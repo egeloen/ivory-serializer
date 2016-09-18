@@ -44,48 +44,41 @@ class TypeParser implements TypeParserInterface
             throw new \InvalidArgumentException('The type must be a non empty string.');
         }
 
-        $lexer = clone $this->lexer;
-        $lexer->setInput($type);
-        $this->walk($lexer);
+        $this->lexer->setInput($type);
+        $this->walk();
 
         try {
-            return $this->doParse($lexer);
+            return $this->parseType();
         } catch (\Exception $e) {
             throw new \InvalidArgumentException(sprintf('The type "%s" is not valid.', $type), 0, $e);
         }
     }
 
     /**
-     * @param Lexer $lexer
-     *
      * @return TypeMetadata
      */
-    private function doParse(Lexer $lexer)
+    private function parseType()
     {
-        return new TypeMetadata($this->getName($lexer), $this->getOptions($lexer));
+        return new TypeMetadata($this->parseName(), $this->parseOptions());
     }
 
     /**
-     * @param Lexer $lexer
-     *
      * @return string
      */
-    private function getName(Lexer $lexer)
+    private function parseName()
     {
-        $token = $this->validate($lexer, TypeLexer::T_NAME);
+        $token = $this->validateToken(TypeLexer::T_NAME);
 
         return $token['value'];
     }
 
     /**
-     * @param Lexer $lexer
-     *
      * @return mixed[]
      */
-    private function getOptions(Lexer $lexer)
+    private function parseOptions()
     {
         $options = [];
-        $token = $lexer->token;
+        $token = $this->lexer->token;
 
         if ($token === null
             || $token['type'] === TypeLexer::T_GREATER_THAN
@@ -94,63 +87,58 @@ class TypeParser implements TypeParserInterface
             return $options;
         }
 
-        $this->validate($lexer, TypeLexer::T_LOWER_THAN);
+        $this->validateToken(TypeLexer::T_LOWER_THAN);
 
-        while ($lexer->isNextTokenAny([TypeLexer::T_NAME, TypeLexer::T_STRING])) {
-            $options[$this->getOptionName($lexer)] = $this->getOptionValue($lexer);
+        while ($this->lexer->isNextTokenAny([TypeLexer::T_NAME, TypeLexer::T_STRING])) {
+            $options[$this->parseOptionName()] = $this->parseOptionValue();
         }
 
-        $this->validate($lexer, TypeLexer::T_GREATER_THAN);
+        $this->validateToken(TypeLexer::T_GREATER_THAN);
 
         return $options;
     }
 
     /**
-     * @param Lexer $lexer
-     *
      * @return string
      */
-    private function getOptionName(Lexer $lexer)
+    private function parseOptionName()
     {
-        $token = $lexer->token;
-        $this->walk($lexer);
-        $this->validate($lexer, TypeLexer::T_EQUAL);
+        $token = $this->lexer->token;
+        $this->walk();
+        $this->validateToken(TypeLexer::T_EQUAL);
 
         return $token['value'];
     }
 
     /**
-     * @param Lexer $lexer
-     *
      * @return TypeMetadataInterface
      */
-    private function getOptionValue(Lexer $lexer)
+    private function parseOptionValue()
     {
-        $token = $lexer->token;
+        $token = $this->lexer->token;
 
         if ($token['type'] === TypeLexer::T_STRING) {
             $result = $token['value'];
-            $this->walk($lexer);
+            $this->walk();
         } else {
-            $result = $this->doParse($lexer);
+            $result = $this->parseType();
         }
 
-        if ($lexer->token['type'] === TypeLexer::T_COMMA) {
-            $this->walk($lexer);
+        if ($this->lexer->token['type'] === TypeLexer::T_COMMA) {
+            $this->walk();
         }
 
         return $result;
     }
 
     /**
-     * @param Lexer $lexer
-     * @param int   $type
+     * @param int $type
      *
      * @return mixed[]
      */
-    private function validate(Lexer $lexer, $type)
+    private function validateToken($type)
     {
-        $token = $lexer->token;
+        $token = $this->lexer->token;
 
         if ($token['type'] !== $type) {
             throw new \InvalidArgumentException(sprintf(
@@ -160,24 +148,23 @@ class TypeParser implements TypeParserInterface
             ));
         }
 
-        $this->walk($lexer);
+        $this->walk();
 
         return $token;
     }
 
     /**
-     * @param Lexer $lexer
-     * @param int   $count
+     * @param int $count
      *
      * @return mixed[]
      */
-    private function walk(Lexer $lexer, $count = 1)
+    private function walk($count = 1)
     {
-        $token = $nextToken = $lexer->token;
+        $token = $nextToken = $this->lexer->token;
 
         for ($i = 0; ($i < $count) || ($token === $nextToken); ++$i) {
-            $lexer->moveNext();
-            $nextToken = $lexer->token;
+            $this->lexer->moveNext();
+            $nextToken = $this->lexer->token;
         }
 
         return $nextToken;
