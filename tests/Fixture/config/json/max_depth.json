@@ -1,0 +1,9 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\MaxDepthFixture": {
+        "properties": {
+            "children": {
+                "max_depth": true
+            }
+        }
+    }
+}

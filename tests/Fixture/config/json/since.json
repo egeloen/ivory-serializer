@@ -1,0 +1,9 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\VersionFixture": {
+        "properties": {
+            "foo": {
+                "since": true
+            }
+        }
+    }
+}

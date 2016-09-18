@@ -1,0 +1,9 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\GroupFixture": {
+        "properties": {
+            "foo": {
+                "groups": [true]
+            }
+        }
+    }
+}

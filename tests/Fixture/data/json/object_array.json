@@ -1,0 +1,1 @@
+{"scalars":{"0":"foo","bar":"baz"},"objects":[{"scalars":[],"objects":[],"types":[],"inceptions":[]}],"types":["foo","bar"],"inceptions":{"foo":["bar","baz"]}}

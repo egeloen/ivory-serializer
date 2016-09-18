@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+
+<serializer
+    xmlns="http://egeloen.fr/schema/ivory-serializer"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://egeloen.fr/schema/ivory-serializer
+                        http://egeloen.fr/schema/ivory-serializer/mapping-1.0.xsd"
+>
+    <class name="Ivory\Tests\Serializer\Fixture\ArrayFixture">
+        <property name="scalars" type="array&lt;value=string&gt;" />
+        <property name="objects" type="array&lt;value=Ivory\Tests\Serializer\Fixture\ArrayFixture&gt;" />
+        <property name="types" type="array&lt;key=int, value=string&gt;" />
+        <property name="inceptions" type="array&lt;key=string, value=array&lt;key=int, value=string>&gt;" />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\ScalarFixture">
+        <property name="bool" type="bool" />
+        <property name="float" type="float" />
+        <property name="int" type="int" />
+        <property name="string" type="string" />
+        <property name="type" type="Ivory\Tests\Serializer\Fixture\ScalarFixture" />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\MaxDepthFixture">
+        <property
+            name="parent"
+            type="Ivory\Tests\Serializer\Fixture\MaxDepthFixture"
+            max-depth="1"
+        />
+
+        <property
+            name="children"
+            type="array&lt;value=Ivory\Tests\Serializer\Fixture\MaxDepthFixture&gt;"
+            max-depth="2"
+        />
+
+        <property
+            name="orphanChildren"
+            type="array&lt;value=Ivory\Tests\Serializer\Fixture\MaxDepthFixture&gt;"
+            max-depth="1"
+        />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\GroupFixture">
+        <property name="foo">
+            <group>group1</group>
+            <group>group2</group>
+        </property>
+
+        <property name="bar">
+            <group>group1</group>
+        </property>
+
+        <property name="baz">
+            <group>group2</group>
+        </property>
+
+        <property name="bat" />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\VersionFixture">
+        <property name="foo" since="1.0" until="2.0" />
+        <property name="bar" since="1.0" />
+        <property name="baz" until="2.0" />
+        <property name="bat" />
+    </class>
+</serializer>

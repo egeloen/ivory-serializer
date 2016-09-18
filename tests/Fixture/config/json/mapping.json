@@ -1,0 +1,82 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\ArrayFixture": {
+        "properties": {
+            "scalars": {
+                "type": "array<value=string>"
+            },
+            "objects": {
+                "type": "array<value=Ivory\\Tests\\Serializer\\Fixture\\ArrayFixture>"
+            },
+            "types": {
+                "type": "array<key=int, value=string>"
+            },
+            "inceptions": {
+                "type": "array<key=string, value=array<key=int, value=string>>"
+            }
+        }
+    },
+    "Ivory\\Tests\\Serializer\\Fixture\\ScalarFixture": {
+        "properties": {
+            "bool": {
+                "type": "bool"
+            },
+            "float": {
+                "type": "float"
+            },
+            "int": {
+                "type": "int"
+            },
+            "string": {
+                "type": "string"
+            },
+            "type": {
+                "type": "Ivory\\Tests\\Serializer\\Fixture\\ScalarFixture"
+            }
+        }
+    },
+    "Ivory\\Tests\\Serializer\\Fixture\\MaxDepthFixture": {
+        "properties": {
+            "parent": {
+                "type": "Ivory\\Tests\\Serializer\\Fixture\\MaxDepthFixture",
+                "max_depth": 1
+            },
+            "children": {
+                "type": "array<value=Ivory\\Tests\\Serializer\\Fixture\\MaxDepthFixture>",
+                "max_depth": 2
+            },
+            "orphanChildren": {
+                "type": "array<value=Ivory\\Tests\\Serializer\\Fixture\\MaxDepthFixture>",
+                "max_depth": 1
+            }
+        }
+    },
+    "Ivory\\Tests\\Serializer\\Fixture\\GroupFixture": {
+        "properties": {
+            "foo": {
+                "groups": ["group1", "group2"]
+            },
+            "bar": {
+                "groups": ["group1"]
+            },
+            "baz": {
+                "groups": ["group2"]
+            },
+            "bat": {}
+        }
+    },
+    "Ivory\\Tests\\Serializer\\Fixture\\VersionFixture": {
+        "properties": {
+            "foo": {
+                "since": "1.0",
+                "until": "2.0"
+            },
+            "bar": {
+                "since": "1.0"
+            },
+            "baz": {
+                "until": "2.0"
+            },
+            "bat": {}
+        }
+    }
+}
