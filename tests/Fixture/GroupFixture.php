@@ -21,31 +21,31 @@ class GroupFixture implements FixtureInterface
     /**
      * @Serializer\Groups({"group1", "group2"})
      *
-     * @var bool
+     * @var string
      */
     private $foo;
 
     /**
      * @Serializer\Groups({"group1"})
      *
-     * @var bool
+     * @var string
      */
     private $bar;
 
     /**
      * @Serializer\Groups({"group2"})
      *
-     * @var bool
+     * @var string
      */
     private $baz;
 
     /**
-     * @var bool
+     * @var string
      */
     private $bat;
 
     /**
-     * @return bool
+     * @return string
      */
     public function getFoo()
     {
@@ -53,7 +53,7 @@ class GroupFixture implements FixtureInterface
     }
 
     /**
-     * @param bool $foo
+     * @param string $foo
      */
     public function setFoo($foo)
     {
@@ -61,7 +61,7 @@ class GroupFixture implements FixtureInterface
     }
 
     /**
-     * @return bool
+     * @return string
      */
     public function getBar()
     {
@@ -69,7 +69,7 @@ class GroupFixture implements FixtureInterface
     }
 
     /**
-     * @param bool $bar
+     * @param string $bar
      */
     public function setBar($bar)
     {
@@ -77,7 +77,7 @@ class GroupFixture implements FixtureInterface
     }
 
     /**
-     * @return bool
+     * @return string
      */
     public function getBaz()
     {
@@ -85,7 +85,7 @@ class GroupFixture implements FixtureInterface
     }
 
     /**
-     * @param bool $baz
+     * @param string $baz
      */
     public function setBaz($baz)
     {
@@ -93,7 +93,7 @@ class GroupFixture implements FixtureInterface
     }
 
     /**
-     * @return bool
+     * @return string
      */
     public function isBat()
     {
@@ -101,7 +101,7 @@ class GroupFixture implements FixtureInterface
     }
 
     /**
-     * @param bool $bat
+     * @param string $bat
      */
     public function setBat($bat)
     {

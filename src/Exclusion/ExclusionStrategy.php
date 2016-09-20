@@ -30,7 +30,7 @@ class ExclusionStrategy implements ExclusionStrategyInterface
     {
         if (empty($strategies)) {
             $strategies = [
-                new GroupExclusionStrategy(),
+                new GroupsExclusionStrategy(),
                 new MaxDepthExclusionStrategy(),
                 new VersionExclusionStrategy(),
             ];

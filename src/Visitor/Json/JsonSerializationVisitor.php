@@ -40,13 +40,13 @@ class JsonSerializationVisitor extends AbstractSerializationVisitor
     /**
      * {@inheritdoc}
      */
-    public function visitData($data, TypeMetadataInterface $type, ContextInterface $context)
+    protected function doVisitArray($data, TypeMetadataInterface $type, ContextInterface $context)
     {
         if ($data === [] && class_exists($type->getName())) {
-            $data = (object) $data;
+            return $this->visitData((object) $data, $type, $context);
         }
 
-        return parent::visitData($data, $type, $context);
+        return parent::doVisitArray($data, $type, $context);
     }
 
     /**

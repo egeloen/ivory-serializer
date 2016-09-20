@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<result>
+  <dateTime>2017-01-01T00:00:00+00:00</dateTime>
+  <formattedDateTime>2017-01-01, 00:00:00, +00:00</formattedDateTime>
+  <timeZonedDateTime>2017-01-01T00:00:00+01:00</timeZonedDateTime>
+  <immutableDateTime>2017-01-01T00:00:00+00:00</immutableDateTime>
+  <formattedImmutableDateTime>2017-01-01, 00:00:00, +00:00</formattedImmutableDateTime>
+  <timeZonedImmutableDateTime>2017-01-01T00:00:00+01:00</timeZonedImmutableDateTime>
+</result>

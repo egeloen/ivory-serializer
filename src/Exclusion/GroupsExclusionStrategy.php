@@ -17,7 +17,7 @@ use Ivory\Serializer\Mapping\PropertyMetadataInterface;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class GroupExclusionStrategy extends ExclusionStrategy
+class GroupsExclusionStrategy extends ExclusionStrategy
 {
     /**
      * {@inheritdoc}

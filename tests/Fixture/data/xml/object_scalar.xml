@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<result xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <bool>true</bool>
+  <int>123</int>
+  <float>123.45</float>
+  <string>foo</string>
+  <type>
+    <bool>true</bool>
+    <int>123</int>
+    <float>123.45</float>
+    <string>foo</string>
+    <type xsi:nil="true"/>
+  </type>
+</result>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<result xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <parent>
+    <parent xsi:nil="true"/>
+    <children/>
+    <orphanChildren/>
+  </parent>
+  <children>
+    <entry key="0">
+      <parent xsi:nil="true"/>
+      <children/>
+      <orphanChildren/>
+    </entry>
+  </children>
+  <orphanChildren/>
+</result>

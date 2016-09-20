@@ -72,7 +72,7 @@ class Serializer implements SerializerInterface
      */
     private function navigate($data, $direction, $format, ContextInterface $context = null, $type = null)
     {
-        $visitor = clone $this->visitorRegistry->getVisitor($direction, $format);
+        $visitor = $this->visitorRegistry->getVisitor($direction, $format);
 
         $context = $context ?: new Context();
         $context

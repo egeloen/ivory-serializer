@@ -53,10 +53,10 @@ abstract class AbstractReflectionClassMetadataLoaderTest extends AbstractClassMe
 
         $this->assertTrue($this->loadClassMetadata($classMetadata));
         $this->assertClassMetadata($classMetadata, [
-            'foo' => ['type' => 'bool'],
-            'bar' => ['type' => 'bool'],
-            'baz' => ['type' => 'bool'],
-            'bat' => ['type' => 'bool'],
+            'foo' => ['type' => 'string'],
+            'bar' => ['type' => 'string'],
+            'baz' => ['type' => 'string'],
+            'bat' => ['type' => 'string'],
         ]);
     }
 
@@ -66,10 +66,10 @@ abstract class AbstractReflectionClassMetadataLoaderTest extends AbstractClassMe
 
         $this->assertTrue($this->loadClassMetadata($classMetadata));
         $this->assertClassMetadata($classMetadata, [
-            'foo' => ['type' => 'bool'],
-            'bar' => ['type' => 'bool'],
-            'baz' => ['type' => 'bool'],
-            'bat' => ['type' => 'bool'],
+            'foo' => ['type' => 'string'],
+            'bar' => ['type' => 'string'],
+            'baz' => ['type' => 'string'],
+            'bat' => ['type' => 'string'],
         ]);
     }
 }

@@ -64,6 +64,6 @@ class StdClassType extends AbstractClassType
      */
     private function visit($data, TypeMetadataInterface $type, ContextInterface $context)
     {
-        return $context->getVisitor()->visitArray($data, $type, $context);
+        return $context->getVisitor()->visitArray((array) $data, $type, $context);
     }
 }

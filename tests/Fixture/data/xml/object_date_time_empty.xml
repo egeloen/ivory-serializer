@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<result xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <dateTime xsi:nil="true"/>
+  <formattedDateTime xsi:nil="true"/>
+  <timeZonedDateTime xsi:nil="true"/>
+  <immutableDateTime xsi:nil="true"/>
+  <formattedImmutableDateTime xsi:nil="true"/>
+  <timeZonedImmutableDateTime xsi:nil="true"/>
+</result>

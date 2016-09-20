@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<result>
+  <scalars>
+    <entry key="0">foo</entry>
+    <bar>baz</bar>
+  </scalars>
+  <objects>
+    <entry key="0">
+      <scalars/>
+      <objects/>
+      <types/>
+      <inceptions/>
+    </entry>
+  </objects>
+  <types>
+    <entry key="0">foo</entry>
+    <entry key="1">bar</entry>
+  </types>
+  <inceptions>
+    <foo>
+      <entry key="0">bar</entry>
+      <entry key="1">baz</entry>
+    </foo>
+  </inceptions>
+</result>

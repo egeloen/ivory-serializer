@@ -27,11 +27,11 @@ abstract class AbstractClassType extends AbstractType
     {
         switch ($context->getDirection()) {
             case Direction::SERIALIZATION:
-                $data = $this->serialize($data, $type, clone $context);
+                $data = $this->serialize($data, $type, $context);
                 break;
 
             case Direction::DESERIALIZATION:
-                $data = $this->deserialize($data, $type, clone $context);
+                $data = $this->deserialize($data, $type, $context);
                 break;
         }
 

@@ -17,6 +17,7 @@
         "doctrine/common": "^2.0",
         "ext-json": "*",
         "ext-dom": "*",
+        "ext-simplexml": "*",
         "friendsofphp/php-cs-fixer": "^1.11",
         "phpunit/phpunit": "^5.4",
         "psr/cache": "^1.0",
@@ -26,11 +27,12 @@
     },
     "suggest": {
         "doctrine/annotations": "Allow you to use the mapping annotations.",
-        "ext-dom": "Allow you to use the XML encoder, decoder and mapping.",
-        "ext-json": "Allow you to use the JSON encoder and decoder.",
-        "symfony/property-access": "Allow you to use the object normalizer and denormalizer.",
-        "symfony/property-info": "Allow you to use the type auto discovery.",
-        "symfony/yaml": "Allow you to use the YAML encoder, decoder and mapping."
+        "ext-dom": "Allow you to use the XML serialization visitor and mapping.",
+        "ext-json": "Allow you to use the JSON serialization/deserialization visitors and mapping.",
+        "ext-simplexml": "Allow you to use the XML deserialization visitor and mapping.",
+        "symfony/property-access": "Allow you to use the Symfony accessor/mutator.",
+        "symfony/property-info": "Allow you to use the mapping type auto discovery.",
+        "symfony/yaml": "Allow you to use the YAML serialization/deserialization visitors and mapping."
     },
     "autoload": {
         "psr-4": { "Ivory\\Serializer\\": "src/" }

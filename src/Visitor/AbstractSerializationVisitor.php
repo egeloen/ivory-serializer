@@ -14,13 +14,13 @@ namespace Ivory\Serializer\Visitor;
 use Ivory\Serializer\Accessor\AccessorInterface;
 use Ivory\Serializer\Context\ContextInterface;
 use Ivory\Serializer\Exclusion\ExclusionStrategyInterface;
-use Ivory\Serializer\Mapping\ClassMetadataInterface;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
+use Ivory\Serializer\Naming\NamingStrategyInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-abstract class AbstractSerializationVisitor extends AbstractVisitor
+abstract class AbstractSerializationVisitor extends AbstractGenericVisitor
 {
     /**
      * @var AccessorInterface
@@ -30,10 +30,14 @@ abstract class AbstractSerializationVisitor extends AbstractVisitor
     /**
      * @param AccessorInterface               $accessor
      * @param ExclusionStrategyInterface|null $exclusionStrategy
+     * @param NamingStrategyInterface|null    $namingStrategy
      */
-    public function __construct(AccessorInterface $accessor, ExclusionStrategyInterface $exclusionStrategy = null)
-    {
-        parent::__construct($exclusionStrategy);
+    public function __construct(
+        AccessorInterface $accessor,
+        ExclusionStrategyInterface $exclusionStrategy = null,
+        NamingStrategyInterface $namingStrategy = null
+    ) {
+        parent::__construct($exclusionStrategy, $namingStrategy);
 
         $this->accessor = $accessor;
     }
@@ -66,7 +70,7 @@ abstract class AbstractSerializationVisitor extends AbstractVisitor
         $this->result[$property->getName()] = $this->navigate(
             $this->accessor->getValue($data, $name),
             $property->getType(),
-            clone $context
+            $context
         );
 
         return true;
@@ -75,7 +79,7 @@ abstract class AbstractSerializationVisitor extends AbstractVisitor
     /**
      * {@inheritdoc}
      */
-    protected function createResult(ClassMetadataInterface $classMetadata)
+    protected function createResult($class)
     {
         return [];
     }

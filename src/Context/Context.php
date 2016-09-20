@@ -227,14 +227,4 @@ class Context implements ContextInterface
     {
         return $this->metadataStack;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __clone()
-    {
-        if ($this->visitor !== null) {
-            $this->visitor = clone $this->visitor;
-        }
-    }
 }

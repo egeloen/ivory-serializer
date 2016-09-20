@@ -22,26 +22,26 @@ class VersionFixture implements FixtureInterface
      * @Serializer\Since("1.0")
      * @Serializer\Until("2.0")
      *
-     * @var bool
+     * @var string
      */
     public $foo;
 
     /**
      * @Serializer\Since("1.0")
      *
-     * @var bool
+     * @var string
      */
     public $bar;
 
     /**
      * @Serializer\Until("2.0")
      *
-     * @var bool
+     * @var string
      */
     public $baz;
 
     /**
-     * @var bool
+     * @var string
      */
     public $bat;
 

@@ -14,14 +14,15 @@ namespace Ivory\Serializer\Visitor;
 use Ivory\Serializer\Context\ContextInterface;
 use Ivory\Serializer\Exclusion\ExclusionStrategyInterface;
 use Ivory\Serializer\Instantiator\InstantiatorInterface;
-use Ivory\Serializer\Mapping\ClassMetadataInterface;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
+use Ivory\Serializer\Mapping\TypeMetadataInterface;
 use Ivory\Serializer\Mutator\MutatorInterface;
+use Ivory\Serializer\Naming\NamingStrategyInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-abstract class AbstractDeserializationVisitor extends AbstractVisitor
+abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
 {
     /**
      * @var InstantiatorInterface
@@ -37,13 +38,15 @@ abstract class AbstractDeserializationVisitor extends AbstractVisitor
      * @param InstantiatorInterface           $instantiator
      * @param MutatorInterface                $mutator
      * @param ExclusionStrategyInterface|null $exclusionStrategy
+     * @param NamingStrategyInterface|null    $namingStrategy
      */
     public function __construct(
         InstantiatorInterface $instantiator,
         MutatorInterface $mutator,
-        ExclusionStrategyInterface $exclusionStrategy = null
+        ExclusionStrategyInterface $exclusionStrategy = null,
+        NamingStrategyInterface $namingStrategy = null
     ) {
-        parent::__construct($exclusionStrategy);
+        parent::__construct($exclusionStrategy, $namingStrategy);
 
         $this->instantiator = $instantiator;
         $this->mutator = $mutator;
@@ -54,7 +57,19 @@ abstract class AbstractDeserializationVisitor extends AbstractVisitor
      */
     public function prepare($data)
     {
-        return $this->decode($data);
+        return $this->decode(parent::prepare($data));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function visitBoolean($data, TypeMetadataInterface $type, ContextInterface $context)
+    {
+        return parent::visitBoolean(
+            filter_var($data, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+            $type,
+            $context
+        );
     }
 
     /**
@@ -90,8 +105,8 @@ abstract class AbstractDeserializationVisitor extends AbstractVisitor
     /**
      * {@inheritdoc}
      */
-    protected function createResult(ClassMetadataInterface $classMetadata)
+    protected function createResult($class)
     {
-        return $this->instantiator->instantiate($classMetadata->getName());
+        return $this->instantiator->instantiate($class);
     }
 }

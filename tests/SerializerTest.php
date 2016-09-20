@@ -109,10 +109,10 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         $emptyGroupFixture = new GroupFixture();
         $groupFixture = clone $emptyGroupFixture;
-        $groupFixture->setFoo(true);
-        $groupFixture->setBar(false);
-        $groupFixture->setBaz(true);
-        $groupFixture->setBat(false);
+        $groupFixture->setFoo('oof');
+        $groupFixture->setBar('rab');
+        $groupFixture->setBaz('zab');
+        $groupFixture->setBat('tab');
 
         $emptyMaxDepthFixture = new MaxDepthFixture();
         $maxDepthFixture = clone $emptyMaxDepthFixture;
@@ -146,10 +146,10 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         $emptyVersionFixture = new VersionFixture();
         $versionFixture = clone $emptyVersionFixture;
-        $versionFixture->foo = true;
-        $versionFixture->bar = false;
-        $versionFixture->baz = true;
-        $versionFixture->bat = false;
+        $versionFixture->foo = 'oof';
+        $versionFixture->bar = 'rab';
+        $versionFixture->baz = 'zab';
+        $versionFixture->bat = 'tab';
 
         $cases = [
             // JSON
@@ -186,7 +186,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         $providers = [];
 
-        foreach ([Format::JSON, Format::YAML] as $format) {
+        foreach ([Format::JSON, Format::XML, Format::YAML] as $format) {
             foreach ($cases as $case) {
                 if (isset($case[2])) {
                     $case[3] = $case[2];

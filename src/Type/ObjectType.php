@@ -47,7 +47,7 @@ class ObjectType extends AbstractType
 
         $visitor = $context->getVisitor();
 
-        if (!$visitor->startVisitingObject($data, $class, $context = clone $context)) {
+        if (!$visitor->startVisitingObject($data, $class, $context)) {
             return $visitor->visitNull(null, $type, $context);
         }
 

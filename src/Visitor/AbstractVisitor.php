@@ -37,16 +37,6 @@ abstract class AbstractVisitor implements VisitorInterface
     private $namingStrategy;
 
     /**
-     * @var \SplStack
-     */
-    private $stack;
-
-    /**
-     * @var mixed
-     */
-    protected $result;
-
-    /**
      * @param ExclusionStrategyInterface|null $exclusionStrategy
      * @param NamingStrategyInterface|null    $namingStrategy
      */
@@ -56,7 +46,6 @@ abstract class AbstractVisitor implements VisitorInterface
     ) {
         $this->exclusionStrategy = $exclusionStrategy ?: ExclusionStrategy::create();
         $this->namingStrategy = $namingStrategy ?: new IdenticalNamingStrategy();
-        $this->stack = new \SplStack();
     }
 
     /**
@@ -72,24 +61,16 @@ abstract class AbstractVisitor implements VisitorInterface
      */
     public function visitArray($data, TypeMetadataInterface $type, ContextInterface $context)
     {
-        $result = [];
         $this->enterScope($data, $type, $context);
 
         if ($this->exclusionStrategy->skipType($type, $context)) {
             $data = [];
         }
 
-        foreach ($data as $key => $value) {
-            $result[$this->navigate($key, $type->getOption('key'), $context)] = $this->navigate(
-                $value,
-                $type->getOption('value'),
-                $context
-            );
-        }
-
+        $result = $this->doVisitArray($data, $type, $context);
         $this->leaveScope($context);
 
-        return $this->visitData($result, $type, $context);
+        return $result;
     }
 
     /**
@@ -98,18 +79,6 @@ abstract class AbstractVisitor implements VisitorInterface
     public function visitBoolean($data, TypeMetadataInterface $type, ContextInterface $context)
     {
         return $this->visitData((bool) $data, $type, $context);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function visitData($data, TypeMetadataInterface $type, ContextInterface $context)
-    {
-        if ($this->result === null) {
-            $this->result = $data;
-        }
-
-        return $data;
     }
 
     /**
@@ -163,9 +132,6 @@ abstract class AbstractVisitor implements VisitorInterface
 
         $this->enterScope($data, $class, $context);
 
-        $this->stack->push($this->result);
-        $this->result = $this->createResult($class);
-
         return true;
     }
 
@@ -197,24 +163,16 @@ abstract class AbstractVisitor implements VisitorInterface
     public function finishVisitingObject($data, ClassMetadataInterface $class, ContextInterface $context)
     {
         $this->leaveScope($context);
-
-        $result = $this->result;
-        $this->result = $this->stack->pop();
-
-        if ($this->result === null || $this->stack->isEmpty()) {
-            $this->result = $result;
-        }
-
-        return $result;
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed                 $data
+     * @param TypeMetadataInterface $type
+     * @param ContextInterface      $context
+     *
+     * @return mixed
      */
-    public function getResult()
-    {
-        return $this->result;
-    }
+    abstract protected function doVisitArray($data, TypeMetadataInterface $type, ContextInterface $context);
 
     /**
      * @param mixed                     $data
@@ -232,13 +190,6 @@ abstract class AbstractVisitor implements VisitorInterface
     );
 
     /**
-     * @param ClassMetadataInterface $classMetadata
-     *
-     * @return mixed
-     */
-    abstract protected function createResult(ClassMetadataInterface $classMetadata);
-
-    /**
      * @param mixed                             $data
      * @param TypeMetadataInterface|string|null $type
      * @param ContextInterface                  $context
@@ -247,7 +198,7 @@ abstract class AbstractVisitor implements VisitorInterface
      */
     protected function navigate($data, $type, ContextInterface $context)
     {
-        return $context->getNavigator()->navigate($data, $type, clone $context);
+        return $context->getNavigator()->navigate($data, $type, $context);
     }
 
     /**

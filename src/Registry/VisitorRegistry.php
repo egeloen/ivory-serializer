@@ -19,6 +19,8 @@ use Ivory\Serializer\Mutator\SymfonyMutator;
 use Ivory\Serializer\Visitor\Json\JsonDeserializationVisitor;
 use Ivory\Serializer\Visitor\Json\JsonSerializationVisitor;
 use Ivory\Serializer\Visitor\VisitorInterface;
+use Ivory\Serializer\Visitor\Xml\XmlDeserializationVisitor;
+use Ivory\Serializer\Visitor\Xml\XmlSerializationVisitor;
 use Ivory\Serializer\Visitor\Yaml\YamlDeserializationVisitor;
 use Ivory\Serializer\Visitor\Yaml\YamlSerializationVisitor;
 
@@ -58,10 +60,12 @@ class VisitorRegistry implements VisitorRegistryInterface
         return new static(array_replace_recursive([
             Direction::SERIALIZATION => [
                 Format::JSON => new JsonSerializationVisitor($accessor),
+                Format::XML  => new XmlSerializationVisitor($accessor),
                 Format::YAML => new YamlSerializationVisitor($accessor),
             ],
             Direction::DESERIALIZATION => [
                 Format::JSON => new JsonDeserializationVisitor($instantiator, $mutator),
+                Format::XML  => new XmlDeserializationVisitor($instantiator, $mutator),
                 Format::YAML => new YamlDeserializationVisitor($instantiator, $mutator),
             ],
         ], $visitors));
