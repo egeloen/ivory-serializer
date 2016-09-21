@@ -45,11 +45,6 @@ class XmlSerializationVisitor extends AbstractVisitor
     private $stack;
 
     /**
-     * @var bool
-     */
-    private $nullVisited;
-
-    /**
      * @var string
      */
     private $version = '1.0';
@@ -90,7 +85,6 @@ class XmlSerializationVisitor extends AbstractVisitor
     public function prepare($data)
     {
         $this->stack = new \SplStack();
-        $this->nullVisited = false;
 
         return parent::prepare($data);
     }
@@ -114,18 +108,6 @@ class XmlSerializationVisitor extends AbstractVisitor
     /**
      * {@inheritdoc}
      */
-    public function visitNull($data, TypeMetadataInterface $type, ContextInterface $context)
-    {
-        $node = $this->getDocument()->createAttribute('xsi:nil');
-        $node->value = 'true';
-        $this->nullVisited = true;
-
-        return $this->visitNode($node);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function visitString($data, TypeMetadataInterface $type, ContextInterface $context)
     {
         $document = $this->getDocument();
@@ -144,14 +126,6 @@ class XmlSerializationVisitor extends AbstractVisitor
     public function getResult()
     {
         $document = $this->getDocument();
-
-        if ($this->nullVisited) {
-            $document->documentElement->setAttributeNS(
-                'http://www.w3.org/2000/xmlns/',
-                'xmlns:xsi',
-                'http://www.w3.org/2001/XMLSchema-instance'
-            );
-        }
 
         if ($document->formatOutput) {
             $document->loadXML($document->saveXML());

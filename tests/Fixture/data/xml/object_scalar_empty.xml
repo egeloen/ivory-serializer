@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<result xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <bool xsi:nil="true"/>
-  <int xsi:nil="true"/>
-  <float xsi:nil="true"/>
-  <string xsi:nil="true"/>
-  <type xsi:nil="true"/>
+<result>
+  <bool/>
+  <int/>
+  <float/>
+  <string/>
+  <type/>
 </result>
