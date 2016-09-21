@@ -13,7 +13,9 @@ namespace Ivory\Serializer\Visitor\Json;
 
 use Ivory\Serializer\Accessor\AccessorInterface;
 use Ivory\Serializer\Context\ContextInterface;
+use Ivory\Serializer\Exclusion\ExclusionStrategyInterface;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
+use Ivory\Serializer\Naming\NamingStrategyInterface;
 use Ivory\Serializer\Visitor\AbstractSerializationVisitor;
 
 /**
@@ -27,12 +29,18 @@ class JsonSerializationVisitor extends AbstractSerializationVisitor
     private $options;
 
     /**
-     * @param AccessorInterface $accessor
-     * @param int               $options
+     * @param AccessorInterface               $accessor
+     * @param ExclusionStrategyInterface|null $exclusionStrategy
+     * @param NamingStrategyInterface|null    $namingStrategy
+     * @param int                             $options
      */
-    public function __construct(AccessorInterface $accessor, $options = 0)
-    {
-        parent::__construct($accessor);
+    public function __construct(
+        AccessorInterface $accessor,
+        ExclusionStrategyInterface $exclusionStrategy = null,
+        NamingStrategyInterface $namingStrategy = null,
+        $options = 0
+    ) {
+        parent::__construct($accessor, $exclusionStrategy, $namingStrategy);
 
         $this->options = $options;
     }

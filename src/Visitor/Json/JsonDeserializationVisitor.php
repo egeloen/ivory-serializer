@@ -11,8 +11,10 @@
 
 namespace Ivory\Serializer\Visitor\Json;
 
+use Ivory\Serializer\Exclusion\ExclusionStrategyInterface;
 use Ivory\Serializer\Instantiator\InstantiatorInterface;
 use Ivory\Serializer\Mutator\MutatorInterface;
+use Ivory\Serializer\Naming\NamingStrategyInterface;
 use Ivory\Serializer\Visitor\AbstractDeserializationVisitor;
 
 /**
@@ -31,14 +33,18 @@ class JsonDeserializationVisitor extends AbstractDeserializationVisitor
     private $options;
 
     /**
-     * @param InstantiatorInterface $instantiator
-     * @param MutatorInterface      $mutator
-     * @param int                   $maxDepth
-     * @param int                   $options
+     * @param InstantiatorInterface           $instantiator
+     * @param MutatorInterface                $mutator
+     * @param ExclusionStrategyInterface|null $exclusionStrategy
+     * @param NamingStrategyInterface|null    $namingStrategy
+     * @param int                             $maxDepth
+     * @param int                             $options
      */
     public function __construct(
         InstantiatorInterface $instantiator,
         MutatorInterface $mutator,
+        ExclusionStrategyInterface $exclusionStrategy = null,
+        NamingStrategyInterface $namingStrategy = null,
         $maxDepth = 512,
         $options = 0
     ) {

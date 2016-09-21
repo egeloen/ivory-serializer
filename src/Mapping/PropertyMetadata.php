@@ -22,7 +22,7 @@ class PropertyMetadata implements PropertyMetadataInterface
     private $name;
 
     /**
-     * @var string|null
+     * @var TypeMetadataInterface|null
      */
     private $type;
 

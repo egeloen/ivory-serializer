@@ -24,23 +24,23 @@ use Ivory\Serializer\Type\Parser\TypeParserInterface;
 class Navigator implements NavigatorInterface
 {
     /**
-     * @var TypeParserInterface
-     */
-    private $typeParser;
-
-    /**
      * @var TypeRegistryInterface
      */
     private $typeRegistry;
 
     /**
-     * @param TypeParserInterface|null   $typeParser
-     * @param TypeRegistryInterface|null $typeRegistry
+     * @var TypeParserInterface
      */
-    public function __construct(TypeParserInterface $typeParser = null, TypeRegistryInterface $typeRegistry = null)
+    private $typeParser;
+
+    /**
+     * @param TypeRegistryInterface|null $typeRegistry
+     * @param TypeParserInterface|null   $typeParser
+     */
+    public function __construct(TypeRegistryInterface $typeRegistry = null, TypeParserInterface $typeParser = null)
     {
-        $this->typeParser = $typeParser ?: new TypeParser();
         $this->typeRegistry = $typeRegistry ?: TypeRegistry::create();
+        $this->typeParser = $typeParser ?: new TypeParser();
     }
 
     /**

@@ -10,24 +10,23 @@
 [![Total Downloads](https://poser.pugx.org/egeloen/serializer/downloads.svg)](https://packagist.org/packages/egeloen/serializer)
 [![License](https://poser.pugx.org/egeloen/serializer/license.svg)](https://packagist.org/packages/egeloen/serializer)
 
-The Ivory Serializer allows you to (de)-serialize any scalar data as well as complex object graph. It supports the 
-JSON, XML & YAML formats.
-
-``` php
-use Acme\Model\ComplexObject;
-use Ivory\Serializer\Format;
-use Ivory\Serializer\Serializer;
-
-$serializer = new Serializer();
-$data = new ComplexObject();
-
-$json = $serializer->serialize($data, Format::JSON);
-$object = $serializer->deserialize($json, ComplexObject::class, Format::JSON);
-```
+The Ivory Serializer is a PHP 5.6+ library allowing you to (de)-serialize complex data using the visitor pattern. 
+Natively, it supports JSON, XML and YAML. It also supports features such as exclusion strategies (groups, max depth, 
+version), naming strategies (camel case, snake case, studly caps), automatic/explicit mapping (reflection, 
+annotation, XML, YAML, JSON) and many others...
 
 ## Documentation
 
-FIXME - Write me...
+  - [Installation](/doc/installation.md)
+  - [Usage](/doc/usage.md)
+  - [Type](/doc/type.md)
+  - [Exclusion](/doc/exclusion.md)
+  - [Naming](/doc/naming.md)
+  - [Mapping](/doc/mapping.md)
+    - [Annotation](/doc/mapping/annotation-reference.md)
+    - [XML](/doc/mapping/xml-reference.md)
+    - [YAML](/doc/mapping/yaml-reference.md)
+    - [JSON](/doc/mapping/json-reference.md)
 
 ## Testing
 
