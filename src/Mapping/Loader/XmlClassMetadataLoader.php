@@ -104,7 +104,7 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
             }
         }
 
-        $this->validateDocument($document, $file, $internalErrors, $disableEntities);
+        $this->validateDocument($document, $internalErrors, $disableEntities);
         $this->setState($internalErrors, $disableEntities);
 
         return $document;
@@ -112,11 +112,10 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
 
     /**
      * @param \DOMDocument $document
-     * @param string       $file
      * @param bool         $internalErrors
      * @param bool         $disableEntities
      */
-    private function validateDocument(\DOMDocument $document, $file, $internalErrors, $disableEntities)
+    private function validateDocument(\DOMDocument $document, $internalErrors, $disableEntities)
     {
         if (@$document->schemaValidateSource(file_get_contents(__DIR__.'/../Resource/mapping.xsd'))) {
             return;

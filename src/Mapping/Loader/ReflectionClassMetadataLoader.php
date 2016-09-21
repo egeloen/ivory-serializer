@@ -63,7 +63,7 @@ class ReflectionClassMetadataLoader extends AbstractReflectionClassMetadataLoade
             return;
         }
 
-        $types = $this->extractor->getTypes($property->getDeclaringClass()->getName(), $property->getName());
+        $types = $this->extractor->getTypes($property->class, $property->name);
 
         if (empty($types)) {
             return;

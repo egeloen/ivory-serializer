@@ -33,11 +33,11 @@ abstract class AbstractReflectionClassMetadataLoader extends AbstractClassMetada
         $properties = [];
 
         foreach ($reflection->getMethods() as $method) {
-            if ($method->getDeclaringClass()->getName() !== $class) {
+            if ($method->class !== $class) {
                 continue;
             }
 
-            if (($methodName = $this->validateMethod($method->getName())) === null) {
+            if (($methodName = $this->validateMethod($method->name)) === null) {
                 continue;
             }
 
@@ -49,7 +49,7 @@ abstract class AbstractReflectionClassMetadataLoader extends AbstractClassMetada
         }
 
         foreach ($reflection->getProperties() as $property) {
-            if ($property->getDeclaringClass()->getName() !== $class) {
+            if ($property->class !== $class) {
                 continue;
             }
 
