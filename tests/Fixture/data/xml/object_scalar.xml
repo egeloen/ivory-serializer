@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <result>
-  <bool>true</bool>
+  <boolean>true</boolean>
   <int>123</int>
   <float>123.45</float>
   <string>foo</string>
   <type>
-    <bool>true</bool>
+    <boolean>true</boolean>
     <int>123</int>
     <float>123.45</float>
     <string>foo</string>

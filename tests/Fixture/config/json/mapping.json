@@ -18,6 +18,7 @@
     "Ivory\\Tests\\Serializer\\Fixture\\ScalarFixture": {
         "properties": {
             "bool": {
+                "alias": "boolean",
                 "type": "bool"
             },
             "float": {

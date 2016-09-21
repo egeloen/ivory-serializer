@@ -22,6 +22,11 @@ class PropertyMetadata implements PropertyMetadataInterface
     private $name;
 
     /**
+     * @var string
+     */
+    private $alias;
+
+    /**
      * @var TypeMetadataInterface|null
      */
     private $type;
@@ -68,6 +73,30 @@ class PropertyMetadata implements PropertyMetadataInterface
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasAlias()
+    {
+        return $this->alias !== null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setAlias($alias)
+    {
+        $this->alias = $alias;
     }
 
     /**

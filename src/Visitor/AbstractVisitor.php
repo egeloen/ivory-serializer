@@ -146,7 +146,7 @@ abstract class AbstractVisitor implements VisitorInterface
         if (!$this->exclusionStrategy->skipProperty($property, $context)) {
             $visited = $this->doVisitObjectProperty(
                 $data,
-                $this->namingStrategy->convert($property->getName()),
+                $this->namingStrategy->convert($property->hasAlias() ? $property->getAlias() : $property->getName()),
                 $property,
                 $context
             );

@@ -1,9 +1,9 @@
-bool: true
+boolean: true
 int: 123
 float: 123.45
 string: foo
 type:
-    bool: true
+    boolean: true
     int: 123
     float: 123.45
     string: foo

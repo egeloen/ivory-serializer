@@ -59,6 +59,15 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
     /**
      * @expectedException \InvalidArgumentException
      */
+    public function testPropertyAlias()
+    {
+        $this->setLoader($this->createLoader('alias'));
+        $this->loadClassMetadata(new ClassMetadata(ScalarFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testPropertyType()
     {
         $this->setLoader($this->createLoader('type'));

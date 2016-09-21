@@ -46,6 +46,10 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
     {
         $property = [];
 
+        if (isset($element['alias'])) {
+            $property['alias'] = (string) $element['alias'];
+        }
+
         if (isset($element['type'])) {
             $property['type'] = (string) $element['type'];
         }

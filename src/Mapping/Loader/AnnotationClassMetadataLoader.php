@@ -13,6 +13,7 @@ namespace Ivory\Serializer\Mapping\Loader;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
+use Ivory\Serializer\Mapping\Annotation\Alias;
 use Ivory\Serializer\Mapping\Annotation\Groups;
 use Ivory\Serializer\Mapping\Annotation\MaxDepth;
 use Ivory\Serializer\Mapping\Annotation\Since;
@@ -71,7 +72,9 @@ class AnnotationClassMetadataLoader extends AbstractReflectionClassMetadataLoade
         $definition = [];
 
         foreach ($annotations as $annotation) {
-            if ($annotation instanceof Type) {
+            if ($annotation instanceof Alias) {
+                $definition['alias'] = $annotation->getAlias();
+            } elseif ($annotation instanceof Type) {
                 $definition['type'] = $annotation->getType();
             } elseif ($annotation instanceof Since) {
                 $definition['since'] = $annotation->getVersion();

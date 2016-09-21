@@ -14,7 +14,7 @@
     </class>
 
     <class name="Ivory\Tests\Serializer\Fixture\ScalarFixture">
-        <property name="bool" type="bool" />
+        <property name="bool" alias="boolean" type="bool" />
         <property name="float" type="float" />
         <property name="int" type="int" />
         <property name="string" type="string" />

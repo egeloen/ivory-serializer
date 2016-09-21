@@ -19,6 +19,7 @@ use Ivory\Serializer\Mapping\Annotation as Serializer;
 class ScalarFixture implements FixtureInterface
 {
     /**
+     * @Serializer\Alias("boolean")
      * @Serializer\Type("bool")
      *
      * @var bool

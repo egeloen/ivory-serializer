@@ -8,6 +8,7 @@ use Ivory\Serializer\Mapping\Annotation as Serializer;
 class User
 {
     /**
+     * @Serializer\Alias("user_name")
      * @Serializer\Type("string")
      * @Serializer\Groups({"group1", "group2"})
      * @Serializer\Since("1.0")

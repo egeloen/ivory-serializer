@@ -67,8 +67,8 @@ abstract class AbstractSerializationVisitor extends AbstractGenericVisitor
         ContextInterface $context
     ) {
         // FIXME - Detect errors
-        $this->result[$property->getName()] = $this->navigate(
-            $this->accessor->getValue($data, $name),
+        $this->result[$name] = $this->navigate(
+            $this->accessor->getValue($data, $property->getName()),
             $property->getType(),
             $context
         );

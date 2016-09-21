@@ -12,6 +12,7 @@ Ivory\Tests\Serializer\Fixture\ArrayFixture:
 Ivory\Tests\Serializer\Fixture\ScalarFixture:
     properties:
         bool:
+            alias: boolean
             type: bool
         float:
             type: float

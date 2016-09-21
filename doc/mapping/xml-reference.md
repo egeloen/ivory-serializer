@@ -10,7 +10,7 @@
                         http://egeloen.fr/schema/ivory-serializer/mapping-1.0.xsd"
 >
     <class name="Acme\Model\User">
-        <property name="username" type="string" since="1.0" until="2.0">
+        <property name="username" alias="user_name" type="string" since="1.0" until="2.0">
             <group>group1</group>
             <group>group2</group>
         </property>

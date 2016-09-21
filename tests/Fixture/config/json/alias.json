@@ -1,0 +1,9 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\ScalarFixture": {
+        "properties": {
+            "bool": {
+                "alias": true
+            }
+        }
+    }
+}

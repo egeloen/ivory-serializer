@@ -4,6 +4,7 @@
 Acme\Model\User:
     properties:
         username:
+            alias: user_name
             type: string
             groups: [group1, group2]
             since: "1.0"

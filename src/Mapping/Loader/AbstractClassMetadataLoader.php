@@ -99,6 +99,10 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
             return;
         }
 
+        if (array_key_exists('alias', $data)) {
+            $this->loadPropertyMetadataAlias($propertyMetadata, $data['alias']);
+        }
+
         if (array_key_exists('type', $data)) {
             $this->loadPropertyMetadataType($propertyMetadata, $data['type']);
         }
@@ -118,6 +122,28 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
         if (array_key_exists('groups', $data)) {
             $this->loadPropertyMetadataGroups($propertyMetadata, $data['groups']);
         }
+    }
+
+    /**
+     * @param PropertyMetadataInterface $propertyMetadata
+     * @param string                    $alias
+     */
+    private function loadPropertyMetadataAlias(PropertyMetadataInterface $propertyMetadata, $alias)
+    {
+        if (!is_string($alias)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property alias must be a non empty string, got "%s".',
+                is_object($alias) ? get_class($alias) : gettype($alias)
+            ));
+        }
+
+        $alias = trim($alias);
+
+        if (empty($alias)) {
+            throw new \InvalidArgumentException('The mapping property alias must be a non empty string.');
+        }
+
+        $propertyMetadata->setAlias($alias);
     }
 
     /**

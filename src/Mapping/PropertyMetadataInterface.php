@@ -19,6 +19,21 @@ interface PropertyMetadataInterface extends MetadataInterface
     /**
      * @return bool
      */
+    public function hasAlias();
+
+    /**
+     * @return string|null
+     */
+    public function getAlias();
+
+    /**
+     * @param string|null $alias
+     */
+    public function setAlias($alias);
+
+    /**
+     * @return bool
+     */
     public function hasType();
 
     /**
