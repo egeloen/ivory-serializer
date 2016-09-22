@@ -89,7 +89,7 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
             $propertyMetadata = $classMetadata->getProperty($property) ?: new PropertyMetadata($property);
             $this->loadPropertyMetadata($propertyMetadata, $value);
 
-            if ($this->isPropertyExposed($propertyMetadata, $policy)) {
+            if ($this->isPropertyMetadataExposed($value, $policy)) {
                 $classMetadata->addProperty($propertyMetadata);
             }
         }
@@ -105,20 +105,20 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
             return;
         }
 
+        if (array_key_exists('exclude', $data)) {
+            $this->validatePropertyMetadataExclude($data['exclude']);
+        }
+
+        if (array_key_exists('expose', $data)) {
+            $this->validatePropertyMetadataExpose($data['expose']);
+        }
+
         if (array_key_exists('alias', $data)) {
             $this->loadPropertyMetadataAlias($propertyMetadata, $data['alias']);
         }
 
         if (array_key_exists('type', $data)) {
             $this->loadPropertyMetadataType($propertyMetadata, $data['type']);
-        }
-
-        if (array_key_exists('exclude', $data)) {
-            $this->loadPropertyMetadataExclude($propertyMetadata, $data['exclude']);
-        }
-
-        if (array_key_exists('expose', $data)) {
-            $this->loadPropertyMetadataExpose($propertyMetadata, $data['expose']);
         }
 
         if (array_key_exists('since', $data)) {
@@ -174,38 +174,6 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
         }
 
         $propertyMetadata->setType($this->typeParser->parse($type));
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string                    $exclude
-     */
-    private function loadPropertyMetadataExclude(PropertyMetadataInterface $propertyMetadata, $exclude)
-    {
-        if (!is_bool($exclude)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property exclude must be a boolean, got "%s".',
-                is_object($exclude) ? get_class($exclude) : gettype($exclude)
-            ));
-        }
-
-        $propertyMetadata->setExcluded($exclude);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string                    $expose
-     */
-    private function loadPropertyMetadataExpose(PropertyMetadataInterface $propertyMetadata, $expose)
-    {
-        if (!is_bool($expose)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property expose must be a boolean, got "%s".',
-                is_object($expose) ? get_class($expose) : gettype($expose)
-            ));
-        }
-
-        $propertyMetadata->setExposed($expose);
     }
 
     /**
@@ -347,14 +315,42 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
     }
 
     /**
-     * @param PropertyMetadataInterface $property
-     * @param string                    $policy
+     * @param bool $exclude
+     */
+    private function validatePropertyMetadataExclude($exclude)
+    {
+        if (!is_bool($exclude)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property exclude must be a boolean, got "%s".',
+                is_object($exclude) ? get_class($exclude) : gettype($exclude)
+            ));
+        }
+    }
+
+    /**
+     * @param bool $expose
+     */
+    private function validatePropertyMetadataExpose($expose)
+    {
+        if (!is_bool($expose)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property expose must be a boolean, got "%s".',
+                is_object($expose) ? get_class($expose) : gettype($expose)
+            ));
+        }
+    }
+
+    /**
+     * @param mixed[] $property
+     * @param string  $policy
      *
      * @return bool
      */
-    private function isPropertyExposed(PropertyMetadataInterface $property, $policy)
+    private function isPropertyMetadataExposed($property, $policy)
     {
-        return ($policy === ExclusionPolicy::ALL && $property->isExposed())
-            || ($policy === ExclusionPolicy::NONE && !$property->isExcluded());
+        $expose = isset($property['expose']) && $property['expose'];
+        $exclude = isset($property['exclude']) && $property['exclude'];
+
+        return ($policy === ExclusionPolicy::ALL && $expose) || ($policy === ExclusionPolicy::NONE && !$exclude);
     }
 }

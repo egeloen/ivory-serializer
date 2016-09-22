@@ -86,8 +86,6 @@ class ClassMetadataFactoryTest extends \PHPUnit_Framework_TestCase
         $firstResult = $this->factory->getClassMetadata($class = ExtendedScalarFixture::class);
         $secondResult = $this->factory->getClassMetadata($class);
 
-        $expected = array_reverse($expected);
-
         $this->assertArrayHasKey(0, $expected);
         $this->assertSame($class, $expected[0]->getName());
 

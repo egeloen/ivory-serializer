@@ -32,16 +32,6 @@ class PropertyMetadata implements PropertyMetadataInterface
     private $type;
 
     /**
-     * @var bool|null
-     */
-    private $exposed;
-
-    /**
-     * @var bool|null
-     */
-    private $excluded;
-
-    /**
      * @var string|null
      */
     private $since;
@@ -131,38 +121,6 @@ class PropertyMetadata implements PropertyMetadataInterface
     public function setType(TypeMetadataInterface $type = null)
     {
         $this->type = $type;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isExposed()
-    {
-        return $this->exposed;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setExposed($exposed)
-    {
-        $this->exposed = $exposed;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isExcluded()
-    {
-        return $this->excluded;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setExcluded($excluded)
-    {
-        $this->excluded = $excluded;
     }
 
     /**
@@ -303,8 +261,20 @@ class PropertyMetadata implements PropertyMetadataInterface
      */
     public function merge(PropertyMetadataInterface $propertyMetadata)
     {
+        if (!$this->hasAlias() && $propertyMetadata->hasAlias()) {
+            $this->setAlias($propertyMetadata->getAlias());
+        }
+
         if (!$this->hasType() && $propertyMetadata->hasType()) {
             $this->setType($propertyMetadata->getType());
+        }
+
+        if (!$this->hasSinceVersion() && $propertyMetadata->hasSinceVersion()) {
+            $this->setSinceVersion($propertyMetadata->getSinceVersion());
+        }
+
+        if (!$this->hasUntilVersion() && $propertyMetadata->hasUntilVersion()) {
+            $this->setUntilVersion($propertyMetadata->getUntilVersion());
         }
 
         if (!$this->hasMaxDepth() && $propertyMetadata->hasMaxDepth()) {
