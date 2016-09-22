@@ -9,26 +9,26 @@ A type is a generic structure which follow the pattern `type` or `type<option1=v
 
 The library is shipped with some built-in types:
 
- | Type                                       |
- |--------------------------------------------|
- | bool                                       |
- | boolean (alias of bool)                    |
- | double (alias of float)                    |
- | float                                      |
- | numeric (alias of float)                   |
- | int                                        |
- | integer (alias of int)                     |
- | string                                     |
- | array                                      |
- | array<value=type>                          |
- | array<key=type, value=type>                |
- | DateTime                                   |
- | DateTime<format='Y-m-d H:i:d'>             |
- | DateTime<timezone='Europe/Paris'>          |
- | DateTimeImmutable                          |
- | DateTimeImmutable<format='Y-m-d H:i:d'>    |
- | DateTimeImmutable<timezone='Europe/Paris'> |
- | Fully\Qualified\Class\Name                 |
+| Type                                       |
+| ------------------------------------------ |
+| bool                                       |
+| boolean (alias of bool)                    |
+| double (alias of float)                    |
+| float                                      |
+| numeric (alias of float)                   |
+| int                                        |
+| integer (alias of int)                     |
+| string                                     |
+| array                                      |
+| array<value=type>                          |
+| array<key=type, value=type>                |
+| DateTime                                   |
+| DateTime<format='Y-m-d H:i:d'>             |
+| DateTime<timezone='Europe/Paris'>          |
+| DateTimeImmutable                          |
+| DateTimeImmutable<format='Y-m-d H:i:d'>    |
+| DateTimeImmutable<timezone='Europe/Paris'> |
+| Fully\Qualified\Class\Name                 |
 
 ## Custom
 
