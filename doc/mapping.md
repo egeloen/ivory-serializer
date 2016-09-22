@@ -57,6 +57,8 @@ use Ivory\Serializer\Mapping\Loader\AnnotationClassMetadataLoader;
 $loader = new AnnotationClassMetadataLoader();
 ```
 
+An example of all annotations are available [here](/doc/mapping/annotation-reference.md).
+
 ### XML
 
 The XML loader allows you to use a XML mapping file:
@@ -66,6 +68,8 @@ use Ivory\Serializer\Mapping\Loader\XmlClassMetadataLoader;
 
 $loader = new XmlClassMetadataLoader('/path/to/file.xml');
 ```
+
+An example of all annotations are available [here](/doc/mapping/xml-reference.md).
 
 ### YAML
 
@@ -77,6 +81,8 @@ use Ivory\Serializer\Mapping\Loader\YamlClassMetadataLoader;
 $loader = new YamlClassMetadataLoader('/path/to/file.yml');
 ```
 
+An example of all annotations are available [here](/doc/mapping/yaml-reference.md).
+
 ### JSON
 
 The JSON loader allows you to use a JSON mapping file:
@@ -86,6 +92,8 @@ use Ivory\Serializer\Mapping\Loader\JsonClassMetadataLoader;
 
 $loader = new JsonClassMetadataLoader('/path/to/file.json');
 ```
+
+An example of all annotations are available [here](/doc/mapping/json-reference.md).
 
 ### Chain
 
