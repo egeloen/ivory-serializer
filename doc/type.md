@@ -9,26 +9,26 @@ A type is a generic structure which follow the pattern `type` or `type<option1=v
 
 The library is shipped with some built-in types:
 
-| Type                                       |
-| ------------------------------------------ |
-| bool                                       |
-| boolean (alias of bool)                    |
-| double (alias of float)                    |
-| float                                      |
-| numeric (alias of float)                   |
-| int                                        |
-| integer (alias of int)                     |
-| string                                     |
-| array                                      |
-| array<value=type>                          |
-| array<key=type, value=type>                |
-| DateTime                                   |
-| DateTime<format='Y-m-d H:i:d'>             |
-| DateTime<timezone='Europe/Paris'>          |
-| DateTimeImmutable                          |
-| DateTimeImmutable<format='Y-m-d H:i:d'>    |
-| DateTimeImmutable<timezone='Europe/Paris'> |
-| Fully\Qualified\Class\Name                 |
+| Type                                         | Description                          |
+| -------------------------------------------- | ------------------------------------ |
+| `bool`                                       | Boolean type                         |
+| `boolean`                                    | Alias of bool                        |
+| `double`                                     | Alias of float                       |
+| `float`                                      | Float type                           |
+| `numeric`                                    | Alias of float                       |
+| `int`                                        | Integer type                         |
+| `integer`                                    | Alias of int                         |
+| `string`                                     | String type                          |
+| `array`                                      | Array type                           |
+| `array<value=type>`                          | Array type with typed value          |
+| `array<key=type, value=type>`                | Array type with typed key and value  |
+| `DateTime`                                   | DateTime type                        |
+| `DateTime<format='Y-m-d H:i:d'>`             | DateTime type with format            |
+| `DateTime<timezone='Europe/Paris'>`          | DateTime type with timezone          |
+| `DateTimeImmutable`                          | DateTimeImmutable type               |
+| `DateTimeImmutable<format='Y-m-d H:i:d'>`    | DateTimeImmutable type with format   |
+| `DateTimeImmutable<timezone='Europe/Paris'>` | DateTimeImmutable type with timezone |
+| `Fully\Qualified\Class\Name`                 | Object type                          |
 
 ## Custom
 
