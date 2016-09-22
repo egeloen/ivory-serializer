@@ -11,6 +11,7 @@
 
 namespace Ivory\Serializer\Mapping\Loader;
 
+use Ivory\Serializer\Exclusion\ExclusionPolicy;
 use Ivory\Serializer\Mapping\ClassMetadataInterface;
 use Ivory\Serializer\Mapping\PropertyMetadata;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
@@ -82,10 +83,15 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
             ));
         }
 
+        $policy = $this->getExclusionPolicy($data);
+
         foreach ($data['properties'] as $property => $value) {
             $propertyMetadata = $classMetadata->getProperty($property) ?: new PropertyMetadata($property);
             $this->loadPropertyMetadata($propertyMetadata, $value);
-            $classMetadata->addProperty($propertyMetadata);
+
+            if ($this->isPropertyExposed($propertyMetadata, $policy)) {
+                $classMetadata->addProperty($propertyMetadata);
+            }
         }
     }
 
@@ -105,6 +111,14 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
 
         if (array_key_exists('type', $data)) {
             $this->loadPropertyMetadataType($propertyMetadata, $data['type']);
+        }
+
+        if (array_key_exists('exclude', $data)) {
+            $this->loadPropertyMetadataExclude($propertyMetadata, $data['exclude']);
+        }
+
+        if (array_key_exists('expose', $data)) {
+            $this->loadPropertyMetadataExpose($propertyMetadata, $data['expose']);
         }
 
         if (array_key_exists('since', $data)) {
@@ -160,6 +174,38 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
         }
 
         $propertyMetadata->setType($this->typeParser->parse($type));
+    }
+
+    /**
+     * @param PropertyMetadataInterface $propertyMetadata
+     * @param string                    $exclude
+     */
+    private function loadPropertyMetadataExclude(PropertyMetadataInterface $propertyMetadata, $exclude)
+    {
+        if (!is_bool($exclude)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property exclude must be a boolean, got "%s".',
+                is_object($exclude) ? get_class($exclude) : gettype($exclude)
+            ));
+        }
+
+        $propertyMetadata->setExcluded($exclude);
+    }
+
+    /**
+     * @param PropertyMetadataInterface $propertyMetadata
+     * @param string                    $expose
+     */
+    private function loadPropertyMetadataExpose(PropertyMetadataInterface $propertyMetadata, $expose)
+    {
+        if (!is_bool($expose)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property expose must be a boolean, got "%s".',
+                is_object($expose) ? get_class($expose) : gettype($expose)
+            ));
+        }
+
+        $propertyMetadata->setExposed($expose);
     }
 
     /**
@@ -262,5 +308,53 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
 
             $propertyMetadata->addGroup($group);
         }
+    }
+
+    /**
+     * @param mixed[] $data
+     *
+     * @return string|null
+     */
+    private function getExclusionPolicy($data)
+    {
+        if (!isset($data['exclusion_policy'])) {
+            return ExclusionPolicy::NONE;
+        }
+
+        $policy = $data['exclusion_policy'];
+
+        if (!is_string($policy)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping exclusion policy must be "%s" or "%s", got "%s".',
+                ExclusionPolicy::ALL,
+                ExclusionPolicy::NONE,
+                is_object($policy) ? get_class($policy) : gettype($policy)
+            ));
+        }
+
+        $policy = strtolower(trim($policy));
+
+        if ($policy !== ExclusionPolicy::ALL && $policy !== ExclusionPolicy::NONE) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping exclusion policy must be "%s" or "%s", got "%s".',
+                ExclusionPolicy::ALL,
+                ExclusionPolicy::NONE,
+                $policy
+            ));
+        }
+
+        return $policy;
+    }
+
+    /**
+     * @param PropertyMetadataInterface $property
+     * @param string                    $policy
+     *
+     * @return bool
+     */
+    private function isPropertyExposed(PropertyMetadataInterface $property, $policy)
+    {
+        return ($policy === ExclusionPolicy::ALL && $property->isExposed())
+            || ($policy === ExclusionPolicy::NONE && !$property->isExcluded());
     }
 }

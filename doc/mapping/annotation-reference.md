@@ -5,9 +5,13 @@ namespace Acme\Model;
 
 use Ivory\Serializer\Mapping\Annotation as Serializer;
 
+/**
+ * @Serializer\ExclusionPolicy("all")
+ */
 class User
 {
     /**
+     * @Serializer\Expose
      * @Serializer\Alias("user_name")
      * @Serializer\Type("string")
      * @Serializer\Groups({"group1", "group2"})
@@ -17,6 +21,7 @@ class User
     public $username;
     
     /**
+     * @Serializer\Exclude
      * @Serializer\Type("array<key=int, value=Acme\Model\User>")
      * @Serializer\MaxDepth(2)
      */

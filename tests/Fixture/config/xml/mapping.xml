@@ -21,6 +21,25 @@
         <property name="type" type="Ivory\Tests\Serializer\Fixture\ScalarFixture" />
     </class>
 
+    <class name="Ivory\Tests\Serializer\Fixture\DateTimeFixture">
+        <property name="dateTime" type="DateTime" />
+        <property name="formattedDateTime" type="DateTime&lt;format='Y-m-d, H:i:s, P'&gt;" />
+        <property name="timeZonedDateTime" type="DateTime&lt;timezone='Europe/Paris'&gt;" />
+        <property name="immutableDateTime" type="DateTimeImmutable" />
+        <property name="formattedImmutableDateTime" type="DateTimeImmutable&lt;format='Y-m-d, H:i:s, P'&gt;" />
+        <property name="timeZonedImmutableDateTime" type="DateTimeImmutable&lt;timezone='Europe/Paris'&gt;" />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\ExcludeFixture" exclusion-policy="all">
+        <property name="foo" exclude="true" />
+        <property name="bar" />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\ExposeFixture" exclusion-policy="none">
+        <property name="foo" expose="true" />
+        <property name="bar" />
+    </class>
+
     <class name="Ivory\Tests\Serializer\Fixture\MaxDepthFixture">
         <property
             name="parent"

@@ -35,6 +35,46 @@
             }
         }
     },
+    "Ivory\\Tests\\Serializer\\Fixture\\DateTimeFixture": {
+        "properties": {
+            "dateTime": {
+                "type": "DateTime"
+            },
+            "formattedDateTime": {
+                "type": "DateTime<format='Y-m-d, H:i:s, P'>"
+            },
+            "timeZonedDateTime": {
+                "type": "DateTime<timezone='Europe/Paris'>"
+            },
+            "immutableDateTime": {
+                "type": "DateTimeImmutable"
+            },
+            "formattedImmutableDateTime": {
+                "type": "DateTimeImmutable<format='Y-m-d, H:i:s, P'>"
+            },
+            "timeZonedImmutableDateTime": {
+                "type": "DateTimeImmutable<timezone='Europe/Paris'>"
+            }
+        }
+    },
+    "Ivory\\Tests\\Serializer\\Fixture\\ExcludeFixture": {
+        "exclusion_policy": "none",
+        "properties": {
+            "foo": {
+                "exclude": true
+            },
+            "bar": {}
+        }
+    },
+    "Ivory\\Tests\\Serializer\\Fixture\\ExposeFixture": {
+        "exclusion_policy": "all",
+        "properties": {
+            "foo": {
+                "expose": true
+            },
+            "bar": {}
+        }
+    },
     "Ivory\\Tests\\Serializer\\Fixture\\MaxDepthFixture": {
         "properties": {
             "parent": {

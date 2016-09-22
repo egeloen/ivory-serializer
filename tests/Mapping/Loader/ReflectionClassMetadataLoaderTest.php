@@ -14,6 +14,9 @@ namespace Ivory\Tests\Serializer\Mapping\Loader;
 use Ivory\Serializer\Mapping\ClassMetadata;
 use Ivory\Serializer\Mapping\Loader\ReflectionClassMetadataLoader;
 use Ivory\Tests\Serializer\Fixture\ArrayFixture;
+use Ivory\Tests\Serializer\Fixture\DateTimeFixture;
+use Ivory\Tests\Serializer\Fixture\ExcludeFixture;
+use Ivory\Tests\Serializer\Fixture\ExposeFixture;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
 use Ivory\Tests\Serializer\Fixture\ScalarFixture;
@@ -48,6 +51,41 @@ class ReflectionClassMetadataLoaderTest extends AbstractReflectionClassMetadataL
             'int'    => [],
             'string' => [],
             'type'   => [],
+        ]);
+    }
+
+    public function testDateTimeFixture()
+    {
+        $classMetadata = new ClassMetadata(DateTimeFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'dateTime'                   => [],
+            'formattedDateTime'          => [],
+            'timeZonedDateTime'          => [],
+            'immutableDateTime'          => [],
+            'formattedImmutableDateTime' => [],
+            'timeZonedImmutableDateTime' => [],
+        ]);
+    }
+
+    public function testExcludeFixture()
+    {
+        $classMetadata = new ClassMetadata(ExcludeFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'bar' => [],
+        ]);
+    }
+
+    public function testExposeFixture()
+    {
+        $classMetadata = new ClassMetadata(ExposeFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'foo' => [],
         ]);
     }
 

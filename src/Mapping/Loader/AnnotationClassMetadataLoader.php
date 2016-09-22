@@ -14,6 +14,9 @@ namespace Ivory\Serializer\Mapping\Loader;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Ivory\Serializer\Mapping\Annotation\Alias;
+use Ivory\Serializer\Mapping\Annotation\Exclude;
+use Ivory\Serializer\Mapping\Annotation\ExclusionPolicy;
+use Ivory\Serializer\Mapping\Annotation\Expose;
 use Ivory\Serializer\Mapping\Annotation\Groups;
 use Ivory\Serializer\Mapping\Annotation\MaxDepth;
 use Ivory\Serializer\Mapping\Annotation\Since;
@@ -40,6 +43,22 @@ class AnnotationClassMetadataLoader extends AbstractReflectionClassMetadataLoade
         parent::__construct($typeParser);
 
         $this->reader = $reader ?: new AnnotationReader();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function loadClass(\ReflectionClass $class)
+    {
+        $definition = parent::loadClass($class);
+
+        foreach ($this->reader->getClassAnnotations($class) as $annotation) {
+            if ($annotation instanceof ExclusionPolicy) {
+                $definition['exclusion_policy'] = $annotation->getPolicy();
+            }
+        }
+
+        return $definition;
     }
 
     /**
@@ -76,6 +95,10 @@ class AnnotationClassMetadataLoader extends AbstractReflectionClassMetadataLoade
                 $definition['alias'] = $annotation->getAlias();
             } elseif ($annotation instanceof Type) {
                 $definition['type'] = $annotation->getType();
+            } elseif ($annotation instanceof Expose) {
+                $definition['expose'] = true;
+            } elseif ($annotation instanceof Exclude) {
+                $definition['exclude'] = true;
             } elseif ($annotation instanceof Since) {
                 $definition['since'] = $annotation->getVersion();
             } elseif ($annotation instanceof Until) {

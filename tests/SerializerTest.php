@@ -17,6 +17,8 @@ use Ivory\Serializer\Format;
 use Ivory\Serializer\Serializer;
 use Ivory\Tests\Serializer\Fixture\ArrayFixture;
 use Ivory\Tests\Serializer\Fixture\DateTimeFixture;
+use Ivory\Tests\Serializer\Fixture\ExcludeFixture;
+use Ivory\Tests\Serializer\Fixture\ExposeFixture;
 use Ivory\Tests\Serializer\Fixture\FixtureInterface;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
@@ -107,6 +109,14 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $dateTimeFixture->formattedImmutableDateTime = $dateTimeImmutable;
         $dateTimeFixture->timeZonedImmutableDateTime = $timeZonedDateTimeImmutable;
 
+        $excludeFixture = new ExcludeFixture();
+        $excludeFixture->foo = 'oof';
+        $excludeFixture->bar = 'rab';
+
+        $exposeFixture = new ExposeFixture();
+        $exposeFixture->foo = 'oof';
+        $exposeFixture->bar = 'rab';
+
         $emptyGroupFixture = new GroupFixture();
         $groupFixture = clone $emptyGroupFixture;
         $groupFixture->setFoo('oof');
@@ -166,6 +176,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['object_array_empty', $emptyArrayFixture],
             ['object_date_time', $dateTimeFixture],
             ['object_date_time_empty', $emptyDateTimeFixture],
+            ['object_exclude', $excludeFixture],
+            ['object_expose', $exposeFixture],
             ['object_groups', $groupFixture],
             ['object_groups_empty', $emptyGroupFixture],
             ['object_groups_group1', $groupFixture, (new Context())->setGroups(['group1'])],

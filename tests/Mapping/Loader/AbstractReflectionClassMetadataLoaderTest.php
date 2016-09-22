@@ -13,6 +13,9 @@ namespace Ivory\Tests\Serializer\Mapping\Loader;
 
 use Ivory\Serializer\Mapping\ClassMetadata;
 use Ivory\Tests\Serializer\Fixture\ArrayFixture;
+use Ivory\Tests\Serializer\Fixture\DateTimeFixture;
+use Ivory\Tests\Serializer\Fixture\ExcludeFixture;
+use Ivory\Tests\Serializer\Fixture\ExposeFixture;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
@@ -32,6 +35,41 @@ abstract class AbstractReflectionClassMetadataLoaderTest extends AbstractClassMe
             'objects'    => ['type' => 'array'],
             'types'      => ['type' => 'array'],
             'inceptions' => ['type' => 'array'],
+        ]);
+    }
+
+    public function testDateTimeFixture()
+    {
+        $classMetadata = new ClassMetadata(DateTimeFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'dateTime'                   => ['type' => 'DateTime'],
+            'formattedDateTime'          => ['type' => 'DateTime'],
+            'timeZonedDateTime'          => ['type' => 'DateTime'],
+            'immutableDateTime'          => ['type' => 'DateTimeImmutable'],
+            'formattedImmutableDateTime' => ['type' => 'DateTimeImmutable'],
+            'timeZonedImmutableDateTime' => ['type' => 'DateTimeImmutable'],
+        ]);
+    }
+
+    public function testExcludeFixture()
+    {
+        $classMetadata = new ClassMetadata(ExcludeFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'bar' => ['type' => 'string'],
+        ]);
+    }
+
+    public function testExposeFixture()
+    {
+        $classMetadata = new ClassMetadata(ExposeFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'foo' => ['type' => 'string'],
         ]);
     }
 

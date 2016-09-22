@@ -47,6 +47,26 @@ interface PropertyMetadataInterface extends MetadataInterface
     public function setType(TypeMetadataInterface $type = null);
 
     /**
+     * @return bool|null
+     */
+    public function isExposed();
+
+    /**
+     * @param bool|null $exposed
+     */
+    public function setExposed($exposed);
+
+    /**
+     * @return bool|null
+     */
+    public function isExcluded();
+
+    /**
+     * @param bool|null $excluded
+     */
+    public function setExcluded($excluded);
+
+    /**
      * @return bool
      */
     public function hasSinceVersion();

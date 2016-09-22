@@ -24,6 +24,10 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
         $data = [];
         $xml = simplexml_import_dom($this->loadDocument($file));
 
+        if (isset($xml['exclusion-policy'])) {
+            $data['exclusion_policy'] = (string) $xml['exclusion-policy'];
+        }
+
         foreach ($xml->class as $class) {
             $properties = [];
 
@@ -52,6 +56,14 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
 
         if (isset($element['type'])) {
             $property['type'] = (string) $element['type'];
+        }
+
+        if (isset($element['exclude']) && $element['exclude'] === 'true') {
+            $property['exclude'] = true;
+        }
+
+        if (isset($element['expose']) && $element['expose'] === 'true') {
+            $property['expose'] = true;
         }
 
         if (isset($element['since'])) {

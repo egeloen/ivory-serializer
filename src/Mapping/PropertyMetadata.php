@@ -32,6 +32,16 @@ class PropertyMetadata implements PropertyMetadataInterface
     private $type;
 
     /**
+     * @var bool|null
+     */
+    private $exposed;
+
+    /**
+     * @var bool|null
+     */
+    private $excluded;
+
+    /**
      * @var string|null
      */
     private $since;
@@ -121,6 +131,38 @@ class PropertyMetadata implements PropertyMetadataInterface
     public function setType(TypeMetadataInterface $type = null)
     {
         $this->type = $type;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isExposed()
+    {
+        return $this->exposed;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setExposed($exposed)
+    {
+        $this->exposed = $exposed;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isExcluded()
+    {
+        return $this->excluded;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setExcluded($excluded)
+    {
+        $this->excluded = $excluded;
     }
 
     /**

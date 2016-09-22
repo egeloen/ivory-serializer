@@ -1,7 +1,7 @@
 # Exclusion
 
-If you want to exclude fields based on groups or API version or restrict depth of the (de)-serialization, you can use 
-the exclusion strategy.
+If you want to exclude fields based on mapping, groups, API version or restrict depth of the (de)-serialization, you 
+can use the exclusion strategy.
 
 ## Context
 
@@ -22,6 +22,18 @@ $json = $serializer->serialize(new \stdClass(), Format::JSON, $context);
 // or
 $object = $serializer->deserialize($json, \stdClass::class, Format::JSON, $context);
 ```
+
+## Policy
+
+The exclusion policy is an exclusion based on your mapping. You define a policy for a class and then, you configure if 
+a property should be excluded or exposed.
+
+The available policy are:
+ - none: All fields are exposed (default).
+ - all: All fields are excluded.
+
+Then, the serializer will use your metadata [mapping](/doc/mapping.md) in order to expose/exclude your object 
+properties.
 
 ## Groups
 
