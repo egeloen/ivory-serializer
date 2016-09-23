@@ -299,7 +299,7 @@ class PropertyMetadata implements PropertyMetadataInterface
             $this->since,
             $this->until,
             $this->maxDepth,
-            $this->groups
+            $this->groups,
         ]);
     }
 

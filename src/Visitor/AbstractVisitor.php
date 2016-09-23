@@ -141,18 +141,19 @@ abstract class AbstractVisitor implements VisitorInterface
     public function visitObjectProperty($data, PropertyMetadataInterface $property, ContextInterface $context)
     {
         $visited = false;
-        $this->enterScope($data, $property, $context);
 
         if (!$this->exclusionStrategy->skipProperty($property, $context)) {
+            $this->enterScope($data, $property, $context);
+
             $visited = $this->doVisitObjectProperty(
                 $data,
-                $this->namingStrategy->convert($property->hasAlias() ? $property->getAlias() : $property->getName()),
+                $property->hasAlias() ? $property->getAlias() : $this->namingStrategy->convert($property->getName()),
                 $property,
                 $context
             );
-        }
 
-        $this->leaveScope($context);
+            $this->leaveScope($context);
+        }
 
         return $visited;
     }

@@ -22,17 +22,12 @@ use Ivory\Serializer\Mapping\Loader\ReflectionClassMetadataLoader;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class ClassMetadataFactory implements ClassMetadataFactoryInterface
+class ClassMetadataFactory extends AbstractClassMetadataFactory
 {
     /**
      * @var ClassMetadataLoaderInterface
      */
     private $loader;
-
-    /**
-     * @var ClassMetadataInterface[]
-     */
-    private $classMetadatas = [];
 
     /**
      * @param ClassMetadataLoaderInterface $loader
@@ -61,12 +56,8 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getClassMetadata($class)
+    protected function fetchClassMetadata($class)
     {
-        if (array_key_exists($class, $this->classMetadatas)) {
-            return $this->classMetadatas[$class];
-        }
-
         $classMetadata = new ClassMetadata($class);
         $found = false;
 
@@ -77,7 +68,7 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
 
         $found = $this->loader->loadClassMetadata($classMetadata) || $found;
 
-        return $this->classMetadatas[$class] = $found ? $classMetadata : null;
+        return $found ? $classMetadata : null;
     }
 
     /**

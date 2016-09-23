@@ -15,7 +15,7 @@ use Ivory\Serializer\Mapping\Annotation as Serializer;
 
 /**
  * @Serializer\Order("DESC")
- * 
+ *
  * @author GeLo <geloen.eric@gmail.com>
  */
 class DescFixture implements FixtureInterface

@@ -45,9 +45,13 @@ abstract class AbstractGenericVisitor extends AbstractVisitor
      */
     public function visitArray($data, TypeMetadataInterface $type, ContextInterface $context)
     {
-        $this->enterScope();
-        $result = parent::visitArray($data, $type, $context);
-        $this->leaveScope();
+        $result = [];
+
+        if (!empty($data)) {
+            $this->enterScope();
+            $result = parent::visitArray($data, $type, $context);
+            $this->leaveScope();
+        }
 
         return $this->visitData($result, $type, $context);
     }

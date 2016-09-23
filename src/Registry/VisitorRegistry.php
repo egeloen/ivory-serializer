@@ -11,11 +11,11 @@
 
 namespace Ivory\Serializer\Registry;
 
-use Ivory\Serializer\Accessor\SymfonyAccessor;
+use Ivory\Serializer\Accessor\ReflectionAccessor;
 use Ivory\Serializer\Direction;
 use Ivory\Serializer\Format;
 use Ivory\Serializer\Instantiator\DoctrineInstantiator;
-use Ivory\Serializer\Mutator\SymfonyMutator;
+use Ivory\Serializer\Mutator\ReflectionMutator;
 use Ivory\Serializer\Visitor\Json\JsonDeserializationVisitor;
 use Ivory\Serializer\Visitor\Json\JsonSerializationVisitor;
 use Ivory\Serializer\Visitor\VisitorInterface;
@@ -54,8 +54,8 @@ class VisitorRegistry implements VisitorRegistryInterface
     public static function create(array $visitors = [])
     {
         $instantiator = new DoctrineInstantiator();
-        $accessor = new SymfonyAccessor();
-        $mutator = new SymfonyMutator();
+        $accessor = new ReflectionAccessor();
+        $mutator = new ReflectionMutator();
 
         return new static(array_replace_recursive([
             Direction::SERIALIZATION => [

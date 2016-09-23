@@ -16,7 +16,7 @@ use Psr\Cache\CacheItemPoolInterface;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class CacheClassMetadataFactory implements ClassMetadataFactoryInterface
+class CacheClassMetadataFactory extends AbstractClassMetadataFactory
 {
     /**
      * @var ClassMetadataFactoryInterface
@@ -41,7 +41,7 @@ class CacheClassMetadataFactory implements ClassMetadataFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getClassMetadata($class)
+    protected function fetchClassMetadata($class)
     {
         $item = $this->pool->getItem(strtr($class, '\\', '_'));
 
