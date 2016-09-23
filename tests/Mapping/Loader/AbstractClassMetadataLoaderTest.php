@@ -16,11 +16,14 @@ use Ivory\Serializer\Mapping\ClassMetadataInterface;
 use Ivory\Serializer\Mapping\Loader\ClassMetadataLoaderInterface;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
 use Ivory\Tests\Serializer\Fixture\ArrayFixture;
+use Ivory\Tests\Serializer\Fixture\AscFixture;
 use Ivory\Tests\Serializer\Fixture\DateTimeFixture;
+use Ivory\Tests\Serializer\Fixture\DescFixture;
 use Ivory\Tests\Serializer\Fixture\ExcludeFixture;
 use Ivory\Tests\Serializer\Fixture\ExposeFixture;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
+use Ivory\Tests\Serializer\Fixture\OrderFixture;
 use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
 
@@ -132,6 +135,30 @@ abstract class AbstractClassMetadataLoaderTest extends \PHPUnit_Framework_TestCa
             'baz' => ['groups' => ['group2']],
             'bat' => [],
         ]);
+    }
+
+    public function testOrderFixture()
+    {
+        $classMetadata = new ClassMetadata(OrderFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertSame(['bar', 'foo'], array_keys($classMetadata->getProperties()));
+    }
+
+    public function testAscFixture()
+    {
+        $classMetadata = new ClassMetadata(AscFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertSame(['bar', 'foo'], array_keys($classMetadata->getProperties()));
+    }
+
+    public function testDescFixture()
+    {
+        $classMetadata = new ClassMetadata(DescFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertSame(['foo', 'bar'], array_keys($classMetadata->getProperties()));
     }
 
     public function testVersionFixture()

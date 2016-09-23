@@ -129,6 +129,11 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testSerialize()
+    {
+        $this->assertEquals($this->classMetadata, unserialize(serialize($this->classMetadata)));
+    }
+
     /**
      * @param string $name
      *

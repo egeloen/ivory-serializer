@@ -30,12 +30,12 @@
         <property name="timeZonedImmutableDateTime" type="DateTimeImmutable&lt;timezone='Europe/Paris'&gt;" />
     </class>
 
-    <class name="Ivory\Tests\Serializer\Fixture\ExcludeFixture" exclusion-policy="all">
+    <class name="Ivory\Tests\Serializer\Fixture\ExcludeFixture" exclusion-policy="none">
         <property name="foo" exclude="true" />
         <property name="bar" />
     </class>
 
-    <class name="Ivory\Tests\Serializer\Fixture\ExposeFixture" exclusion-policy="none">
+    <class name="Ivory\Tests\Serializer\Fixture\ExposeFixture" exclusion-policy="all">
         <property name="foo" expose="true" />
         <property name="bar" />
     </class>
@@ -75,6 +75,21 @@
         </property>
 
         <property name="bat" />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\OrderFixture" order="bar, foo">
+        <property name="foo" />
+        <property name="bar" />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\AscFixture" order="ASC">
+        <property name="bar" />
+        <property name="foo" />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\DescFixture" order="DESC">
+        <property name="foo" />
+        <property name="bar" />
     </class>
 
     <class name="Ivory\Tests\Serializer\Fixture\VersionFixture">

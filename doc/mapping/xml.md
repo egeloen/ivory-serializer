@@ -1,4 +1,4 @@
-# XML Reference
+# XML Mapping
 
 ``` xml
 <?xml version="1.0" ?>
@@ -9,7 +9,7 @@
     xsi:schemaLocation="http://egeloen.fr/schema/ivory-serializer
                         http://egeloen.fr/schema/ivory-serializer/mapping-1.0.xsd"
 >
-    <class name="Acme\Model\User" exclusion-policy="all">
+    <class name="Acme\Model\User" exclusion-policy="all" order="friends, username">
         <property 
             name="username" 
             alias="identifier" 
@@ -31,3 +31,6 @@
     </class>
 </serializer>
 ```
+
+If you want to learn more about each nodes and attributes, you can read this 
+[documentation](/doc/mapping/mapping.md).

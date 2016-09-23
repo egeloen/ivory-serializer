@@ -1,9 +1,10 @@
-# JSON Reference 
+# JSON Mapping 
 
 ``` json
 {
     "Acme\\Model\\User": {
         "exclusion_policy": "all",
+        "order": ["friends", "username"]
         "properties": {
             "username": {
                 "alias": "user_name",
@@ -22,3 +23,5 @@
     }
 }
 ```
+
+If you want to learn more about each properties, you can read this [documentation](/doc/mapping/mapping.md).

@@ -89,4 +89,9 @@ class TypeMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($this->typeMetadata->getOption($option));
         $this->assertSame('bat', $this->typeMetadata->getOption($option, 'bat'));
     }
+
+    public function testSerialize()
+    {
+        $this->assertEquals($this->typeMetadata, unserialize(serialize($this->typeMetadata)));
+    }
 }

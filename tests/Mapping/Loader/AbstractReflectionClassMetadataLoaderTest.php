@@ -110,4 +110,16 @@ abstract class AbstractReflectionClassMetadataLoaderTest extends AbstractClassMe
             'bat' => ['type' => 'string'],
         ]);
     }
+
+    public function testOrderFixture()
+    {
+    }
+
+    public function testAscFixture()
+    {
+    }
+
+    public function testDescFixture()
+    {
+    }
 }

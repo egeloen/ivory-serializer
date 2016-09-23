@@ -208,7 +208,7 @@ class PropertyMetadata implements PropertyMetadataInterface
      */
     public function getGroups()
     {
-        return array_values($this->groups);
+        return $this->groups;
     }
 
     /**
@@ -254,6 +254,7 @@ class PropertyMetadata implements PropertyMetadataInterface
     public function removeGroup($group)
     {
         unset($this->groups[array_search($group, $this->groups, true)]);
+        $this->groups = array_values($this->groups);
     }
 
     /**
@@ -261,28 +262,60 @@ class PropertyMetadata implements PropertyMetadataInterface
      */
     public function merge(PropertyMetadataInterface $propertyMetadata)
     {
-        if (!$this->hasAlias() && $propertyMetadata->hasAlias()) {
+        if ($propertyMetadata->hasAlias()) {
             $this->setAlias($propertyMetadata->getAlias());
         }
 
-        if (!$this->hasType() && $propertyMetadata->hasType()) {
+        if ($propertyMetadata->hasType()) {
             $this->setType($propertyMetadata->getType());
         }
 
-        if (!$this->hasSinceVersion() && $propertyMetadata->hasSinceVersion()) {
+        if ($propertyMetadata->hasSinceVersion()) {
             $this->setSinceVersion($propertyMetadata->getSinceVersion());
         }
 
-        if (!$this->hasUntilVersion() && $propertyMetadata->hasUntilVersion()) {
+        if ($propertyMetadata->hasUntilVersion()) {
             $this->setUntilVersion($propertyMetadata->getUntilVersion());
         }
 
-        if (!$this->hasMaxDepth() && $propertyMetadata->hasMaxDepth()) {
+        if ($propertyMetadata->hasMaxDepth()) {
             $this->setMaxDepth($propertyMetadata->getMaxDepth());
         }
 
         foreach ($propertyMetadata->getGroups() as $group) {
             $this->addGroup($group);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return serialize([
+            $this->name,
+            $this->alias,
+            $this->type,
+            $this->since,
+            $this->until,
+            $this->maxDepth,
+            $this->groups
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized)
+    {
+        list(
+            $this->name,
+            $this->alias,
+            $this->type,
+            $this->since,
+            $this->until,
+            $this->maxDepth,
+            $this->groups
+        ) = unserialize($serialized);
     }
 }

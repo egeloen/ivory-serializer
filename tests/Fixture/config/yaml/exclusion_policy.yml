@@ -1,0 +1,5 @@
+Ivory\Tests\Serializer\Fixture\ExcludeFixture:
+    exclusion_policy: invalid
+    properties:
+        foo:
+            exclude: true

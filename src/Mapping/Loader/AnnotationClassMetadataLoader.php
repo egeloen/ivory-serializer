@@ -19,6 +19,7 @@ use Ivory\Serializer\Mapping\Annotation\ExclusionPolicy;
 use Ivory\Serializer\Mapping\Annotation\Expose;
 use Ivory\Serializer\Mapping\Annotation\Groups;
 use Ivory\Serializer\Mapping\Annotation\MaxDepth;
+use Ivory\Serializer\Mapping\Annotation\Order;
 use Ivory\Serializer\Mapping\Annotation\Since;
 use Ivory\Serializer\Mapping\Annotation\Type;
 use Ivory\Serializer\Mapping\Annotation\Until;
@@ -55,6 +56,8 @@ class AnnotationClassMetadataLoader extends AbstractReflectionClassMetadataLoade
         foreach ($this->reader->getClassAnnotations($class) as $annotation) {
             if ($annotation instanceof ExclusionPolicy) {
                 $definition['exclusion_policy'] = $annotation->getPolicy();
+            } elseif ($annotation instanceof Order) {
+                $definition['order'] = $annotation->getOrder();
             }
         }
 

@@ -1,0 +1,9 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\ExcludeFixture": {
+        "properties": {
+            "foo": {
+                "exclude": "invalid"
+            }
+        }
+    }
+}

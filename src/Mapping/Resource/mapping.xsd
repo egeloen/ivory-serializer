@@ -21,6 +21,7 @@
 
         <xsd:attribute name="name" type="xsd:string" use="required" />
         <xsd:attribute name="exclusion-policy" type="xsd:string" />
+        <xsd:attribute name="order" type="xsd:string" />
     </xsd:complexType>
 
     <xsd:complexType name="property">

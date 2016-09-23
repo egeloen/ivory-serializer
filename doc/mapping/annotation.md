@@ -1,4 +1,4 @@
-# Annotation Reference
+# Annotation Mapping
 
 ``` php
 namespace Acme\Model;
@@ -7,6 +7,7 @@ use Ivory\Serializer\Mapping\Annotation as Serializer;
 
 /**
  * @Serializer\ExclusionPolicy("all")
+ * @Serializer\Order({"friends", "username"})
  */
 class User
 {
@@ -31,3 +32,5 @@ class User
 
 Here you can find all available annotations directly configured on public properties. Obviously, it also works if you 
 encapsulate your data with getter/setter... You can also put annotations on methods. 
+
+Additionally, if you want to learn more about each annotations, you can read this [documentation](/doc/mapping/mapping.md).

@@ -132,15 +132,26 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
     public function testMerge()
     {
         $propertyMetadata = new PropertyMetadata('foo');
+        $propertyMetadata->setAlias($alias = 'bar');
         $propertyMetadata->setType($type = $this->createTypeMetadataMock());
+        $propertyMetadata->setSinceVersion($sinceVersion = '1.0');
+        $propertyMetadata->setUntilVersion($untilVersion = '2.0');
         $propertyMetadata->setMaxDepth($maxDepth = 1);
         $propertyMetadata->setGroups($groups = ['group1', 'group2']);
 
         $this->propertyMetadata->merge($propertyMetadata);
 
+        $this->assertSame($alias, $this->propertyMetadata->getAlias());
         $this->assertSame($type, $this->propertyMetadata->getType());
+        $this->assertSame($sinceVersion, $this->propertyMetadata->getSinceVersion());
+        $this->assertSame($untilVersion, $this->propertyMetadata->getUntilVersion());
         $this->assertSame($maxDepth, $this->propertyMetadata->getMaxDepth());
         $this->assertSame($groups, $this->propertyMetadata->getGroups());
+    }
+
+    public function testSerialize()
+    {
+        $this->assertEquals($this->propertyMetadata, unserialize(serialize($this->propertyMetadata)));
     }
 
     /**

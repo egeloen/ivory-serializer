@@ -119,6 +119,28 @@ class TypeMetadata implements TypeMetadataInterface
     /**
      * {@inheritdoc}
      */
+    public function serialize()
+    {
+        return serialize([
+            $this->name,
+            $this->options,
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized)
+    {
+        list(
+            $this->name,
+            $this->options
+        ) = unserialize($serialized);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function __toString()
     {
         $name = (string) $this->getName();

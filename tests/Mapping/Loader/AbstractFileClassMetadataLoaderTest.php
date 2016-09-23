@@ -12,8 +12,11 @@
 namespace Ivory\Tests\Serializer\Mapping\Loader;
 
 use Ivory\Serializer\Mapping\ClassMetadata;
+use Ivory\Tests\Serializer\Fixture\ExcludeFixture;
+use Ivory\Tests\Serializer\Fixture\ExposeFixture;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
+use Ivory\Tests\Serializer\Fixture\OrderFixture;
 use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
 
@@ -45,6 +48,60 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
     {
         $this->setLoader($this->createLoader('malformed'));
         $this->loadClassMetadata(new ClassMetadata(\stdClass::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testExclusionPolicy()
+    {
+        $this->setLoader($this->createLoader('exclusion_policy'));
+        $this->loadClassMetadata(new ClassMetadata(ExcludeFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testExclude()
+    {
+        $this->setLoader($this->createLoader('exclude'));
+        $this->loadClassMetadata(new ClassMetadata(ExcludeFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testExpose()
+    {
+        $this->setLoader($this->createLoader('expose'));
+        $this->loadClassMetadata(new ClassMetadata(ExposeFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testOrder()
+    {
+        $this->setLoader($this->createLoader('order'));
+        $this->loadClassMetadata(new ClassMetadata(OrderFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testOrderEmpty()
+    {
+        $this->setLoader($this->createLoader('order_empty'));
+        $this->loadClassMetadata(new ClassMetadata(OrderFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testOrderEmptyProperty()
+    {
+        $this->setLoader($this->createLoader('order_empty_property'));
+        $this->loadClassMetadata(new ClassMetadata(OrderFixture::class));
     }
 
     /**

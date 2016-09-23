@@ -53,4 +53,12 @@ class XmlClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
         $this->setLoader($this->createLoader('xsd'));
         $this->loadClassMetadata(new ClassMetadata(\stdClass::class));
     }
+
+    public function testExclude()
+    {
+    }
+
+    public function testExpose()
+    {
+    }
 }

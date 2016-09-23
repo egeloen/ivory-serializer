@@ -1,0 +1,4 @@
+Ivory\Tests\Serializer\Fixture\OrderFixture:
+    order: [invalid]
+    properties:
+        foo: ~

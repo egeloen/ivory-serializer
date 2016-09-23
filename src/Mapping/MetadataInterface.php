@@ -14,7 +14,7 @@ namespace Ivory\Serializer\Mapping;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-interface MetadataInterface
+interface MetadataInterface extends \Serializable
 {
     /**
      * @return string

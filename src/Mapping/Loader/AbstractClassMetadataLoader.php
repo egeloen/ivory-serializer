@@ -71,8 +71,6 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
     /**
      * @param ClassMetadataInterface $classMetadata
      * @param mixed[]                $data
-     *
-     * @return bool
      */
     private function doLoadClassMetadata(ClassMetadataInterface $classMetadata, array $data)
     {
@@ -83,6 +81,7 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
             ));
         }
 
+        $properties = $classMetadata->getProperties();
         $policy = $this->getExclusionPolicy($data);
 
         foreach ($data['properties'] as $property => $value) {
@@ -90,9 +89,15 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
             $this->loadPropertyMetadata($propertyMetadata, $value);
 
             if ($this->isPropertyMetadataExposed($value, $policy)) {
-                $classMetadata->addProperty($propertyMetadata);
+                $properties[$property] = $propertyMetadata;
             }
         }
+
+        if (($order = $this->getOrder($data, $properties)) !== null) {
+            $properties = $this->sortProperties($properties, $order);
+        }
+
+        $classMetadata->setProperties($properties);
     }
 
     /**
@@ -283,7 +288,7 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
      *
      * @return string|null
      */
-    private function getExclusionPolicy($data)
+    private function getExclusionPolicy(array $data)
     {
         if (!isset($data['exclusion_policy'])) {
             return ExclusionPolicy::NONE;
@@ -312,6 +317,94 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
         }
 
         return $policy;
+    }
+
+    /**
+     * @param mixed[]                     $data
+     * @param PropertyMetadataInterface[] $properties
+     *
+     * @return string|string[]|null
+     */
+    private function getOrder(array $data, array $properties)
+    {
+        if (!isset($data['order'])) {
+            return;
+        }
+
+        $order = $data['order'];
+
+        if (is_string($order)) {
+            $order = trim($order);
+
+            if (empty($order)) {
+                throw new \InvalidArgumentException(
+                    'The mapping order must be an non empty strings or an array of non empty strings.'
+                );
+            }
+
+            if (strcasecmp($order, 'ASC') === 0 || strcasecmp($order, 'DESC') === 0) {
+                return strtoupper($order);
+            }
+
+            $order = explode(',', $order);
+        } elseif (!is_array($order)) {
+            throw new \InvalidArgumentException(
+                'The mapping order must be an non empty strings or an array of non empty strings.'
+            );
+        }
+
+        if (empty($order)) {
+            throw new \InvalidArgumentException(
+                'The mapping order must be an non empty strings or an array of non empty strings.'
+            );
+        }
+
+        foreach ($order as &$property) {
+            if (!is_string($property)) {
+                throw new \InvalidArgumentException(sprintf(
+                    'The mapping order must be an non empty strings or an array of non empty strings, got "%s".',
+                    is_object($property) ? get_class($property) : gettype($property)
+                ));
+            }
+
+            $property = trim($property);
+
+            if (empty($property)) {
+                throw new \InvalidArgumentException(
+                    'The mapping order must be an non empty strings or an array of non empty strings.'
+                );
+            }
+
+            if (!isset($properties[$property])) {
+                throw new \InvalidArgumentException(sprintf(
+                    'The property "%s" defined in the mapping order does not exist.',
+                    $property
+                ));
+            }
+        }
+
+        return $order;
+    }
+
+    /**
+     * @param PropertyMetadataInterface[] $properties
+     * @param string|string[]             $order
+     *
+     * @return PropertyMetadataInterface[]
+     */
+    private function sortProperties(array $properties, $order)
+    {
+        if (is_string($order)) {
+            if ($order === 'ASC') {
+                ksort($properties);
+            } else {
+                krsort($properties);
+            }
+        } elseif (is_array($order)) {
+            $properties = array_merge(array_flip($order), $properties);
+        }
+
+        return $properties;
     }
 
     /**

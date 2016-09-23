@@ -105,6 +105,27 @@
             "bat": {}
         }
     },
+    "Ivory\\Tests\\Serializer\\Fixture\\OrderFixture": {
+        "order": ["bar", "foo"],
+        "properties": {
+            "foo": {},
+            "bar": {}
+        }
+    },
+    "Ivory\\Tests\\Serializer\\Fixture\\AscFixture": {
+        "order": "ASC",
+        "properties": {
+            "bar": {},
+            "foo": {}
+        }
+    },
+    "Ivory\\Tests\\Serializer\\Fixture\\DescFixture": {
+        "order": "DESC",
+        "properties": {
+            "foo": {},
+            "bar": {}
+        }
+    },
     "Ivory\\Tests\\Serializer\\Fixture\\VersionFixture": {
         "properties": {
             "foo": {

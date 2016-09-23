@@ -22,7 +22,7 @@ $json = $serializer->serialize(new AcmeObject(), Format::JSON);
 
 The `serialize` method also accepts a context as third argument which is useful if you want to exclude properties 
 according to groups or API version. If you want to learn more about it, you can read this 
-[documentation](/doc/exclusion.md).
+[documentation](/doc/context.md).
 
 ## Deserialization
 
@@ -38,4 +38,4 @@ $object = $serializer->deserialize('{"foo":"bar"}', AcmeObject::class, Format::J
 
 The `deserialize` method also accepts a context as fourth argument which is useful if you want to exclude properties 
 according to groups or API version. If you want to learn more about it, you can read this 
-[documentation](/doc/exclusion.md).
+[documentation](/doc/context.md).

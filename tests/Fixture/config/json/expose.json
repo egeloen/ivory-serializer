@@ -1,0 +1,9 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\ExposeFixture": {
+        "properties": {
+            "foo": {
+                "expose": "invalid"
+            }
+        }
+    }
+}

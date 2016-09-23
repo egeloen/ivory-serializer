@@ -1,0 +1,8 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\OrderFixture": {
+        "order": [],
+        "properties": {
+            "foo": {}
+        }
+    }
+}

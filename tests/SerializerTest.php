@@ -16,12 +16,15 @@ use Ivory\Serializer\Context\ContextInterface;
 use Ivory\Serializer\Format;
 use Ivory\Serializer\Serializer;
 use Ivory\Tests\Serializer\Fixture\ArrayFixture;
+use Ivory\Tests\Serializer\Fixture\AscFixture;
 use Ivory\Tests\Serializer\Fixture\DateTimeFixture;
+use Ivory\Tests\Serializer\Fixture\DescFixture;
 use Ivory\Tests\Serializer\Fixture\ExcludeFixture;
 use Ivory\Tests\Serializer\Fixture\ExposeFixture;
 use Ivory\Tests\Serializer\Fixture\FixtureInterface;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
+use Ivory\Tests\Serializer\Fixture\OrderFixture;
 use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
 
@@ -130,8 +133,19 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $maxDepthParentFixture->setParent(clone $emptyMaxDepthFixture);
         $maxDepthFixture->addChild($maxDepthChildFixture = clone $emptyMaxDepthFixture);
         $maxDepthFixture->orphanChildren[] = clone $emptyArrayFixture;
-
         $maxDepthChildFixture->addChild(clone $emptyMaxDepthFixture);
+
+        $ascFixture = new AscFixture();
+        $ascFixture->foo = 'oof';
+        $ascFixture->bar = 'rab';
+
+        $descFixture = new DescFixture();
+        $descFixture->foo = 'oof';
+        $descFixture->bar = 'rab';
+
+        $orderFixture = new OrderFixture();
+        $orderFixture->foo = 'oof';
+        $orderFixture->bar = 'rab';
 
         $emptyScalarFixture = new ScalarFixture();
         $scalarFixture = clone $emptyScalarFixture;
@@ -162,7 +176,6 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $versionFixture->bat = 'tab';
 
         $cases = [
-            // JSON
             ['array', []],
             ['boolean', true],
             ['integer', 123],
@@ -185,6 +198,9 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['object_groups_group1_group2', $groupFixture, (new Context())->setGroups(['group1', 'group2'])],
             ['object_max_depth', $maxDepthFixture],
             ['object_max_depth_empty', $emptyMaxDepthFixture],
+            ['object_order', $orderFixture],
+            ['object_order_asc', $ascFixture],
+            ['object_order_desc', $descFixture],
             ['object_scalar', $scalarFixture],
             ['object_scalar_empty', $emptyScalarFixture],
             ['object_scalar', $scalarExtendedFixture],

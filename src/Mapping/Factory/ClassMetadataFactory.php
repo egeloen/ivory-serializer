@@ -68,12 +68,14 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
         }
 
         $classMetadata = new ClassMetadata($class);
-        $found = $this->loader->loadClassMetadata($classMetadata);
+        $found = false;
 
         if (($parentMetadata = $this->getParentClassMetadata($class)) !== null) {
             $classMetadata->merge($parentMetadata);
             $found = true;
         }
+
+        $found = $this->loader->loadClassMetadata($classMetadata) || $found;
 
         return $this->classMetadatas[$class] = $found ? $classMetadata : null;
     }

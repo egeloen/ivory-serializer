@@ -57,7 +57,7 @@ use Ivory\Serializer\Mapping\Loader\AnnotationClassMetadataLoader;
 $loader = new AnnotationClassMetadataLoader();
 ```
 
-An example of all annotations is available [here](/doc/mapping/annotation-reference.md).
+An example of all annotations is available [here](/doc/mapping/annotation.md).
 
 ### XML
 
@@ -69,7 +69,7 @@ use Ivory\Serializer\Mapping\Loader\XmlClassMetadataLoader;
 $loader = new XmlClassMetadataLoader('/path/to/file.xml');
 ```
 
-An example of XML configuration is available [here](/doc/mapping/xml-reference.md).
+An example of XML configuration is available [here](/doc/mapping/xml.md).
 
 ### YAML
 
@@ -81,7 +81,7 @@ use Ivory\Serializer\Mapping\Loader\YamlClassMetadataLoader;
 $loader = new YamlClassMetadataLoader('/path/to/file.yml');
 ```
 
-An example of YAML configuration is available [here](/doc/mapping/yaml-reference.md).
+An example of YAML configuration is available [here](/doc/mapping/yaml.md).
 
 ### JSON
 
@@ -93,11 +93,13 @@ use Ivory\Serializer\Mapping\Loader\JsonClassMetadataLoader;
 $loader = new JsonClassMetadataLoader('/path/to/file.json');
 ```
 
-An example of JSON configuration is available [here](/doc/mapping/json-reference.md).
+An example of JSON configuration is available [here](/doc/mapping/json.md).
 
 ### Chain
 
-The chain loader allows you to load a metadata by delegating it to a chain of loaders.
+The chain loader allows you to load a metadata by delegating it to a chain of loaders. When loading a metadata, the 
+chain loader will invoke all loaders in the chain regardless if the previous has loaded the metadata or not. This allow 
+us to support multiple metadata formats in the same application.
 
 ``` php
 use Ivory\Serializer\Mapping\Loader\AnnotationClassMetadataLoader;

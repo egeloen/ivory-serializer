@@ -129,4 +129,26 @@ class ClassMetadata implements ClassMetadataInterface
             $this->addProperty($property);
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return serialize([
+            $this->name,
+            $this->properties,
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized)
+    {
+        list(
+            $this->name,
+            $this->properties
+        ) = unserialize($serialized);
+    }
 }

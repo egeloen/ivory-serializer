@@ -20,13 +20,14 @@ annotation, XML, YAML, JSON) and many others...
   - [Installation](/doc/installation.md)
   - [Usage](/doc/usage.md)
   - [Type](/doc/type.md)
-  - [Exclusion](/doc/exclusion.md)
+  - [Context](/doc/context.md)
   - [Naming](/doc/naming.md)
   - [Mapping](/doc/mapping.md)
-    - [Annotation](/doc/mapping/annotation-reference.md)
-    - [XML](/doc/mapping/xml-reference.md)
-    - [YAML](/doc/mapping/yaml-reference.md)
-    - [JSON](/doc/mapping/json-reference.md)
+    - [Annotation](/doc/mapping/annotation.md)
+    - [XML](/doc/mapping/xml.md)
+    - [YAML](/doc/mapping/yaml.md)
+    - [JSON](/doc/mapping/json.md)
+    - [Reference](/doc/mapping/reference.md)
 
 ## Testing
 

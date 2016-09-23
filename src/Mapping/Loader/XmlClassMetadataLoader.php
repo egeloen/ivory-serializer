@@ -24,21 +24,39 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
         $data = [];
         $xml = simplexml_import_dom($this->loadDocument($file));
 
-        if (isset($xml['exclusion-policy'])) {
-            $data['exclusion_policy'] = (string) $xml['exclusion-policy'];
-        }
-
         foreach ($xml->class as $class) {
-            $properties = [];
-
-            foreach ($class->property as $property) {
-                $properties[(string) $property['name']] = $this->loadProperty($property);
-            }
-
-            $data[(string) $class['name']] = ['properties' => $properties];
+            $data[(string) $class['name']] = $this->loadClass($class);
         }
 
         return $data;
+    }
+
+    /**
+     * @param \SimpleXMLElement $class
+     *
+     * @return mixed[]
+     */
+    private function loadClass(\SimpleXMLElement $class)
+    {
+        $definition = [];
+
+        if (isset($class['exclusion-policy'])) {
+            $definition['exclusion_policy'] = (string) $class['exclusion-policy'];
+        }
+
+        if (isset($class['order'])) {
+            $definition['order'] = (string) $class['order'];
+        }
+
+        $properties = [];
+
+        foreach ($class->property as $property) {
+            $properties[(string) $property['name']] = $this->loadProperty($property);
+        }
+
+        $definition['properties'] = $properties;
+
+        return $definition;
     }
 
     /**
@@ -58,12 +76,12 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
             $property['type'] = (string) $element['type'];
         }
 
-        if (isset($element['exclude']) && $element['exclude'] === 'true') {
-            $property['exclude'] = true;
+        if (isset($element['exclude'])) {
+            $property['exclude'] = (string) $element['exclude'] === 'true';
         }
 
-        if (isset($element['expose']) && $element['expose'] === 'true') {
-            $property['expose'] = true;
+        if (isset($element['expose'])) {
+            $property['expose'] = (string) $element['expose'] === 'true';
         }
 
         if (isset($element['since'])) {

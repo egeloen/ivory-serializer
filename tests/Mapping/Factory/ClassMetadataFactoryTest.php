@@ -87,13 +87,13 @@ class ClassMetadataFactoryTest extends \PHPUnit_Framework_TestCase
         $secondResult = $this->factory->getClassMetadata($class);
 
         $this->assertArrayHasKey(0, $expected);
-        $this->assertSame($class, $expected[0]->getName());
-
-        $this->assertSame($expected[0], $firstResult);
-        $this->assertSame($expected[0], $secondResult);
+        $this->assertSame(ScalarFixture::class, $expected[0]->getName());
 
         $this->assertArrayHasKey(1, $expected);
-        $this->assertSame(ScalarFixture::class, $expected[1]->getName());
+        $this->assertSame($class, $expected[1]->getName());
+
+        $this->assertSame($expected[1], $firstResult);
+        $this->assertSame($expected[1], $secondResult);
     }
 
     public function testClassMetadataDoesNotExist()
