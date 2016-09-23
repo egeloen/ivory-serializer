@@ -4,7 +4,7 @@
 {
     "Acme\\Model\\User": {
         "exclusion_policy": "all",
-        "order": ["friends", "username"]
+        "order": ["friends", "username"],
         "properties": {
             "username": {
                 "alias": "user_name",
