@@ -10,10 +10,10 @@
 [![Total Downloads](https://poser.pugx.org/egeloen/serializer/downloads.svg)](https://packagist.org/packages/egeloen/serializer)
 [![License](https://poser.pugx.org/egeloen/serializer/license.svg)](https://packagist.org/packages/egeloen/serializer)
 
-The Ivory Serializer is a PHP 5.6+ library allowing you to (de)-serialize complex data using the visitor pattern. 
-Natively, it supports JSON, XML and YAML. It also supports features such as exclusion strategies (groups, max depth, 
-version), naming strategies (camel case, snake case, studly caps), automatic/explicit mapping (reflection, 
-annotation, XML, YAML, JSON) and many others...
+The Ivory Serializer is a PHP 5.6+ library allowing you to (de)-serialize complex data using the visitor pattern on 
+each node of the graph recursively. Natively, it supports JSON, XML and YAML. It also supports features such as 
+exclusion strategies (groups, max depth, version), naming strategies (camel case, snake case, studly caps), 
+automatic/explicit mapping (reflection, annotation, XML, YAML, JSON) and many others...
 
 ## Documentation
 
@@ -21,13 +21,14 @@ annotation, XML, YAML, JSON) and many others...
   - [Usage](/doc/usage.md)
   - [Type](/doc/type.md)
   - [Context](/doc/context.md)
-  - [Naming](/doc/naming.md)
+    - [Exclusion strategies](/doc/context.md#exclusion-strategies)
+    - [Naming strategies](/doc/context.md#naming-strategies)
   - [Mapping](/doc/mapping.md)
+    - [Reference](/doc/mapping/reference.md)
     - [Annotation](/doc/mapping/annotation.md)
     - [XML](/doc/mapping/xml.md)
     - [YAML](/doc/mapping/yaml.md)
     - [JSON](/doc/mapping/json.md)
-    - [Reference](/doc/mapping/reference.md)
 
 ## Testing
 

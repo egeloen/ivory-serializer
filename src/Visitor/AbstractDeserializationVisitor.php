@@ -12,12 +12,10 @@
 namespace Ivory\Serializer\Visitor;
 
 use Ivory\Serializer\Context\ContextInterface;
-use Ivory\Serializer\Exclusion\ExclusionStrategyInterface;
 use Ivory\Serializer\Instantiator\InstantiatorInterface;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 use Ivory\Serializer\Mutator\MutatorInterface;
-use Ivory\Serializer\Naming\NamingStrategyInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -35,19 +33,11 @@ abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
     private $mutator;
 
     /**
-     * @param InstantiatorInterface           $instantiator
-     * @param MutatorInterface                $mutator
-     * @param ExclusionStrategyInterface|null $exclusionStrategy
-     * @param NamingStrategyInterface|null    $namingStrategy
+     * @param InstantiatorInterface $instantiator
+     * @param MutatorInterface      $mutator
      */
-    public function __construct(
-        InstantiatorInterface $instantiator,
-        MutatorInterface $mutator,
-        ExclusionStrategyInterface $exclusionStrategy = null,
-        NamingStrategyInterface $namingStrategy = null
-    ) {
-        parent::__construct($exclusionStrategy, $namingStrategy);
-
+    public function __construct(InstantiatorInterface $instantiator, MutatorInterface $mutator)
+    {
         $this->instantiator = $instantiator;
         $this->mutator = $mutator;
     }

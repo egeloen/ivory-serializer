@@ -22,24 +22,6 @@ use Ivory\Serializer\Mapping\TypeMetadataInterface;
 class ExclusionStrategy implements ExclusionStrategyInterface
 {
     /**
-     * @param ExclusionStrategyInterface[] $strategies
-     *
-     * @return ExclusionStrategyInterface
-     */
-    public static function create(array $strategies = [])
-    {
-        if (empty($strategies)) {
-            $strategies = [
-                new GroupsExclusionStrategy(),
-                new MaxDepthExclusionStrategy(),
-                new VersionExclusionStrategy(),
-            ];
-        }
-
-        return count($strategies) > 1 ? new ChainExclusionStrategy($strategies) : array_shift($strategies);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function skipClass(ClassMetadataInterface $class, ContextInterface $context)

@@ -13,6 +13,9 @@ namespace Ivory\Tests\Serializer;
 
 use Ivory\Serializer\Context\Context;
 use Ivory\Serializer\Context\ContextInterface;
+use Ivory\Serializer\Exclusion\GroupsExclusionStrategy;
+use Ivory\Serializer\Exclusion\MaxDepthExclusionStrategy;
+use Ivory\Serializer\Exclusion\VersionExclusionStrategy;
 use Ivory\Serializer\Format;
 use Ivory\Serializer\Serializer;
 use Ivory\Tests\Serializer\Fixture\ArrayFixture;
@@ -193,10 +196,10 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['object_expose', $exposeFixture],
             ['object_groups', $groupFixture],
             ['object_groups_empty', $emptyGroupFixture],
-            ['object_groups_group1', $groupFixture, (new Context())->setGroups(['group1'])],
-            ['object_groups_group2', $groupFixture, (new Context())->setGroups(['group2'])],
-            ['object_groups_group1_group2', $groupFixture, (new Context())->setGroups(['group1', 'group2'])],
-            ['object_max_depth', $maxDepthFixture, (new Context())->enableMaxDepth()],
+            ['object_groups_group1', $groupFixture, (new Context())->setExclusionStrategy(new GroupsExclusionStrategy(['group1']))],
+            ['object_groups_group2', $groupFixture, (new Context())->setExclusionStrategy(new GroupsExclusionStrategy(['group2']))],
+            ['object_groups_group1_group2', $groupFixture, (new Context())->setExclusionStrategy(new GroupsExclusionStrategy(['group1', 'group2']))],
+            ['object_max_depth', $maxDepthFixture, (new Context())->setExclusionStrategy(new MaxDepthExclusionStrategy())],
             ['object_max_depth_empty', $emptyMaxDepthFixture],
             ['object_order', $orderFixture],
             ['object_order_asc', $ascFixture],
@@ -206,10 +209,10 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['object_scalar', $scalarExtendedFixture],
             ['object_scalar_empty', $emptyScalarExtendedFixture],
             ['object_version_empty', $emptyVersionFixture],
-            ['object_version_0_9', $versionFixture, (new Context())->setVersion('0.9')],
-            ['object_version_1_0', $versionFixture, (new Context())->setVersion('1.0')],
-            ['object_version_2_0', $versionFixture, (new Context())->setVersion('2.0')],
-            ['object_version_2_1', $versionFixture, (new Context())->setVersion('2.1')],
+            ['object_version_0_9', $versionFixture, (new Context())->setExclusionStrategy(new VersionExclusionStrategy('0.9'))],
+            ['object_version_1_0', $versionFixture, (new Context())->setExclusionStrategy(new VersionExclusionStrategy('1.0'))],
+            ['object_version_2_0', $versionFixture, (new Context())->setExclusionStrategy(new VersionExclusionStrategy('2.0'))],
+            ['object_version_2_1', $versionFixture, (new Context())->setExclusionStrategy(new VersionExclusionStrategy('2.1'))],
         ];
 
         $providers = [];

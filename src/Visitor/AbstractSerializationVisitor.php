@@ -13,9 +13,7 @@ namespace Ivory\Serializer\Visitor;
 
 use Ivory\Serializer\Accessor\AccessorInterface;
 use Ivory\Serializer\Context\ContextInterface;
-use Ivory\Serializer\Exclusion\ExclusionStrategyInterface;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
-use Ivory\Serializer\Naming\NamingStrategyInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -28,17 +26,10 @@ abstract class AbstractSerializationVisitor extends AbstractGenericVisitor
     private $accessor;
 
     /**
-     * @param AccessorInterface               $accessor
-     * @param ExclusionStrategyInterface|null $exclusionStrategy
-     * @param NamingStrategyInterface|null    $namingStrategy
+     * @param AccessorInterface $accessor
      */
-    public function __construct(
-        AccessorInterface $accessor,
-        ExclusionStrategyInterface $exclusionStrategy = null,
-        NamingStrategyInterface $namingStrategy = null
-    ) {
-        parent::__construct($exclusionStrategy, $namingStrategy);
-
+    public function __construct(AccessorInterface $accessor)
+    {
         $this->accessor = $accessor;
     }
 

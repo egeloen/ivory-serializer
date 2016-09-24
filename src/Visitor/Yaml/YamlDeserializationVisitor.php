@@ -11,10 +11,8 @@
 
 namespace Ivory\Serializer\Visitor\Yaml;
 
-use Ivory\Serializer\Exclusion\ExclusionStrategyInterface;
 use Ivory\Serializer\Instantiator\InstantiatorInterface;
 use Ivory\Serializer\Mutator\MutatorInterface;
-use Ivory\Serializer\Naming\NamingStrategyInterface;
 use Ivory\Serializer\Visitor\AbstractDeserializationVisitor;
 use Symfony\Component\Yaml\Yaml;
 
@@ -29,19 +27,12 @@ class YamlDeserializationVisitor extends AbstractDeserializationVisitor
     private $options;
 
     /**
-     * @param InstantiatorInterface           $instantiator
-     * @param MutatorInterface                $mutator
-     * @param ExclusionStrategyInterface|null $exclusionStrategy
-     * @param NamingStrategyInterface|null    $namingStrategy
-     * @param int                             $options
+     * @param InstantiatorInterface $instantiator
+     * @param MutatorInterface      $mutator
+     * @param int                   $options
      */
-    public function __construct(
-        InstantiatorInterface $instantiator,
-        MutatorInterface $mutator,
-        ExclusionStrategyInterface $exclusionStrategy = null,
-        NamingStrategyInterface $namingStrategy = null,
-        $options = 0
-    ) {
+    public function __construct(InstantiatorInterface $instantiator, MutatorInterface $mutator, $options = 0)
+    {
         parent::__construct($instantiator, $mutator);
 
         $this->options = $options;

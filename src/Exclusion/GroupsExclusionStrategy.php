@@ -20,15 +20,24 @@ use Ivory\Serializer\Mapping\PropertyMetadataInterface;
 class GroupsExclusionStrategy extends ExclusionStrategy
 {
     /**
+     * @var string[]
+     */
+    private $groups;
+
+    /**
+     * @param string[] $groups
+     */
+    public function __construct(array $groups)
+    {
+        $this->groups = $groups;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function skipProperty(PropertyMetadataInterface $property, ContextInterface $context)
     {
-        if (!$context->hasGroups()) {
-            return false;
-        }
-
-        foreach ($context->getGroups() as $group) {
+        foreach ($this->groups as $group) {
             if ($property->hasGroup($group)) {
                 return false;
             }

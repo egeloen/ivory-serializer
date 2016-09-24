@@ -11,6 +11,10 @@
 
 namespace Ivory\Serializer\Context;
 
+use Ivory\Serializer\Exclusion\ExclusionStrategy;
+use Ivory\Serializer\Exclusion\ExclusionStrategyInterface;
+use Ivory\Serializer\Naming\IdenticalNamingStrategy;
+use Ivory\Serializer\Naming\NamingStrategyInterface;
 use Ivory\Serializer\Navigator\NavigatorInterface;
 use Ivory\Serializer\Visitor\VisitorInterface;
 
@@ -35,21 +39,6 @@ class Context implements ContextInterface
     private $direction;
 
     /**
-     * @var bool
-     */
-    private $maxDepth = false;
-
-    /**
-     * @var string|null
-     */
-    private $version;
-
-    /**
-     * @var string[]
-     */
-    private $groups = [];
-
-    /**
      * @var \SplStack
      */
     private $dataStack;
@@ -58,6 +47,28 @@ class Context implements ContextInterface
      * @var \SplStack
      */
     private $metadataStack;
+
+    /**
+     * @var ExclusionStrategyInterface
+     */
+    private $exclusionStrategy;
+
+    /**
+     * @var NamingStrategyInterface
+     */
+    private $namingStrategy;
+
+    /**
+     * @param ExclusionStrategyInterface|null $exclusionStrategy
+     * @param NamingStrategyInterface|null    $namingStrategy
+     */
+    public function __construct(
+        ExclusionStrategyInterface $exclusionStrategy = null,
+        NamingStrategyInterface $namingStrategy = null
+    ) {
+        $this->exclusionStrategy = $exclusionStrategy ?: new ExclusionStrategy();
+        $this->namingStrategy = $namingStrategy ?: new IdenticalNamingStrategy();
+    }
 
     /**
      * {@inheritdoc}
@@ -114,119 +125,6 @@ class Context implements ContextInterface
     }
 
     /**
-     * @return bool
-     */
-    public function hasMaxDepthEnabled()
-    {
-        return $this->maxDepth;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function enableMaxDepth($enable = true)
-    {
-        $this->maxDepth = $enable;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasVersion()
-    {
-        return $this->version !== null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasGroups()
-    {
-        return !empty($this->groups);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGroups()
-    {
-        return array_values($this->groups);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setGroups(array $groups)
-    {
-        $this->groups = [];
-        $this->addGroups($groups);
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addGroups(array $groups)
-    {
-        foreach ($groups as $group) {
-            $this->addGroup($group);
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasGroup($group)
-    {
-        return in_array($group, $this->groups, true);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addGroup($group)
-    {
-        if (!$this->hasGroup($group)) {
-            $this->groups[] = $group;
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeGroup($group)
-    {
-        unset($this->groups[array_search($group, $this->groups, true)]);
-
-        return $this;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getDataStack()
@@ -258,6 +156,42 @@ class Context implements ContextInterface
     public function setMetadataStack(\SplStack $metadataStack)
     {
         $this->metadataStack = $metadataStack;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExclusionStrategy()
+    {
+        return $this->exclusionStrategy;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setExclusionStrategy(ExclusionStrategyInterface $exclusionStrategy)
+    {
+        $this->exclusionStrategy = $exclusionStrategy;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNamingStrategy()
+    {
+        return $this->namingStrategy;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setNamingStrategy(NamingStrategyInterface $namingStrategy)
+    {
+        $this->namingStrategy = $namingStrategy;
 
         return $this;
     }

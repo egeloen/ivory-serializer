@@ -11,6 +11,8 @@
 
 namespace Ivory\Serializer\Context;
 
+use Ivory\Serializer\Exclusion\ExclusionStrategyInterface;
+use Ivory\Serializer\Naming\NamingStrategyInterface;
 use Ivory\Serializer\Navigator\NavigatorInterface;
 use Ivory\Serializer\Visitor\VisitorInterface;
 
@@ -56,80 +58,6 @@ interface ContextInterface
     public function setDirection($direction);
 
     /**
-     * @return bool
-     */
-    public function hasMaxDepthEnabled();
-
-    /**
-     * @param bool $enable
-     *
-     * @return ContextInterface
-     */
-    public function enableMaxDepth($enable = true);
-
-    /**
-     * @return bool
-     */
-    public function hasVersion();
-
-    /**
-     * @return string|null
-     */
-    public function getVersion();
-
-    /**
-     * @param string|null $version
-     *
-     * @return ContextInterface
-     */
-    public function setVersion($version);
-
-    /**
-     * @return bool
-     */
-    public function hasGroups();
-
-    /**
-     * @return string[]
-     */
-    public function getGroups();
-
-    /**
-     * @param string[] $groups
-     *
-     * @return ContextInterface
-     */
-    public function setGroups(array $groups);
-
-    /**
-     * @param string[] $groups
-     *
-     * @return ContextInterface
-     */
-    public function addGroups(array $groups);
-
-    /**
-     * @param string $group
-     *
-     * @return bool
-     */
-    public function hasGroup($group);
-
-    /**
-     * @param string $group
-     *
-     * @return ContextInterface
-     */
-    public function addGroup($group);
-
-    /**
-     * @param string $group
-     *
-     * @return ContextInterface
-     */
-    public function removeGroup($group);
-
-    /**
      * @return \SplStack
      */
     public function getDataStack();
@@ -152,4 +80,28 @@ interface ContextInterface
      * @return ContextInterface
      */
     public function setMetadataStack(\SplStack $metadataStack);
+
+    /**
+     * @return ExclusionStrategyInterface
+     */
+    public function getExclusionStrategy();
+
+    /**
+     * @param ExclusionStrategyInterface $exclusionStrategy
+     *
+     * @return ContextInterface
+     */
+    public function setExclusionStrategy(ExclusionStrategyInterface $exclusionStrategy);
+
+    /**
+     * @return NamingStrategyInterface
+     */
+    public function getNamingStrategy();
+
+    /**
+     * @param NamingStrategyInterface $namingStrategy
+     *
+     * @return ContextInterface
+     */
+    public function setNamingStrategy(NamingStrategyInterface $namingStrategy);
 }

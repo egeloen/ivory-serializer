@@ -20,21 +20,28 @@ use Ivory\Serializer\Mapping\PropertyMetadataInterface;
 class VersionExclusionStrategy extends ExclusionStrategy
 {
     /**
+     * @var string
+     */
+    private $version;
+
+    /**
+     * @param string $version
+     */
+    public function __construct($version)
+    {
+        $this->version = $version;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function skipProperty(PropertyMetadataInterface $property, ContextInterface $context)
     {
-        if (!$context->hasVersion()) {
-            return false;
-        }
-
-        $version = $context->getVersion();
-
-        if ($property->hasSinceVersion() && version_compare($property->getSinceVersion(), $version, '>')) {
+        if ($property->hasSinceVersion() && version_compare($property->getSinceVersion(), $this->version, '>')) {
             return true;
         }
 
-        if ($property->hasUntilVersion() && version_compare($property->getUntilVersion(), $version, '<')) {
+        if ($property->hasUntilVersion() && version_compare($property->getUntilVersion(), $this->version, '<')) {
             return true;
         }
 
