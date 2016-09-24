@@ -16,8 +16,6 @@ use Ivory\Serializer\Mapping\TypeMetadata;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 use Ivory\Serializer\Registry\TypeRegistry;
 use Ivory\Serializer\Registry\TypeRegistryInterface;
-use Ivory\Serializer\Type\Parser\TypeParser;
-use Ivory\Serializer\Type\Parser\TypeParserInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -30,32 +28,19 @@ class Navigator implements NavigatorInterface
     private $typeRegistry;
 
     /**
-     * @var TypeParserInterface
-     */
-    private $typeParser;
-
-    /**
      * @param TypeRegistryInterface|null $typeRegistry
-     * @param TypeParserInterface|null   $typeParser
      */
-    public function __construct(TypeRegistryInterface $typeRegistry = null, TypeParserInterface $typeParser = null)
+    public function __construct(TypeRegistryInterface $typeRegistry = null)
     {
         $this->typeRegistry = $typeRegistry ?: TypeRegistry::create();
-        $this->typeParser = $typeParser ?: new TypeParser();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function navigate($data, $type, ContextInterface $context)
+    public function navigate($data, ContextInterface $context, TypeMetadataInterface $type = null)
     {
-        if ($type === null) {
-            $type = new TypeMetadata(is_object($data) ? get_class($data) : strtolower(gettype($data)));
-        }
-
-        if (!$type instanceof TypeMetadataInterface) {
-            $type = $this->typeParser->parse($type);
-        }
+        $type = $type ?: new TypeMetadata(is_object($data) ? get_class($data) : strtolower(gettype($data)));
 
         return $this->typeRegistry->getType($type->getName())->convert($data, $type, $context);
     }

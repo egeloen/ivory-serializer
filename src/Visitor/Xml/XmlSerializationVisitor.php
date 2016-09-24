@@ -147,7 +147,7 @@ class XmlSerializationVisitor extends AbstractVisitor
         $this->enterScope($node);
 
         // FIXME - Detect errors
-        $this->navigate($this->accessor->getValue($data, $property->getName()), $property->getType(), $context);
+        $this->navigate($this->accessor->getValue($data, $property->getName()), $context, $property->getType());
 
         $this->leaveScope();
         $this->visitNode($node);
@@ -170,7 +170,7 @@ class XmlSerializationVisitor extends AbstractVisitor
             }
 
             $this->enterScope($node);
-            $this->navigate($value, $type->getOption('value'), $context);
+            $this->navigate($value, $context, $type->getOption('value'));
             $this->leaveScope();
             $this->visitNode($node);
         }

@@ -20,11 +20,11 @@ use Ivory\Serializer\Mapping\TypeMetadataInterface;
 interface NavigatorInterface
 {
     /**
-     * @param mixed                             $data
-     * @param TypeMetadataInterface|string|null $type
-     * @param ContextInterface                  $context
+     * @param mixed                      $data
+     * @param ContextInterface           $context
+     * @param TypeMetadataInterface|null $type
      *
      * @return mixed
      */
-    public function navigate($data, $type, ContextInterface $context);
+    public function navigate($data, ContextInterface $context, TypeMetadataInterface $type = null);
 }

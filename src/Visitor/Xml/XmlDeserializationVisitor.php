@@ -87,9 +87,9 @@ class XmlDeserializationVisitor extends AbstractDeserializationVisitor
     /**
      * {@inheritdoc}
      */
-    protected function navigate($data, $type, ContextInterface $context)
+    protected function navigate($data, ContextInterface $context, TypeMetadataInterface $type = null)
     {
-        return parent::navigate($this->visitNode($data, $type), $type, $context);
+        return parent::navigate($this->visitNode($data, $type), $context, $type);
     }
 
     /**
@@ -100,8 +100,8 @@ class XmlDeserializationVisitor extends AbstractDeserializationVisitor
      */
     private function visitArrayItem($key, $value, TypeMetadataInterface $type, ContextInterface $context)
     {
-        $key = $this->visitArrayKey($key, $value, $type->getOption('key'), $context);
-        $result = $this->navigate($value, $type->getOption('value'), $context);
+        $key = $this->visitArrayKey($key, $value, $context, $type->getOption('key'));
+        $result = $this->navigate($value, $context, $type->getOption('value'));
 
         if ($key === null) {
             $this->result[] = $result;
@@ -111,14 +111,14 @@ class XmlDeserializationVisitor extends AbstractDeserializationVisitor
     }
 
     /**
-     * @param mixed                             $key
-     * @param mixed                             $value
-     * @param TypeMetadataInterface|string|null $type
-     * @param ContextInterface                  $context
+     * @param mixed                      $key
+     * @param mixed                      $value
+     * @param ContextInterface           $context
+     * @param TypeMetadataInterface|null $type
      *
      * @return mixed
      */
-    private function visitArrayKey($key, $value, $type, ContextInterface $context)
+    private function visitArrayKey($key, $value, ContextInterface $context, TypeMetadataInterface $type = null)
     {
         if ($value instanceof \SimpleXMLElement) {
             $key = $value->getName();
@@ -131,16 +131,16 @@ class XmlDeserializationVisitor extends AbstractDeserializationVisitor
             $key = null;
         }
 
-        return $this->navigate($key, $type, $context);
+        return $this->navigate($key, $context, $type);
     }
 
     /**
-     * @param mixed                             $data
-     * @param TypeMetadataInterface|string|null $type
+     * @param mixed                      $data
+     * @param TypeMetadataInterface|null $type
      *
      * @return mixed
      */
-    private function visitNode($data, $type)
+    private function visitNode($data, TypeMetadataInterface $type = null)
     {
         if (!$data instanceof \SimpleXMLElement) {
             return $data;
@@ -156,11 +156,7 @@ class XmlDeserializationVisitor extends AbstractDeserializationVisitor
             return $data;
         }
 
-        if ($type instanceof TypeMetadataInterface) {
-            $type = $type->getName();
-        }
-
-        if ($type === Type::ARRAY_) {
+        if ($type !== null && $type->getName() === Type::ARRAY_) {
             return [];
         }
     }

@@ -96,7 +96,7 @@ abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
         $this->mutator->setValue(
             $this->result,
             $property->getName(),
-            $this->navigate($data[$name], $property->getType(), $context)
+            $this->navigate($data[$name], $context, $property->getType())
         );
 
         return true;

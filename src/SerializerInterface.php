@@ -12,6 +12,7 @@
 namespace Ivory\Serializer;
 
 use Ivory\Serializer\Context\ContextInterface;
+use Ivory\Serializer\Mapping\TypeMetadataInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -28,10 +29,10 @@ interface SerializerInterface
     public function serialize($data, $format, ContextInterface $context = null);
 
     /**
-     * @param string                $data
-     * @param string                $type
-     * @param string                $format
-     * @param ContextInterface|null $context
+     * @param string                       $data
+     * @param string                       $type
+     * @param TypeMetadataInterface|string $format
+     * @param ContextInterface|null        $context
      *
      * @return mixed
      */

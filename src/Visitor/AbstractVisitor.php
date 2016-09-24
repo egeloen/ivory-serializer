@@ -191,15 +191,15 @@ abstract class AbstractVisitor implements VisitorInterface
     );
 
     /**
-     * @param mixed                             $data
-     * @param TypeMetadataInterface|string|null $type
-     * @param ContextInterface                  $context
+     * @param mixed                      $data
+     * @param ContextInterface           $context
+     * @param TypeMetadataInterface|null $type
      *
      * @return mixed
      */
-    protected function navigate($data, $type, ContextInterface $context)
+    protected function navigate($data, ContextInterface $context, TypeMetadataInterface $type = null)
     {
-        return $context->getNavigator()->navigate($data, $type, $context);
+        return $context->getNavigator()->navigate($data, $context, $type);
     }
 
     /**
@@ -209,8 +209,10 @@ abstract class AbstractVisitor implements VisitorInterface
      */
     private function enterScope($data, MetadataInterface $metadata, ContextInterface $context)
     {
-        $context->getDataStack()->push($data);
-        $context->getMetadataStack()->push($metadata);
+        if ($context->hasMaxDepthEnabled()) {
+            $context->getDataStack()->push($data);
+            $context->getMetadataStack()->push($metadata);
+        }
     }
 
     /**
@@ -218,7 +220,9 @@ abstract class AbstractVisitor implements VisitorInterface
      */
     private function leaveScope(ContextInterface $context)
     {
-        $context->getDataStack()->pop();
-        $context->getMetadataStack()->pop();
+        if ($context->hasMaxDepthEnabled()) {
+            $context->getDataStack()->pop();
+            $context->getMetadataStack()->pop();
+        }
     }
 }

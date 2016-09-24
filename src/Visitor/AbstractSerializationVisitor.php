@@ -69,8 +69,8 @@ abstract class AbstractSerializationVisitor extends AbstractGenericVisitor
         // FIXME - Detect errors
         $this->result[$name] = $this->navigate(
             $this->accessor->getValue($data, $property->getName()),
-            $property->getType(),
-            $context
+            $context,
+            $property->getType()
         );
 
         return true;
