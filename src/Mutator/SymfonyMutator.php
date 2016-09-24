@@ -13,6 +13,8 @@ namespace Ivory\Serializer\Mutator;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\PropertyAccess\PropertyPath;
+use Symfony\Component\PropertyAccess\PropertyPathInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -23,6 +25,11 @@ class SymfonyMutator implements MutatorInterface
      * @var PropertyAccessorInterface
      */
     private $propertyAccessor;
+
+    /**
+     * @var PropertyPathInterface[]
+     */
+    private $propertyPaths = [];
 
     /**
      * @param PropertyAccessorInterface|null $propertyAccessor
@@ -37,6 +44,18 @@ class SymfonyMutator implements MutatorInterface
      */
     public function setValue($object, $property, $value)
     {
-        $this->propertyAccessor->setValue($object, $property, $value);
+        $this->propertyAccessor->setValue($object, $this->getPropertyPath($property), $value);
+    }
+
+    /**
+     * @param string $property
+     *
+     * @return PropertyPathInterface
+     */
+    private function getPropertyPath($property)
+    {
+        return isset($this->propertyPaths[$property])
+            ? $this->propertyPaths[$property]
+            : $this->propertyPaths[$property] = new PropertyPath($property);
     }
 }
