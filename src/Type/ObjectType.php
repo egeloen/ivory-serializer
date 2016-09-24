@@ -19,7 +19,7 @@ use Ivory\Serializer\Mapping\TypeMetadataInterface;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class ObjectType extends AbstractType
+class ObjectType implements TypeInterface
 {
     /**
      * @var ClassMetadataFactoryInterface
@@ -37,7 +37,7 @@ class ObjectType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    protected function doConvert($data, TypeMetadataInterface $type, ContextInterface $context)
+    public function convert($data, TypeMetadataInterface $type, ContextInterface $context)
     {
         $class = $this->classMetadataFactory->getClassMetadata($type->getName());
 

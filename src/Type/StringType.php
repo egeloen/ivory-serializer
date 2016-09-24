@@ -17,12 +17,12 @@ use Ivory\Serializer\Mapping\TypeMetadataInterface;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class StringType extends AbstractType
+class StringType implements TypeInterface
 {
     /**
      * {@inheritdoc}
      */
-    protected function doConvert($data, TypeMetadataInterface $type, ContextInterface $context)
+    public function convert($data, TypeMetadataInterface $type, ContextInterface $context)
     {
         return $context->getVisitor()->visitString($data, $type, $context);
     }

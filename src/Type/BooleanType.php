@@ -17,12 +17,12 @@ use Ivory\Serializer\Mapping\TypeMetadataInterface;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class BooleanType extends AbstractType
+class BooleanType implements TypeInterface
 {
     /**
      * {@inheritdoc}
      */
-    protected function doConvert($data, TypeMetadataInterface $type, ContextInterface $context)
+    public function convert($data, TypeMetadataInterface $type, ContextInterface $context)
     {
         return $context->getVisitor()->visitBoolean($data, $type, $context);
     }

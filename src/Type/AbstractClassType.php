@@ -18,12 +18,12 @@ use Ivory\Serializer\Mapping\TypeMetadataInterface;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-abstract class AbstractClassType extends AbstractType
+abstract class AbstractClassType implements TypeInterface
 {
     /**
      * {@inheritdoc}
      */
-    protected function doConvert($data, TypeMetadataInterface $type, ContextInterface $context)
+    public function convert($data, TypeMetadataInterface $type, ContextInterface $context)
     {
         switch ($context->getDirection()) {
             case Direction::SERIALIZATION:

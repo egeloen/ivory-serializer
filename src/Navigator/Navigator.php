@@ -16,6 +16,7 @@ use Ivory\Serializer\Mapping\TypeMetadata;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 use Ivory\Serializer\Registry\TypeRegistry;
 use Ivory\Serializer\Registry\TypeRegistryInterface;
+use Ivory\Serializer\Type\Type;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -41,7 +42,12 @@ class Navigator implements NavigatorInterface
     public function navigate($data, ContextInterface $context, TypeMetadataInterface $type = null)
     {
         $type = $type ?: new TypeMetadata(is_object($data) ? get_class($data) : strtolower(gettype($data)));
+        $name = $type->getName();
 
-        return $this->typeRegistry->getType($type->getName())->convert($data, $type, $context);
+        if ($data === null) {
+            $name = Type::NULL;
+        }
+
+        return $this->typeRegistry->getType($name)->convert($data, $type, $context);
     }
 }

@@ -17,12 +17,12 @@ use Ivory\Serializer\Mapping\TypeMetadataInterface;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class ClosureType extends AbstractType
+class ClosureType implements TypeInterface
 {
     /**
      * {@inheritdoc}
      */
-    protected function doConvert($data, TypeMetadataInterface $type, ContextInterface $context)
+    public function convert($data, TypeMetadataInterface $type, ContextInterface $context)
     {
         throw new \RuntimeException('(De)Serializing a closure is not supported.');
     }
