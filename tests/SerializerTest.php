@@ -13,6 +13,7 @@ namespace Ivory\Tests\Serializer;
 
 use Ivory\Serializer\Context\Context;
 use Ivory\Serializer\Context\ContextInterface;
+use Ivory\Serializer\Exclusion\CircularReferenceExclusionStrategy;
 use Ivory\Serializer\Exclusion\GroupsExclusionStrategy;
 use Ivory\Serializer\Exclusion\MaxDepthExclusionStrategy;
 use Ivory\Serializer\Exclusion\VersionExclusionStrategy;
@@ -138,6 +139,9 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $maxDepthFixture->orphanChildren[] = clone $emptyArrayFixture;
         $maxDepthChildFixture->addChild(clone $emptyMaxDepthFixture);
 
+        $circularReference = new MaxDepthFixture();
+        $circularReference->setParent($circularReference);
+
         $ascFixture = new AscFixture();
         $ascFixture->foo = 'oof';
         $ascFixture->bar = 'rab';
@@ -199,6 +203,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['object_groups_group1', $groupFixture, (new Context())->setExclusionStrategy(new GroupsExclusionStrategy(['group1']))],
             ['object_groups_group2', $groupFixture, (new Context())->setExclusionStrategy(new GroupsExclusionStrategy(['group2']))],
             ['object_groups_group1_group2', $groupFixture, (new Context())->setExclusionStrategy(new GroupsExclusionStrategy(['group1', 'group2']))],
+            ['object_circular_reference', $circularReference, (new Context())->setExclusionStrategy(new CircularReferenceExclusionStrategy())],
             ['object_max_depth', $maxDepthFixture, (new Context())->setExclusionStrategy(new MaxDepthExclusionStrategy())],
             ['object_max_depth_empty', $emptyMaxDepthFixture],
             ['object_order', $orderFixture],
