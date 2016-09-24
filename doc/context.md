@@ -1,7 +1,7 @@
 # Context
 
-The context allows you to inject runtime configuration into the serializer. It allows you to configure exclusion groups 
-as well as the application version.
+The context allows you to inject runtime configuration into the serializer. It allows you to configure an exclusion 
+strategy as well as a naming strategy.
 
 ## Build
 
@@ -77,7 +77,7 @@ The naming strategy allows you to convert a property name into a different repre
 case, ... By default the serializer uses the identical strategy meaning no transformations are performed but it's up 
 to you to configure a different naming strategy.
 
-## Identical
+### Identical
 
 The identical naming strategy (default) uses the property name without altering it:
 

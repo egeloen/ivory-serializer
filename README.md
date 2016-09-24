@@ -15,6 +15,23 @@ each node of the graph recursively. Natively, it supports JSON, XML and YAML. It
 exclusion strategies (groups, max depth, version), naming strategies (camel case, snake case, studly caps), 
 automatic/explicit mapping (reflection, annotation, XML, YAML, JSON) and many others...
 
+``` php
+use Ivory\Serializer\Format;
+use Ivory\Serializer\Serializer;
+
+$stdClass = new \stdClass();
+$stdClass->foo = true;
+$stdClass->bar = ['foo', [123, 432.1]];
+
+$serializer = new Serializer();
+
+echo $serializer->serialize($stdClass, Format::JSON);
+// {"foo": true,"bar": ["foo", [123, 432.1]]}
+
+$deserialize = $serializer->deserialize($json, \stdClass::class, Format::JSON);
+// $deserialize == $stdClass
+```
+
 ## Documentation
 
   - [Installation](/doc/installation.md)
