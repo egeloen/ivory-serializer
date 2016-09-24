@@ -30,8 +30,8 @@ interface SerializerInterface
 
     /**
      * @param string                       $data
-     * @param string                       $type
-     * @param TypeMetadataInterface|string $format
+     * @param TypeMetadataInterface|string $type
+     * @param string                       $format
      * @param ContextInterface|null        $context
      *
      * @return mixed
