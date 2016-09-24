@@ -17,6 +17,16 @@ namespace Ivory\Serializer\Accessor;
 class ReflectionAccessor implements AccessorInterface
 {
     /**
+     * @var \ReflectionProperty[]
+     */
+    private $properties = [];
+
+    /**
+     * @var \ReflectionMethod[]
+     */
+    private $methods = [];
+
+    /**
      * {@inheritdoc}
      */
     public function getValue($object, $property)
@@ -36,10 +46,7 @@ class ReflectionAccessor implements AccessorInterface
      */
     private function getPropertyValue($object, $property)
     {
-        $reflection = new \ReflectionProperty($object, $property);
-        $reflection->setAccessible(true);
-
-        return $reflection->getValue($object);
+        return $this->getReflectionProperty($object, $property)->getValue($object);
     }
 
     /**
@@ -51,14 +58,13 @@ class ReflectionAccessor implements AccessorInterface
     private function getMethodValue($object, $property)
     {
         $methods = [];
-        $suffix = ucfirst($property);
+        $methodSuffix = ucfirst($property);
 
-        foreach (['get', 'has', 'is'] as $prefix) {
+        foreach (['get', 'has', 'is'] as $methodPrefix) {
             try {
-                $reflection = new \ReflectionMethod($object, $methods[] = $prefix.$suffix);
-                $reflection->setAccessible(true);
+                $methods[] = $method = $methodPrefix.$methodSuffix;
 
-                return $reflection->invoke($object);
+                return $this->getReflectionMethod($object, $method)->invoke($object);
             } catch (\ReflectionException $e) {
             }
         }
@@ -68,5 +74,52 @@ class ReflectionAccessor implements AccessorInterface
             $property,
             '"'.implode('", "', $methods).'"'
         ));
+    }
+
+    /**
+     * @param object $object
+     * @param string $property
+     *
+     * @return \ReflectionProperty
+     */
+    private function getReflectionProperty($object, $property)
+    {
+        if (isset($this->properties[$key = $this->getCacheKey($object, $property)])) {
+            return $this->properties[$key];
+        }
+
+        $reflection = new \ReflectionProperty($object, $property);
+        $reflection->setAccessible(true);
+
+        return $this->properties[$key] = $reflection;
+    }
+
+    /**
+     * @param object $object
+     * @param string $method
+     *
+     * @return \ReflectionMethod
+     */
+    private function getReflectionMethod($object, $method)
+    {
+        if (isset($this->methods[$key = $this->getCacheKey($object, $method)])) {
+            return $this->methods[$key];
+        }
+
+        $reflection = new \ReflectionMethod($object, $method);
+        $reflection->setAccessible(true);
+
+        return $this->methods[$key] = $reflection;
+    }
+
+    /**
+     * @param object $object
+     * @param string $key
+     *
+     * @return string
+     */
+    private function getCacheKey($object, $key)
+    {
+        return get_class($object).'::'.$key;
     }
 }

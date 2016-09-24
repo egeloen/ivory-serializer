@@ -37,7 +37,7 @@ class Serializer implements SerializerInterface
     private $visitorRegistry;
 
     /**
-     * @var TypeParser
+     * @var TypeParserInterface
      */
     private $typeParser;
 
