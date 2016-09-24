@@ -196,7 +196,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['object_groups_group1', $groupFixture, (new Context())->setGroups(['group1'])],
             ['object_groups_group2', $groupFixture, (new Context())->setGroups(['group2'])],
             ['object_groups_group1_group2', $groupFixture, (new Context())->setGroups(['group1', 'group2'])],
-            ['object_max_depth', $maxDepthFixture],
+            ['object_max_depth', $maxDepthFixture, (new Context())->enableMaxDepth()],
             ['object_max_depth_empty', $emptyMaxDepthFixture],
             ['object_order', $orderFixture],
             ['object_order_asc', $ascFixture],

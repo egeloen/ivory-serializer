@@ -58,7 +58,10 @@ our limit (2), so, the serializer will stop. If the data is an object, we traver
 at the next depth level (for example if a property value is an array or an object), the serializer will stop.
 
 In addition to this explanation, the serializer stops differently according to the last data (de)-serialized. If the 
-last data is a scalar or object, it stops with `null`, if the data is an array, it stops with an array. 
+last data is a scalar or object, it stops with `null`, if the data is an array, it stops with an array.
+ 
+Finally, using max depth requires to use a context which is documented [here](/doc/context.md). If you don't use it, 
+the max depth is ignored.
 
 ## Since
 

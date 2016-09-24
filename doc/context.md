@@ -13,6 +13,15 @@ use Ivory\Serializer\Context\Context;
 $context = new Context();
 ```
 
+## Max Depth
+
+The max depth exclusion strategy is disabled by default as it is impact performance. So, if you relies on max depth, it 
+is your responsibility to enable it otherwise your mapping will be ignored:
+
+``` php
+$context->enabledMaxDepth();
+```
+
 ## Groups
 
 The groups exclusion strategy allows you to exclude class properties according to groups:

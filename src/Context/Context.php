@@ -35,6 +35,11 @@ class Context implements ContextInterface
     private $direction;
 
     /**
+     * @var bool
+     */
+    private $maxDepth = false;
+
+    /**
      * @var string|null
      */
     private $version;
@@ -113,6 +118,24 @@ class Context implements ContextInterface
     public function setDirection($direction)
     {
         $this->direction = $direction;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasMaxDepthEnabled()
+    {
+        return $this->maxDepth;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function enableMaxDepth($enable = true)
+    {
+        $this->maxDepth = $enable;
 
         return $this;
     }

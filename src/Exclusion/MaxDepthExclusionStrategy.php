@@ -44,6 +44,10 @@ class MaxDepthExclusionStrategy extends ExclusionStrategy
      */
     private function skip(ContextInterface $context)
     {
+        if (!$context->hasMaxDepthEnabled()) {
+            return false;
+        }
+
         $metadataStack = $context->getMetadataStack();
         $stackDepth = count($context->getDataStack());
         $depth = 0;

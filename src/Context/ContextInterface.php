@@ -58,6 +58,18 @@ interface ContextInterface
     /**
      * @return bool
      */
+    public function hasMaxDepthEnabled();
+
+    /**
+     * @param bool $enable
+     *
+     * @return ContextInterface
+     */
+    public function enableMaxDepth($enable = true);
+
+    /**
+     * @return bool
+     */
     public function hasVersion();
 
     /**
