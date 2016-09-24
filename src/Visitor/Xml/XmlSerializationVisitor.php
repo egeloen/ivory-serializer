@@ -82,11 +82,11 @@ class XmlSerializationVisitor extends AbstractVisitor
     /**
      * {@inheritdoc}
      */
-    public function prepare($data)
+    public function prepare($data, ContextInterface $context)
     {
         $this->stack = new \SplStack();
 
-        return parent::prepare($data);
+        return parent::prepare($data, $context);
     }
 
     /**

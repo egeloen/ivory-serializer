@@ -108,7 +108,7 @@ class Serializer implements SerializerInterface
             ->setVisitor($visitor)
             ->setDirection($direction);
 
-        $this->navigator->navigate($visitor->prepare($data), $context, $type);
+        $this->navigator->navigate($visitor->prepare($data, $context), $context, $type);
 
         return $visitor->getResult();
     }

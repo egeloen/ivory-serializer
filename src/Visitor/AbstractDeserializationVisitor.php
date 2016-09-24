@@ -55,9 +55,9 @@ abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
     /**
      * {@inheritdoc}
      */
-    public function prepare($data)
+    public function prepare($data, ContextInterface $context)
     {
-        return $this->decode(parent::prepare($data));
+        return $this->decode(parent::prepare($data, $context));
     }
 
     /**

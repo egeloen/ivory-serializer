@@ -22,11 +22,12 @@ use Ivory\Serializer\Mapping\TypeMetadataInterface;
 interface VisitorInterface
 {
     /**
-     * @param mixed $data
+     * @param mixed            $data
+     * @param ContextInterface $context
      *
      * @return mixed
      */
-    public function prepare($data);
+    public function prepare($data, ContextInterface $context);
 
     /**
      * @param mixed                 $data

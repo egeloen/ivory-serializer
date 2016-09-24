@@ -20,6 +20,7 @@ use Ivory\Serializer\Mapping\PropertyMetadataInterface;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 use Ivory\Serializer\Naming\IdenticalNamingStrategy;
 use Ivory\Serializer\Naming\NamingStrategyInterface;
+use Ivory\Serializer\Navigator\NavigatorInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -37,6 +38,21 @@ abstract class AbstractVisitor implements VisitorInterface
     private $namingStrategy;
 
     /**
+     * @var NavigatorInterface
+     */
+    private $navigator;
+
+    /**
+     * @var \SplStack
+     */
+    private $dataStack;
+
+    /**
+     * @var \SplStack
+     */
+    private $metadataStack;
+
+    /**
      * @param ExclusionStrategyInterface|null $exclusionStrategy
      * @param NamingStrategyInterface|null    $namingStrategy
      */
@@ -51,8 +67,12 @@ abstract class AbstractVisitor implements VisitorInterface
     /**
      * {@inheritdoc}
      */
-    public function prepare($data)
+    public function prepare($data, ContextInterface $context)
     {
+        $this->navigator = $context->getNavigator();
+        $this->dataStack = $context->getDataStack();
+        $this->metadataStack = $context->getMetadataStack();
+
         return $data;
     }
 
@@ -199,7 +219,7 @@ abstract class AbstractVisitor implements VisitorInterface
      */
     protected function navigate($data, ContextInterface $context, TypeMetadataInterface $type = null)
     {
-        return $context->getNavigator()->navigate($data, $context, $type);
+        return $this->navigator->navigate($data, $context, $type);
     }
 
     /**
@@ -210,8 +230,8 @@ abstract class AbstractVisitor implements VisitorInterface
     private function enterScope($data, MetadataInterface $metadata, ContextInterface $context)
     {
         if ($context->hasMaxDepthEnabled()) {
-            $context->getDataStack()->push($data);
-            $context->getMetadataStack()->push($metadata);
+            $this->dataStack->push($data);
+            $this->metadataStack->push($metadata);
         }
     }
 
@@ -221,8 +241,8 @@ abstract class AbstractVisitor implements VisitorInterface
     private function leaveScope(ContextInterface $context)
     {
         if ($context->hasMaxDepthEnabled()) {
-            $context->getDataStack()->pop();
-            $context->getMetadataStack()->pop();
+            $this->dataStack->pop();
+            $this->metadataStack->pop();
         }
     }
 }

@@ -208,7 +208,7 @@ class PropertyMetadata implements PropertyMetadataInterface
      */
     public function getGroups()
     {
-        return $this->groups;
+        return array_keys($this->groups);
     }
 
     /**
@@ -235,7 +235,7 @@ class PropertyMetadata implements PropertyMetadataInterface
      */
     public function hasGroup($group)
     {
-        return in_array($group, $this->groups, true);
+        return isset($this->groups[$group]);
     }
 
     /**
@@ -244,7 +244,7 @@ class PropertyMetadata implements PropertyMetadataInterface
     public function addGroup($group)
     {
         if (!$this->hasGroup($group)) {
-            $this->groups[] = $group;
+            $this->groups[$group] = true;
         }
     }
 
@@ -253,8 +253,7 @@ class PropertyMetadata implements PropertyMetadataInterface
      */
     public function removeGroup($group)
     {
-        unset($this->groups[array_search($group, $this->groups, true)]);
-        $this->groups = array_values($this->groups);
+        unset($this->groups[$group]);
     }
 
     /**

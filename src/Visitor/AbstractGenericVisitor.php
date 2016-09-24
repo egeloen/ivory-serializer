@@ -33,11 +33,11 @@ abstract class AbstractGenericVisitor extends AbstractVisitor
     /**
      * {@inheritdoc}
      */
-    public function prepare($data)
+    public function prepare($data, ContextInterface $context)
     {
         $this->stack = new \SplStack();
 
-        return parent::prepare($data);
+        return parent::prepare($data, $context);
     }
 
     /**
@@ -48,9 +48,9 @@ abstract class AbstractGenericVisitor extends AbstractVisitor
         $result = [];
 
         if (!empty($data)) {
-            $this->enterScope();
+            $this->enterGenericScope();
             $result = parent::visitArray($data, $type, $context);
-            $this->leaveScope();
+            $this->leaveGenericScope();
         }
 
         return $this->visitData($result, $type, $context);
@@ -77,7 +77,7 @@ abstract class AbstractGenericVisitor extends AbstractVisitor
             return false;
         }
 
-        $this->enterScope();
+        $this->enterGenericScope();
         $this->result = $this->createResult($class->getName());
 
         return true;
@@ -90,7 +90,7 @@ abstract class AbstractGenericVisitor extends AbstractVisitor
     {
         parent::finishVisitingObject($data, $class, $context);
 
-        return $this->leaveScope();
+        return $this->leaveGenericScope();
     }
 
     /**
@@ -126,7 +126,7 @@ abstract class AbstractGenericVisitor extends AbstractVisitor
         return $this->result;
     }
 
-    private function enterScope()
+    private function enterGenericScope()
     {
         $this->stack->push($this->result);
     }
@@ -134,7 +134,7 @@ abstract class AbstractGenericVisitor extends AbstractVisitor
     /**
      * @return mixed
      */
-    private function leaveScope()
+    private function leaveGenericScope()
     {
         $result = $this->result;
         $this->result = $this->stack->pop();
