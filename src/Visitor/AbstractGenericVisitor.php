@@ -117,11 +117,9 @@ abstract class AbstractGenericVisitor extends AbstractVisitor
         $this->result = [];
 
         foreach ($data as $key => $value) {
-            $this->result[$this->navigate($key, $context, $type->getOption('key'))] = $this->navigate(
-                $value,
-                $context,
-                $type->getOption('value')
-            );
+            $key = $this->navigator->navigate($key, $context, $type->getOption('key'));
+            $value = $this->navigator->navigate($value, $context, $type->getOption('value'));
+            $this->result[$key] = $value;
         }
 
         return $this->result;

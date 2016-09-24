@@ -24,11 +24,6 @@ use Ivory\Serializer\Navigator\NavigatorInterface;
 abstract class AbstractVisitor implements VisitorInterface
 {
     /**
-     * @var NavigatorInterface
-     */
-    private $navigator;
-
-    /**
      * @var \SplStack
      */
     private $dataStack;
@@ -37,6 +32,11 @@ abstract class AbstractVisitor implements VisitorInterface
      * @var \SplStack
      */
     private $metadataStack;
+
+    /**
+     * @var NavigatorInterface
+     */
+    protected $navigator;
 
     /**
      * {@inheritdoc}
@@ -181,18 +181,6 @@ abstract class AbstractVisitor implements VisitorInterface
         PropertyMetadataInterface $property,
         ContextInterface $context
     );
-
-    /**
-     * @param mixed                      $data
-     * @param ContextInterface           $context
-     * @param TypeMetadataInterface|null $type
-     *
-     * @return mixed
-     */
-    protected function navigate($data, ContextInterface $context, TypeMetadataInterface $type = null)
-    {
-        return $this->navigator->navigate($data, $context, $type);
-    }
 
     /**
      * @param mixed             $data

@@ -45,29 +45,50 @@ class XmlSerializationVisitor extends AbstractVisitor
     /**
      * @var string
      */
-    private $version = '1.0';
+    private $version;
 
     /**
      * @var string
      */
-    private $encoding = 'UTF-8';
+    private $encoding;
 
     /**
      * @var string
      */
-    private $root = 'result';
+    private $root;
 
     /**
      * @var string
      */
-    private $entry = 'entry';
+    private $entry;
+
+    /**
+     * @var string
+     */
+    private $entryAttribute;
 
     /**
      * @param AccessorInterface $accessor
+     * @param string            $version
+     * @param string            $encoding
+     * @param string            $root
+     * @param string            $entry
+     * @param string            $entryAttribute
      */
-    public function __construct(AccessorInterface $accessor)
-    {
+    public function __construct(
+        AccessorInterface $accessor,
+        $version = '1.0',
+        $encoding = 'UTF-8',
+        $root = 'result',
+        $entry = 'entry',
+        $entryAttribute = 'key'
+    ) {
         $this->accessor = $accessor;
+        $this->version = $version;
+        $this->encoding = $encoding;
+        $this->root = $root;
+        $this->entry = $entry;
+        $this->entryAttribute = $entryAttribute;
     }
 
     /**
@@ -138,7 +159,11 @@ class XmlSerializationVisitor extends AbstractVisitor
         $this->enterScope($node);
 
         // FIXME - Detect errors
-        $this->navigate($this->accessor->getValue($data, $property->getName()), $context, $property->getType());
+        $this->navigator->navigate(
+            $this->accessor->getValue($data, $property->getName()),
+            $context,
+            $property->getType()
+        );
 
         $this->leaveScope();
         $this->visitNode($node);
@@ -157,11 +182,11 @@ class XmlSerializationVisitor extends AbstractVisitor
             $node = $this->createNode(is_string($key) ? $key : $this->entry);
 
             if (is_int($key)) {
-                $node->setAttribute('key', $key);
+                $node->setAttribute($this->entryAttribute, $key);
             }
 
             $this->enterScope($node);
-            $this->navigate($value, $context, $type->getOption('value'));
+            $this->navigator->navigate($value, $context, $type->getOption('value'));
             $this->leaveScope();
             $this->visitNode($node);
         }

@@ -78,7 +78,7 @@ abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
         PropertyMetadataInterface $property,
         ContextInterface $context
     ) {
-        if (!array_key_exists($name, $data)) {
+        if (!isset($data[$name])) {
             return false;
         }
 
@@ -86,7 +86,7 @@ abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
         $this->mutator->setValue(
             $this->result,
             $property->getName(),
-            $this->navigate($data[$name], $context, $property->getType())
+            $this->navigator->navigate($data[$name], $context, $property->getType())
         );
 
         return true;

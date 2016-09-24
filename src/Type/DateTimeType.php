@@ -54,8 +54,13 @@ class DateTimeType extends AbstractClassType
             ));
         }
 
-        // FIXME - Detect errors
-        return $data->format($type->getOption('format', $this->format));
+        $result = $data->format($format = $type->getOption('format', $this->format));
+
+        if ($result === false) {
+            throw new \InvalidArgumentException(sprintf('The date format "%s" is not valid.', $format));
+        }
+
+        return $result;
     }
 
     /**
@@ -65,15 +70,39 @@ class DateTimeType extends AbstractClassType
     {
         $class = $type->getName();
 
-        if (!method_exists($class, $method = 'createFromFormat')) {
-            throw new \InvalidArgumentException(sprintf('The method "%s" does not exist on "%s".', $method, $class));
+        if (!method_exists($class, 'createFromFormat')) {
+            throw new \InvalidArgumentException(sprintf(
+                'The method "%s" does not exist on "%s".',
+                'createFromFormat',
+                $class
+            ));
         }
 
-        // FIXME - Detect errors
-        return $class::createFromFormat(
-            $type->getOption('format', $this->format),
+        if (!method_exists($class, 'getLastErrors')) {
+            throw new \InvalidArgumentException(sprintf(
+                'The method "%s" does not exist on "%s".',
+                'getLastErrors',
+                $class
+            ));
+        }
+
+        $result = $class::createFromFormat(
+            $format = $type->getOption('format', $this->format),
             $data,
-            new \DateTimeZone($type->getOption('timezone', $this->timeZone))
+            $timezone = new \DateTimeZone($type->getOption('timezone', $this->timeZone))
         );
+
+        $errors = $class::getLastErrors();
+
+        if (!empty($errors['warnings']) || !empty($errors['errors'])) {
+            throw new \InvalidArgumentException(sprintf(
+                'The date "%s" with format "%s" and timezone "%s" is not valid.',
+                $data,
+                $format,
+                $timezone->getName()
+            ));
+        }
+
+        return $result;
     }
 }

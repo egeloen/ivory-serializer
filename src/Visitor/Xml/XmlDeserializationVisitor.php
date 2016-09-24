@@ -12,8 +12,11 @@
 namespace Ivory\Serializer\Visitor\Xml;
 
 use Ivory\Serializer\Context\ContextInterface;
+use Ivory\Serializer\Instantiator\InstantiatorInterface;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
+use Ivory\Serializer\Mapping\TypeMetadata;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
+use Ivory\Serializer\Mutator\MutatorInterface;
 use Ivory\Serializer\Type\Type;
 use Ivory\Serializer\Visitor\AbstractDeserializationVisitor;
 
@@ -25,7 +28,30 @@ class XmlDeserializationVisitor extends AbstractDeserializationVisitor
     /**
      * @var string
      */
-    private $entry = 'entry';
+    private $entry;
+
+    /**
+     * @var string
+     */
+    private $entryAttribute;
+
+    /**
+     * @param InstantiatorInterface $instantiator
+     * @param MutatorInterface      $mutator
+     * @param string                $entry
+     * @param string                $entryAttribute
+     */
+    public function __construct(
+        InstantiatorInterface $instantiator,
+        MutatorInterface $mutator,
+        $entry = 'entry',
+        $entryAttribute = 'key'
+    ) {
+        parent::__construct($instantiator, $mutator);
+
+        $this->entry = $entry;
+        $this->entryAttribute = $entryAttribute;
+    }
 
     /**
      * {@inheritdoc}
@@ -81,15 +107,15 @@ class XmlDeserializationVisitor extends AbstractDeserializationVisitor
         PropertyMetadataInterface $property,
         ContextInterface $context
     ) {
-        return parent::doVisitObjectProperty($this->visitNode($data, $property->getType()), $name, $property, $context);
-    }
+        $data = $this->visitNode($data, new TypeMetadata(Type::ARRAY_));
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function navigate($data, ContextInterface $context, TypeMetadataInterface $type = null)
-    {
-        return parent::navigate($this->visitNode($data, $type), $context, $type);
+        if (!isset($data[$name])) {
+            return false;
+        }
+
+        $data[$name] = $this->visitNode($data[$name], $property->getType());
+
+        return parent::doVisitObjectProperty($data, $name, $property, $context);
     }
 
     /**
@@ -100,38 +126,30 @@ class XmlDeserializationVisitor extends AbstractDeserializationVisitor
      */
     private function visitArrayItem($key, $value, TypeMetadataInterface $type, ContextInterface $context)
     {
-        $key = $this->visitArrayKey($key, $value, $context, $type->getOption('key'));
-        $result = $this->navigate($value, $context, $type->getOption('value'));
+        $keyType = $type->getOption('key');
+        $valueType = $type->getOption('value');
+
+        if ($value instanceof \SimpleXMLElement) {
+            $key = $value->getName();
+
+            if ($key === $this->entry) {
+                $attributes = $value->attributes();
+                $key = isset($attributes[$this->entryAttribute]) ? $attributes[$this->entryAttribute] : null;
+            }
+
+            $value = $this->visitNode($value, $valueType);
+        } elseif ($key === $this->entry) {
+            $key = null;
+        }
+
+        $key = $this->navigator->navigate($this->visitNode($key, $keyType), $context, $keyType);
+        $result = $this->navigator->navigate($value, $context, $valueType);
 
         if ($key === null) {
             $this->result[] = $result;
         } else {
             $this->result[$key] = $result;
         }
-    }
-
-    /**
-     * @param mixed                      $key
-     * @param mixed                      $value
-     * @param ContextInterface           $context
-     * @param TypeMetadataInterface|null $type
-     *
-     * @return mixed
-     */
-    private function visitArrayKey($key, $value, ContextInterface $context, TypeMetadataInterface $type = null)
-    {
-        if ($value instanceof \SimpleXMLElement) {
-            $key = $value->getName();
-
-            if ($key === $this->entry) {
-                $attributes = $value->attributes();
-                $key = isset($attributes['key']) ? $attributes['key'] : null;
-            }
-        } elseif ($key === $this->entry) {
-            $key = null;
-        }
-
-        return $this->navigate($key, $context, $type);
     }
 
     /**
