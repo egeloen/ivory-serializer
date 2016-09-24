@@ -135,7 +135,21 @@ interface ContextInterface
     public function getDataStack();
 
     /**
+     * @param \SplStack $dataStack
+     *
+     * @return ContextInterface
+     */
+    public function setDataStack(\SplStack $dataStack);
+
+    /**
      * @return \SplStack
      */
     public function getMetadataStack();
+
+    /**
+     * @param \SplStack $metadataStack
+     *
+     * @return ContextInterface
+     */
+    public function setMetadataStack(\SplStack $metadataStack);
 }

@@ -62,15 +62,6 @@ class Context implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function __construct()
-    {
-        $this->dataStack = new \SplStack();
-        $this->metadataStack = new \SplStack();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigator()
     {
         return $this->navigator;
@@ -246,8 +237,28 @@ class Context implements ContextInterface
     /**
      * {@inheritdoc}
      */
+    public function setDataStack(\SplStack $dataStack)
+    {
+        $this->dataStack = $dataStack;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getMetadataStack()
     {
         return $this->metadataStack;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setMetadataStack(\SplStack $metadataStack)
+    {
+        $this->metadataStack = $metadataStack;
+
+        return $this;
     }
 }

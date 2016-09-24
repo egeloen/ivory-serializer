@@ -36,6 +36,7 @@ abstract class AbstractGenericVisitor extends AbstractVisitor
     public function prepare($data, ContextInterface $context)
     {
         $this->stack = new \SplStack();
+        $this->result = null;
 
         return parent::prepare($data, $context);
     }

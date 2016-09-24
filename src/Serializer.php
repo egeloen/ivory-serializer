@@ -106,7 +106,9 @@ class Serializer implements SerializerInterface
         $context
             ->setNavigator($this->navigator)
             ->setVisitor($visitor)
-            ->setDirection($direction);
+            ->setDirection($direction)
+            ->setDataStack(new \SplStack())
+            ->setMetadataStack(new \SplStack());
 
         $this->navigator->navigate($visitor->prepare($data, $context), $context, $type);
 
