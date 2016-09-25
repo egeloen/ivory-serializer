@@ -1,0 +1,9 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\AccessorFixture": {
+        "properties": {
+            "name": {
+                "accessor": true
+            }
+        }
+    }
+}

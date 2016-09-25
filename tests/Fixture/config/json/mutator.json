@@ -1,0 +1,9 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\MutatorFixture": {
+        "properties": {
+            "name": {
+                "mutator": true
+            }
+        }
+    }
+}

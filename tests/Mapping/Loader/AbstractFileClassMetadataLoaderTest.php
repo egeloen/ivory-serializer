@@ -12,10 +12,12 @@
 namespace Ivory\Tests\Serializer\Mapping\Loader;
 
 use Ivory\Serializer\Mapping\ClassMetadata;
+use Ivory\Tests\Serializer\Fixture\AccessorFixture;
 use Ivory\Tests\Serializer\Fixture\ExcludeFixture;
 use Ivory\Tests\Serializer\Fixture\ExposeFixture;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
+use Ivory\Tests\Serializer\Fixture\MutatorFixture;
 use Ivory\Tests\Serializer\Fixture\OrderFixture;
 use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
@@ -75,6 +77,24 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
     {
         $this->setLoader($this->createLoader('expose'));
         $this->loadClassMetadata(new ClassMetadata(ExposeFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testAccessor()
+    {
+        $this->setLoader($this->createLoader('accessor'));
+        $this->loadClassMetadata(new ClassMetadata(AccessorFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testMutator()
+    {
+        $this->setLoader($this->createLoader('mutator'));
+        $this->loadClassMetadata(new ClassMetadata(MutatorFixture::class));
     }
 
     /**
