@@ -69,9 +69,10 @@ class ReflectionMutator implements MutatorInterface
         }
 
         throw new \InvalidArgumentException(sprintf(
-            'The property "%s" or methods %s don\'t exist.',
+            'The property "%s" or methods %s don\'t exist on class "%s".',
             $property,
-            '"'.implode('", "', $methods).'"'
+            '"'.implode('", "', $methods).'"',
+            get_class($object)
         ));
     }
 

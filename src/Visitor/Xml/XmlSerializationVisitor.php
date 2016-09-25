@@ -158,7 +158,7 @@ class XmlSerializationVisitor extends AbstractVisitor
         ContextInterface $context
     ) {
         $node = $this->createNode($name);
-        $this->enterScope($node);
+        $this->enterNodeScope($node);
 
         // FIXME - Detect errors
         $this->navigator->navigate(
@@ -167,7 +167,7 @@ class XmlSerializationVisitor extends AbstractVisitor
             $property->getType()
         );
 
-        $this->leaveScope();
+        $this->leaveNodeScope();
         $this->visitNode($node);
 
         return true;
@@ -187,9 +187,9 @@ class XmlSerializationVisitor extends AbstractVisitor
                 $node->setAttribute($this->entryAttribute, $key);
             }
 
-            $this->enterScope($node);
+            $this->enterNodeScope($node);
             $this->navigator->navigate($value, $context, $type->getOption('value'));
-            $this->leaveScope();
+            $this->leaveNodeScope();
             $this->visitNode($node);
         }
     }
@@ -219,13 +219,13 @@ class XmlSerializationVisitor extends AbstractVisitor
     /**
      * @param \DOMNode $node
      */
-    private function enterScope(\DOMNode $node)
+    private function enterNodeScope(\DOMNode $node)
     {
         $this->stack->push($this->node);
         $this->node = $node;
     }
 
-    private function leaveScope()
+    private function leaveNodeScope()
     {
         $this->node = $this->stack->pop();
     }
