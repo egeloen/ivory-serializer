@@ -97,6 +97,8 @@ class XmlSerializationVisitor extends AbstractVisitor
     public function prepare($data, ContextInterface $context)
     {
         $this->stack = new \SplStack();
+        $this->document = null;
+        $this->node = null;
 
         return parent::prepare($data, $context);
     }
