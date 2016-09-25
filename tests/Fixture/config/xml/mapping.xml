@@ -40,6 +40,14 @@
         <property name="bar" />
     </class>
 
+    <class name="Ivory\Tests\Serializer\Fixture\AccessorFixture">
+        <property name="name" accessor="getName" />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\MutatorFixture">
+        <property name="name" mutator="setName" />
+    </class>
+
     <class name="Ivory\Tests\Serializer\Fixture\MaxDepthFixture">
         <property
             name="parent"

@@ -34,6 +34,16 @@ class PropertyMetadata implements PropertyMetadataInterface
     /**
      * @var string|null
      */
+    private $accessor;
+
+    /**
+     * @var string|null
+     */
+    private $mutator;
+
+    /**
+     * @var string|null
+     */
     private $since;
 
     /**
@@ -121,6 +131,54 @@ class PropertyMetadata implements PropertyMetadataInterface
     public function setType(TypeMetadataInterface $type = null)
     {
         $this->type = $type;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasAccessor()
+    {
+        return $this->accessor !== null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAccessor()
+    {
+        return $this->accessor;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setAccessor($accessor)
+    {
+        $this->accessor = $accessor;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasMutator()
+    {
+        return $this->mutator !== null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMutator()
+    {
+        return $this->mutator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setMutator($mutator)
+    {
+        $this->mutator = $mutator;
     }
 
     /**
@@ -269,6 +327,14 @@ class PropertyMetadata implements PropertyMetadataInterface
             $this->setType($propertyMetadata->getType());
         }
 
+        if ($propertyMetadata->hasAccessor()) {
+            $this->setAccessor($propertyMetadata->getAccessor());
+        }
+
+        if ($propertyMetadata->hasMutator()) {
+            $this->setMutator($propertyMetadata->getMutator());
+        }
+
         if ($propertyMetadata->hasSinceVersion()) {
             $this->setSinceVersion($propertyMetadata->getSinceVersion());
         }
@@ -295,6 +361,8 @@ class PropertyMetadata implements PropertyMetadataInterface
             $this->name,
             $this->alias,
             $this->type,
+            $this->accessor,
+            $this->mutator,
             $this->since,
             $this->until,
             $this->maxDepth,
@@ -311,6 +379,8 @@ class PropertyMetadata implements PropertyMetadataInterface
             $this->name,
             $this->alias,
             $this->type,
+            $this->accessor,
+            $this->mutator,
             $this->since,
             $this->until,
             $this->maxDepth,

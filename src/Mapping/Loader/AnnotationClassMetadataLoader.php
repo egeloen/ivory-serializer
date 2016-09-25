@@ -13,12 +13,14 @@ namespace Ivory\Serializer\Mapping\Loader;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
+use Ivory\Serializer\Mapping\Annotation\Accessor;
 use Ivory\Serializer\Mapping\Annotation\Alias;
 use Ivory\Serializer\Mapping\Annotation\Exclude;
 use Ivory\Serializer\Mapping\Annotation\ExclusionPolicy;
 use Ivory\Serializer\Mapping\Annotation\Expose;
 use Ivory\Serializer\Mapping\Annotation\Groups;
 use Ivory\Serializer\Mapping\Annotation\MaxDepth;
+use Ivory\Serializer\Mapping\Annotation\Mutator;
 use Ivory\Serializer\Mapping\Annotation\Order;
 use Ivory\Serializer\Mapping\Annotation\Since;
 use Ivory\Serializer\Mapping\Annotation\Type;
@@ -102,6 +104,10 @@ class AnnotationClassMetadataLoader extends AbstractReflectionClassMetadataLoade
                 $definition['expose'] = true;
             } elseif ($annotation instanceof Exclude) {
                 $definition['exclude'] = true;
+            } elseif ($annotation instanceof Accessor) {
+                $definition['accessor'] = $annotation->getAccessor();
+            } elseif ($annotation instanceof Mutator) {
+                $definition['mutator'] = $annotation->getMutator();
             } elseif ($annotation instanceof Since) {
                 $definition['since'] = $annotation->getVersion();
             } elseif ($annotation instanceof Until) {

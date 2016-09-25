@@ -75,6 +75,20 @@
             "bar": {}
         }
     },
+    "Ivory\\Tests\\Serializer\\Fixture\\AccessorFixture": {
+        "properties": {
+            "name": {
+                "accessor": "getName"
+            }
+        }
+    },
+    "Ivory\\Tests\\Serializer\\Fixture\\MutatorFixture": {
+        "properties": {
+            "name": {
+                "mutator": "setName"
+            }
+        }
+    },
     "Ivory\\Tests\\Serializer\\Fixture\\MaxDepthFixture": {
         "properties": {
             "parent": {

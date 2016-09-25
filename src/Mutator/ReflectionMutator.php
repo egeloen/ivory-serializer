@@ -31,9 +31,9 @@ class ReflectionMutator implements MutatorInterface
      */
     public function setValue($object, $property, $value)
     {
-        try {
-            return $this->setPropertyValue($object, $property, $value);
-        } catch (\ReflectionException $e) {
+        if (property_exists($object, $property)) {
+            $this->getReflectionProperty($object, $property)->setValue($object, $value);
+        } else {
             $this->setMethodValue($object, $property, $value);
         }
     }
@@ -43,28 +43,25 @@ class ReflectionMutator implements MutatorInterface
      * @param string $property
      * @param mixed  $value
      */
-    private function setPropertyValue($object, $property, $value)
-    {
-        $this->getReflectionProperty($object, $property)->setValue($object, $value);
-    }
-
-    /**
-     * @param object $object
-     * @param string $property
-     * @param mixed  $value
-     */
     private function setMethodValue($object, $property, $value)
     {
-        $methods = [];
+        $methods = [$property];
+
+        if (method_exists($object, $property)) {
+            $this->getReflectionMethod($object, $property)->invoke($object, $value);
+
+            return;
+        }
+
         $methodSuffix = ucfirst($property);
 
         foreach (['get', 'has', 'is'] as $methodPrefix) {
-            try {
-                $methods[] = $method = $methodPrefix.$methodSuffix;
+            $methods[] = $method = $methodPrefix.$methodSuffix;
+
+            if (method_exists($object, $method)) {
                 $this->getReflectionMethod($object, $method)->invoke($object, $value);
 
                 return;
-            } catch (\ReflectionException $e) {
             }
         }
 

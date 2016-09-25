@@ -79,7 +79,7 @@ use Ivory\Serializer\Exclusion\VersionExclusionStrategy;
 
 $context->setExclusionStrategy(new ChainExclusionStrategy([
     new MaxDepthExclusionStrategy(),
-    new GroupsExclusionStrategy(['group1', 'group2'])n
+    new GroupsExclusionStrategy(['group1', 'group2']),
     new VersionExclusionStrategy('1.0.1'),
 ]));
 ```

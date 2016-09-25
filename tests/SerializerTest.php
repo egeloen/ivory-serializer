@@ -19,6 +19,7 @@ use Ivory\Serializer\Exclusion\MaxDepthExclusionStrategy;
 use Ivory\Serializer\Exclusion\VersionExclusionStrategy;
 use Ivory\Serializer\Format;
 use Ivory\Serializer\Serializer;
+use Ivory\Tests\Serializer\Fixture\AccessorFixture;
 use Ivory\Tests\Serializer\Fixture\ArrayFixture;
 use Ivory\Tests\Serializer\Fixture\AscFixture;
 use Ivory\Tests\Serializer\Fixture\DateTimeFixture;
@@ -28,6 +29,7 @@ use Ivory\Tests\Serializer\Fixture\ExposeFixture;
 use Ivory\Tests\Serializer\Fixture\FixtureInterface;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
+use Ivory\Tests\Serializer\Fixture\MutatorFixture;
 use Ivory\Tests\Serializer\Fixture\OrderFixture;
 use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
@@ -124,6 +126,12 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $exposeFixture->foo = 'oof';
         $exposeFixture->bar = 'rab';
 
+        $accessorFixture = new AccessorFixture();
+        $accessorFixture->setName(' foo ');
+
+        $mutatorFixture = new MutatorFixture();
+        $mutatorFixture->setRawName(' foo ');
+
         $emptyGroupFixture = new GroupFixture();
         $groupFixture = clone $emptyGroupFixture;
         $groupFixture->setFoo('oof');
@@ -198,6 +206,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['object_date_time_empty', $emptyDateTimeFixture],
             ['object_exclude', $excludeFixture],
             ['object_expose', $exposeFixture],
+            ['object_accessor', $accessorFixture],
+            ['object_mutator', $mutatorFixture],
             ['object_groups', $groupFixture],
             ['object_groups_empty', $emptyGroupFixture],
             ['object_groups_group1', $groupFixture, (new Context())->setExclusionStrategy(new GroupsExclusionStrategy(['group1']))],

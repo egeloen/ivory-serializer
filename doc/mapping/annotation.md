@@ -15,18 +15,40 @@ class User
      * @Serializer\Expose
      * @Serializer\Alias("user_name")
      * @Serializer\Type("string")
+     * @Serializer\Accessor("getName")
+     * @Serializer\Mutator("setName")
      * @Serializer\Groups({"group1", "group2"})
      * @Serializer\Since("1.0")
      * @Serializer\Until("2.0")
+     *
+     * @var string
      */
-    public $username;
+    private $username;
     
     /**
      * @Serializer\Exclude
      * @Serializer\Type("array<key=int, value=Acme\Model\User>")
      * @Serializer\MaxDepth(2)
+     *
+     * @var User[]
      */
     public $friends = [];
+    
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return trim($this->username);
+    }
+    
+    /**
+     * @param string username
+     */
+    public function setUsername($username)
+    {
+        $this->username = trim($username);
+    }
 }
 ```
 

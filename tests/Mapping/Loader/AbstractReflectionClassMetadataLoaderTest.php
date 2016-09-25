@@ -12,12 +12,15 @@
 namespace Ivory\Tests\Serializer\Mapping\Loader;
 
 use Ivory\Serializer\Mapping\ClassMetadata;
+use Ivory\Tests\Serializer\Fixture\AccessorFixture;
 use Ivory\Tests\Serializer\Fixture\ArrayFixture;
 use Ivory\Tests\Serializer\Fixture\DateTimeFixture;
 use Ivory\Tests\Serializer\Fixture\ExcludeFixture;
 use Ivory\Tests\Serializer\Fixture\ExposeFixture;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
+use Ivory\Tests\Serializer\Fixture\MutatorFixture;
+use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
 
 /**
@@ -35,6 +38,20 @@ abstract class AbstractReflectionClassMetadataLoaderTest extends AbstractClassMe
             'objects'    => ['type' => 'array'],
             'types'      => ['type' => 'array'],
             'inceptions' => ['type' => 'array'],
+        ]);
+    }
+
+    public function testScalarFixture()
+    {
+        $classMetadata = new ClassMetadata(ScalarFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'bool'   => ['type' => 'bool'],
+            'float'  => ['type' => 'float'],
+            'int'    => ['type' => 'int'],
+            'string' => ['type' => 'string'],
+            'type'   => ['type' => ScalarFixture::class],
         ]);
     }
 
@@ -70,6 +87,26 @@ abstract class AbstractReflectionClassMetadataLoaderTest extends AbstractClassMe
         $this->assertTrue($this->loadClassMetadata($classMetadata));
         $this->assertClassMetadata($classMetadata, [
             'foo' => ['type' => 'string'],
+        ]);
+    }
+
+    public function testAccessorFixture()
+    {
+        $classMetadata = new ClassMetadata(AccessorFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'name' => ['type' => 'string'],
+        ]);
+    }
+
+    public function testMutatorFixture()
+    {
+        $classMetadata = new ClassMetadata(MutatorFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'name' => ['type' => 'string'],
         ]);
     }
 

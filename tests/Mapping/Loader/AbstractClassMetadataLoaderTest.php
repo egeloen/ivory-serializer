@@ -15,6 +15,7 @@ use Ivory\Serializer\Mapping\ClassMetadata;
 use Ivory\Serializer\Mapping\ClassMetadataInterface;
 use Ivory\Serializer\Mapping\Loader\ClassMetadataLoaderInterface;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
+use Ivory\Tests\Serializer\Fixture\AccessorFixture;
 use Ivory\Tests\Serializer\Fixture\ArrayFixture;
 use Ivory\Tests\Serializer\Fixture\AscFixture;
 use Ivory\Tests\Serializer\Fixture\DateTimeFixture;
@@ -23,6 +24,7 @@ use Ivory\Tests\Serializer\Fixture\ExcludeFixture;
 use Ivory\Tests\Serializer\Fixture\ExposeFixture;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
+use Ivory\Tests\Serializer\Fixture\MutatorFixture;
 use Ivory\Tests\Serializer\Fixture\OrderFixture;
 use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
@@ -69,7 +71,7 @@ abstract class AbstractClassMetadataLoaderTest extends \PHPUnit_Framework_TestCa
 
         $this->assertTrue($this->loadClassMetadata($classMetadata));
         $this->assertClassMetadata($classMetadata, [
-            'bool'   => ['type' => 'bool'],
+            'bool'   => ['type' => 'bool', 'alias' => 'boolean'],
             'float'  => ['type' => 'float'],
             'int'    => ['type' => 'int'],
             'string' => ['type' => 'string'],
@@ -109,6 +111,26 @@ abstract class AbstractClassMetadataLoaderTest extends \PHPUnit_Framework_TestCa
         $this->assertTrue($this->loadClassMetadata($classMetadata));
         $this->assertClassMetadata($classMetadata, [
             'foo' => [],
+        ]);
+    }
+
+    public function testAccessorFixture()
+    {
+        $classMetadata = new ClassMetadata(AccessorFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'name' => ['accessor' => 'getName'],
+        ]);
+    }
+
+    public function testMutatorFixture()
+    {
+        $classMetadata = new ClassMetadata(MutatorFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'name' => ['mutator' => 'setName'],
         ]);
     }
 
@@ -222,11 +244,26 @@ abstract class AbstractClassMetadataLoaderTest extends \PHPUnit_Framework_TestCa
      */
     private function assertPropertyMetadata(PropertyMetadataInterface $propertyMetadata, array $data)
     {
+        $this->assertSame(isset($data['alias']), $propertyMetadata->hasAlias());
+        $this->assertSame(isset($data['alias']) ? $data['alias'] : null, $propertyMetadata->getAlias());
+
         $this->assertSame(isset($data['type']), $propertyMetadata->hasType(), $propertyMetadata->getName());
         $this->assertSame(
             isset($data['type']) ? $data['type'] : null,
             $propertyMetadata->hasType() ? (string) $propertyMetadata->getType() : null
         );
+
+        $this->assertSame(isset($data['accessor']), $propertyMetadata->hasAccessor());
+        $this->assertSame(isset($data['accessor']) ? $data['accessor'] : null, $propertyMetadata->getAccessor());
+
+        $this->assertSame(isset($data['mutator']), $propertyMetadata->hasMutator());
+        $this->assertSame(isset($data['mutator']) ? $data['mutator'] : null, $propertyMetadata->getMutator());
+
+        $this->assertSame(isset($data['since']), $propertyMetadata->hasSinceVersion());
+        $this->assertSame(isset($data['since']) ? $data['since'] : null, $propertyMetadata->getSinceVersion());
+
+        $this->assertSame(isset($data['until']), $propertyMetadata->hasUntilVersion());
+        $this->assertSame(isset($data['until']) ? $data['until'] : null, $propertyMetadata->getUntilVersion());
 
         $this->assertSame(isset($data['max_depth']), $propertyMetadata->hasMaxDepth());
         $this->assertSame(isset($data['max_depth']) ? $data['max_depth'] : null, $propertyMetadata->getMaxDepth());

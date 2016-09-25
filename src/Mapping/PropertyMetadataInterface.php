@@ -49,6 +49,36 @@ interface PropertyMetadataInterface extends MetadataInterface
     /**
      * @return bool
      */
+    public function hasAccessor();
+
+    /**
+     * @return string|null
+     */
+    public function getAccessor();
+
+    /**
+     * @param string|null $accessor
+     */
+    public function setAccessor($accessor);
+
+    /**
+     * @return bool
+     */
+    public function hasMutator();
+
+    /**
+     * @return string|null
+     */
+    public function getMutator();
+
+    /**
+     * @param string|null $mutator
+     */
+    public function setMutator($mutator);
+
+    /**
+     * @return bool
+     */
     public function hasSinceVersion();
 
     /**

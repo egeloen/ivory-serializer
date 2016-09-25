@@ -34,6 +34,8 @@
         <xsd:attribute name="type" type="xsd:string" />
         <xsd:attribute name="exclude" type="xsd:string" />
         <xsd:attribute name="expose" type="xsd:string" />
+        <xsd:attribute name="accessor" type="xsd:string" />
+        <xsd:attribute name="mutator" type="xsd:string" />
         <xsd:attribute name="since" type="xsd:string" />
         <xsd:attribute name="until" type="xsd:string" />
 

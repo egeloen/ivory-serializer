@@ -38,6 +38,14 @@ The alias mapping allows you to configure a different name for a property. This 
 serializing and deserializing the property instead of the property name. Be aware that, if a custom naming strategy is 
 configured, it will be still apply on the alias.
 
+## Accessor
+
+The accessor mapping allows you to configure the method to use in order to fetch the data when serializing.
+
+## Mutator
+
+The mutator mapping allows you to configure the method to use in order to set the data when deserializing.
+
 ## Groups
 
 The groups mapping allows you to filter the (de)-serialized data based on groups. It gives you the ability to set up 

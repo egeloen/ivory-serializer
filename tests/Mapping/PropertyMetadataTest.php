@@ -47,8 +47,14 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
     public function testDefaultState()
     {
         $this->assertSame($this->name, $this->propertyMetadata->getName());
+        $this->assertFalse($this->propertyMetadata->hasAlias());
+        $this->assertNull($this->propertyMetadata->getAlias());
         $this->assertFalse($this->propertyMetadata->hasType());
         $this->assertNull($this->propertyMetadata->getType());
+        $this->assertFalse($this->propertyMetadata->hasAccessor());
+        $this->assertNull($this->propertyMetadata->getAccessor());
+        $this->assertFalse($this->propertyMetadata->hasMutator());
+        $this->assertNull($this->propertyMetadata->getMutator());
         $this->assertFalse($this->propertyMetadata->hasSinceVersion());
         $this->assertNull($this->propertyMetadata->getSinceVersion());
         $this->assertFalse($this->propertyMetadata->hasUntilVersion());
@@ -59,12 +65,43 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($this->propertyMetadata->getGroups());
     }
 
+    public function testName()
+    {
+        $this->propertyMetadata->setName($name = 'bar');
+
+        $this->assertSame($name, $this->propertyMetadata->getName());
+    }
+
+    public function testAlias()
+    {
+        $this->propertyMetadata->setAlias($alias = 'bar');
+
+        $this->assertTrue($this->propertyMetadata->hasAlias());
+        $this->assertSame($alias, $this->propertyMetadata->getAlias());
+    }
+
     public function testType()
     {
         $this->propertyMetadata->setType($type = $this->createTypeMetadataMock());
 
         $this->assertTrue($this->propertyMetadata->hasType());
         $this->assertSame($type, $this->propertyMetadata->getType());
+    }
+
+    public function testAccessor()
+    {
+        $this->propertyMetadata->setAccessor($accessor = 'foo');
+
+        $this->assertTrue($this->propertyMetadata->hasAccessor());
+        $this->assertSame($accessor, $this->propertyMetadata->getAccessor());
+    }
+
+    public function testMutator()
+    {
+        $this->propertyMetadata->setMutator($mutator = 'foo');
+
+        $this->assertTrue($this->propertyMetadata->hasMutator());
+        $this->assertSame($mutator, $this->propertyMetadata->getMutator());
     }
 
     public function testSinceVersion()
@@ -131,9 +168,11 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
 
     public function testMerge()
     {
-        $propertyMetadata = new PropertyMetadata('foo');
+        $propertyMetadata = new PropertyMetadata($name = 'foo');
         $propertyMetadata->setAlias($alias = 'bar');
         $propertyMetadata->setType($type = $this->createTypeMetadataMock());
+        $propertyMetadata->setAccessor($accessor = 'getFoo');
+        $propertyMetadata->setMutator($mutator = 'setFoo');
         $propertyMetadata->setSinceVersion($sinceVersion = '1.0');
         $propertyMetadata->setUntilVersion($untilVersion = '2.0');
         $propertyMetadata->setMaxDepth($maxDepth = 1);
@@ -141,8 +180,11 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
 
         $this->propertyMetadata->merge($propertyMetadata);
 
+        $this->assertSame($name, $this->propertyMetadata->getName());
         $this->assertSame($alias, $this->propertyMetadata->getAlias());
         $this->assertSame($type, $this->propertyMetadata->getType());
+        $this->assertSame($accessor, $this->propertyMetadata->getAccessor());
+        $this->assertSame($mutator, $this->propertyMetadata->getMutator());
         $this->assertSame($sinceVersion, $this->propertyMetadata->getSinceVersion());
         $this->assertSame($untilVersion, $this->propertyMetadata->getUntilVersion());
         $this->assertSame($maxDepth, $this->propertyMetadata->getMaxDepth());

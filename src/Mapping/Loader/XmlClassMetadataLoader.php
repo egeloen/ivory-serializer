@@ -84,6 +84,14 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
             $property['expose'] = (string) $element['expose'] === 'true';
         }
 
+        if (isset($element['accessor'])) {
+            $property['accessor'] = (string) $element['accessor'];
+        }
+
+        if (isset($element['mutator'])) {
+            $property['mutator'] = (string) $element['mutator'];
+        }
+
         if (isset($element['since'])) {
             $property['since'] = (string) $element['since'];
         }

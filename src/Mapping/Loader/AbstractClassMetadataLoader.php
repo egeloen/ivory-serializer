@@ -126,6 +126,14 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
             $this->loadPropertyMetadataType($propertyMetadata, $data['type']);
         }
 
+        if (array_key_exists('accessor', $data)) {
+            $this->loadPropertyMetadataAccessor($propertyMetadata, $data['accessor']);
+        }
+
+        if (array_key_exists('mutator', $data)) {
+            $this->loadPropertyMetadataMutator($propertyMetadata, $data['mutator']);
+        }
+
         if (array_key_exists('since', $data)) {
             $this->loadPropertyMetadataSinceVersion($propertyMetadata, $data['since']);
         }
@@ -179,6 +187,50 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
         }
 
         $propertyMetadata->setType($this->typeParser->parse($type));
+    }
+
+    /**
+     * @param PropertyMetadataInterface $propertyMetadata
+     * @param string                    $accessor
+     */
+    private function loadPropertyMetadataAccessor(PropertyMetadataInterface $propertyMetadata, $accessor)
+    {
+        if (!is_string($accessor)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property accessor must be a non empty string, got "%s".',
+                is_object($accessor) ? get_class($accessor) : gettype($accessor)
+            ));
+        }
+
+        $accessor = trim($accessor);
+
+        if (empty($accessor)) {
+            throw new \InvalidArgumentException('The mapping property accessor must be a non empty string.');
+        }
+
+        $propertyMetadata->setAccessor($accessor);
+    }
+
+    /**
+     * @param PropertyMetadataInterface $propertyMetadata
+     * @param string                    $mutator
+     */
+    private function loadPropertyMetadataMutator(PropertyMetadataInterface $propertyMetadata, $mutator)
+    {
+        if (!is_string($mutator)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property mutator must be a non empty string, got "%s".',
+                is_object($mutator) ? get_class($mutator) : gettype($mutator)
+            ));
+        }
+
+        $mutator = trim($mutator);
+
+        if (empty($mutator)) {
+            throw new \InvalidArgumentException('The mapping property mutator must be a non empty string.');
+        }
+
+        $propertyMetadata->setMutator($mutator);
     }
 
     /**

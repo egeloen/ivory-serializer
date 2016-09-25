@@ -40,16 +40,6 @@ class Context implements ContextInterface
     private $direction;
 
     /**
-     * @var mixed[]
-     */
-    private $dataStack;
-
-    /**
-     * @var MetadataInterface[]
-     */
-    private $metadataStack;
-
-    /**
      * @var ExclusionStrategyInterface
      */
     private $exclusionStrategy;
@@ -58,6 +48,16 @@ class Context implements ContextInterface
      * @var NamingStrategyInterface
      */
     private $namingStrategy;
+
+    /**
+     * @var mixed[]
+     */
+    private $dataStack;
+
+    /**
+     * @var MetadataInterface[]
+     */
+    private $metadataStack;
 
     /**
      * @param ExclusionStrategyInterface|null $exclusionStrategy

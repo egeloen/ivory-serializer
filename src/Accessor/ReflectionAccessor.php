@@ -31,22 +31,11 @@ class ReflectionAccessor implements AccessorInterface
      */
     public function getValue($object, $property)
     {
-        try {
-            return $this->getPropertyValue($object, $property);
-        } catch (\ReflectionException $e) {
-            return $this->getMethodValue($object, $property);
+        if (property_exists($object, $property)) {
+            return $this->getReflectionProperty($object, $property)->getValue($object);
         }
-    }
 
-    /**
-     * @param object $object
-     * @param string $property
-     *
-     * @return mixed
-     */
-    private function getPropertyValue($object, $property)
-    {
-        return $this->getReflectionProperty($object, $property)->getValue($object);
+        return $this->getMethodValue($object, $property);
     }
 
     /**
@@ -57,15 +46,19 @@ class ReflectionAccessor implements AccessorInterface
      */
     private function getMethodValue($object, $property)
     {
-        $methods = [];
+        $methods = [$property];
+
+        if (method_exists($object, $property)) {
+            return $this->getReflectionMethod($object, $property)->invoke($object);
+        }
+
         $methodSuffix = ucfirst($property);
 
         foreach (['get', 'has', 'is'] as $methodPrefix) {
-            try {
-                $methods[] = $method = $methodPrefix.$methodSuffix;
+            $methods[] = $method = $methodPrefix.$methodSuffix;
 
+            if (method_exists($object, $method)) {
                 return $this->getReflectionMethod($object, $method)->invoke($object);
-            } catch (\ReflectionException $e) {
             }
         }
 

@@ -162,7 +162,10 @@ class XmlSerializationVisitor extends AbstractVisitor
 
         // FIXME - Detect errors
         $this->navigator->navigate(
-            $this->accessor->getValue($data, $property->getName()),
+            $this->accessor->getValue(
+                $data,
+                $property->hasAccessor() ? $property->getAccessor() : $property->getName()
+            ),
             $context,
             $property->getType()
         );

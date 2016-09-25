@@ -85,7 +85,7 @@ abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
         // FIXME - Detect errors
         $this->mutator->setValue(
             $this->result,
-            $property->getName(),
+            $property->hasMutator() ? $property->getMutator() : $property->getName(),
             $this->navigator->navigate($data[$name], $context, $property->getType())
         );
 
