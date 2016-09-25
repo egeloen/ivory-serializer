@@ -15,8 +15,8 @@ class User
      * @Serializer\Expose
      * @Serializer\Alias("user_name")
      * @Serializer\Type("string")
-     * @Serializer\Accessor("getName")
-     * @Serializer\Mutator("setName")
+     * @Serializer\Accessor("getUsername")
+     * @Serializer\Mutator("setUsername")
      * @Serializer\Groups({"group1", "group2"})
      * @Serializer\Since("1.0")
      * @Serializer\Until("2.0")

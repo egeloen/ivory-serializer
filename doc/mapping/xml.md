@@ -15,8 +15,8 @@
             alias="identifier" 
             type="string"
             expose="true" 
-            accessor="getName"
-            mutator="setName"
+            accessor="getUsername"
+            mutator="setUsername"
             since="1.0" 
             until="2.0"
         >

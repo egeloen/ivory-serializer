@@ -10,8 +10,8 @@
                 "alias": "user_name",
                 "type": "string",
                 "expose": true,
-                "accessor": "getName",
-                "mutator": "setName",
+                "accessor": "getUsername",
+                "mutator": "setUsername",
                 "groups": ["group1", "group2"],
                 "since": "1.0",
                 "until": "2.0"
