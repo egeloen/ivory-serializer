@@ -19,8 +19,8 @@ before_script:
 script: vendor/bin/phpunit `if [[ "$TRAVIS_PHP_VERSION" != "hhvm" ]]; then echo "--coverage-clover build/clover.xml"; fi`
 
 after_success:
-    - wget https://scrutinizer-ci.com/ocular.phar
-    - php ocular.phar code-coverage:upload --format=php-clover build/clover.xml
+    - if [[ "$TRAVIS_PHP_VERSION" != "hhvm" ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+    - if [[ "$TRAVIS_PHP_VERSION" != "hhvm" ]]; then php ocular.phar code-coverage:upload --format=php-clover build/clover.xml; fi
 
 matrix:
     include:
