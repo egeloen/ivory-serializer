@@ -23,16 +23,6 @@ use Ivory\Serializer\Navigator\NavigatorInterface;
 abstract class AbstractVisitor implements VisitorInterface
 {
     /**
-     * @var \SplStack
-     */
-    private $dataStack;
-
-    /**
-     * @var \SplStack
-     */
-    private $metadataStack;
-
-    /**
      * @var NavigatorInterface
      */
     protected $navigator;
@@ -43,8 +33,6 @@ abstract class AbstractVisitor implements VisitorInterface
     public function prepare($data, ContextInterface $context)
     {
         $this->navigator = $context->getNavigator();
-        $this->dataStack = $context->getDataStack();
-        $this->metadataStack = $context->getMetadataStack();
 
         return $data;
     }
