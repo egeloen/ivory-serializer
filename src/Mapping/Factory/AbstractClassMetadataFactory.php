@@ -28,11 +28,9 @@ abstract class AbstractClassMetadataFactory implements ClassMetadataFactoryInter
      */
     public function getClassMetadata($class)
     {
-        if (array_key_exists($class, $this->classMetadatas)) {
-            return $this->classMetadatas[$class];
-        }
-
-        return $this->classMetadatas[$class] = $this->fetchClassMetadata($class);
+        return array_key_exists($class, $this->classMetadatas)
+            ? $this->classMetadatas[$class]
+            : $this->classMetadatas[$class] = $this->fetchClassMetadata($class);
     }
 
     /**

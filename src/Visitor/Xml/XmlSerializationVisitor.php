@@ -258,7 +258,16 @@ class XmlSerializationVisitor extends AbstractVisitor
      */
     private function createNode($name)
     {
-        return $this->getDocument()->createElement($name);
+        $document = $this->getDocument();
+
+        try {
+            $element = $document->createElement($name);
+        } catch (\DOMException $e) {
+            $element = $document->createElement($this->entry);
+            $element->setAttribute($this->entryAttribute, $name);
+        }
+
+        return $element;
     }
 
     /**

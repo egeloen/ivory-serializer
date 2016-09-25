@@ -18,6 +18,11 @@ use Ivory\Serializer\Exclusion\GroupsExclusionStrategy;
 use Ivory\Serializer\Exclusion\MaxDepthExclusionStrategy;
 use Ivory\Serializer\Exclusion\VersionExclusionStrategy;
 use Ivory\Serializer\Format;
+use Ivory\Serializer\Naming\CamelCaseNamingStrategy;
+use Ivory\Serializer\Naming\KebabCaseNamingStrategy;
+use Ivory\Serializer\Naming\SnakeCaseNamingStrategy;
+use Ivory\Serializer\Naming\SpaceNamingStrategy;
+use Ivory\Serializer\Naming\StudlyCapsNamingStrategy;
 use Ivory\Serializer\Serializer;
 use Ivory\Tests\Serializer\Fixture\AccessorFixture;
 use Ivory\Tests\Serializer\Fixture\ArrayFixture;
@@ -30,6 +35,7 @@ use Ivory\Tests\Serializer\Fixture\FixtureInterface;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
 use Ivory\Tests\Serializer\Fixture\MutatorFixture;
+use Ivory\Tests\Serializer\Fixture\NamingFixture;
 use Ivory\Tests\Serializer\Fixture\OrderFixture;
 use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
@@ -118,6 +124,10 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $dateTimeFixture->formattedImmutableDateTime = $dateTimeImmutable;
         $dateTimeFixture->timeZonedImmutableDateTime = $timeZonedDateTimeImmutable;
 
+        $namingFixture = new NamingFixture();
+        $namingFixture->fooBar = 'foo';
+        $namingFixture->baz_bat = 'baz';
+
         $excludeFixture = new ExcludeFixture();
         $excludeFixture->foo = 'oof';
         $excludeFixture->bar = 'rab';
@@ -204,6 +214,12 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['object_array_empty', $emptyArrayFixture],
             ['object_date_time', $dateTimeFixture],
             ['object_date_time_empty', $emptyDateTimeFixture],
+            ['object_naming', $namingFixture],
+            ['object_naming_camel_case', $namingFixture, (new Context())->setNamingStrategy(new CamelCaseNamingStrategy())],
+            ['object_naming_kebab_case', $namingFixture, (new Context())->setNamingStrategy(new KebabCaseNamingStrategy())],
+            ['object_naming_snake_case', $namingFixture, (new Context())->setNamingStrategy(new SnakeCaseNamingStrategy())],
+            ['object_naming_space', $namingFixture, (new Context())->setNamingStrategy(new SpaceNamingStrategy())],
+            ['object_naming_studly_caps', $namingFixture, (new Context())->setNamingStrategy(new StudlyCapsNamingStrategy())],
             ['object_exclude', $excludeFixture],
             ['object_expose', $exposeFixture],
             ['object_accessor', $accessorFixture],

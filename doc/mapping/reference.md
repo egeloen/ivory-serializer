@@ -36,7 +36,7 @@ the library fastest. If you want to learn more about types, you can read this [d
 
 The alias mapping allows you to configure a different name for a property. This new name (alias) will be used when 
 serializing and deserializing the property instead of the property name. Be aware that, if a custom naming strategy is 
-configured, it will be still apply on the alias.
+configured, it will be not be apply on the alias.
 
 ## Accessor
 

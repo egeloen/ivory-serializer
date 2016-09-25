@@ -100,16 +100,65 @@ $context->setNamingStrategy(new IdenticalNamingStrategy());
 
 ### Camel Case
 
-FIXME - Implement me...
+The camel case naming strategy converts property into its camel case representation (eg. `fooBarBaz`):
+
+``` php
+use Ivory\Serializer\Naming\CamelCaseNamingStrategy;
+
+$context->setNamingStrategy(new CamelCaseNamingStrategy());
+```
 
 ### Snake Case
 
-FIXME - Implement me...
+The snake case naming strategy converts property into its snake case representation (eg. `foo_bar_baz`):
+
+``` php
+use Ivory\Serializer\Naming\SnakeCaseNamingStrategy;
+
+$context->setNamingStrategy(new SnakeCaseNamingStrategy());
+```
 
 ### Studly Caps
 
-FIXME - Implement me...
+The studly caps naming strategy converts property into this representation (eg. `FooBarBaz`):
+
+``` php
+use Ivory\Serializer\Naming\StudlyCapsNamingStrategy;
+
+$context->setNamingStrategy(new StudlyCapsNamingStrategy());
+```
 
 ### Kebab Case
 
-FIXME - Implement me...
+The kebab case naming strategy converts property into its kebab case representation (eg. `foo-bar-baz`):
+
+``` php
+use Ivory\Serializer\Naming\KebabCaseNamingStrategy;
+
+$context->setNamingStrategy(new KebabCaseNamingStrategy());
+```
+
+## Space
+
+The space naming strategy converts property into this representation (eg. `foo bar baz`):
+
+``` php
+use Ivory\Serializer\Naming\SpaceNamingStrategy;
+
+$context->setNamingStrategy(new SpaceNamingStrategy());
+```
+
+## Cache
+
+The naming strategies is optimized but it impacts performance. In order to reduce it you can use the cache naming 
+strategy which is basically a decorator:
+ 
+``` php
+use Ivory\Serializer\Naming\CacheNamingStrategy;
+use Ivory\Serializer\Naming\SnakeCaseNamingStrategy;
+
+$context->setNamingStrategy(new CacheNamingStrategy(
+    new SnakeCaseNamingStrategy(), 
+    $psr6Cache
+));
+```
