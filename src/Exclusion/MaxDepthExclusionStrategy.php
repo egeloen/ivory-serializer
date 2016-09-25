@@ -44,13 +44,10 @@ class MaxDepthExclusionStrategy extends ExclusionStrategy
      */
     private function skip(ContextInterface $context)
     {
-        $metadataStack = $context->getMetadataStack();
-        $stackDepth = count($context->getDataStack());
         $depth = 0;
+        $dataDepth = count($context->getDataStack());
 
-        for ($i = $metadataStack->count() - 1; $i > 0; --$i) {
-            $metadata = $metadataStack[$i];
-
+        foreach ($context->getMetadataStack() as $metadata) {
             if ($metadata instanceof TypeMetadataInterface) {
                 ++$depth;
             }
@@ -65,7 +62,7 @@ class MaxDepthExclusionStrategy extends ExclusionStrategy
                 continue;
             }
 
-            if ($stackDepth - $depth > $metadata->getMaxDepth()) {
+            if ($dataDepth - $depth > $metadata->getMaxDepth()) {
                 return true;
             }
         }

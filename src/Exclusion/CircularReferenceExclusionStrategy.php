@@ -39,11 +39,9 @@ class CircularReferenceExclusionStrategy extends ExclusionStrategy
     {
         $references = [];
         $dataStack = $context->getDataStack();
-        $metadataStack = $context->getMetadataStack();
 
-        for ($i = $metadataStack->count() - 1; $i > 0; --$i) {
-            $data = $dataStack[$i];
-            $metadata = $metadataStack[$i];
+        foreach ($context->getMetadataStack() as $depth => $metadata) {
+            $data = $dataStack[$depth];
 
             if (!$metadata instanceof ClassMetadataInterface || !is_object($data)) {
                 continue;

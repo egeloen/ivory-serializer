@@ -40,12 +40,12 @@ class Context implements ContextInterface
     private $direction;
 
     /**
-     * @var \SplStack
+     * @var mixed[]
      */
     private $dataStack;
 
     /**
-     * @var \SplStack
+     * @var MetadataInterface[]
      */
     private $metadataStack;
 
@@ -172,7 +172,7 @@ class Context implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function setDataStack(\SplStack $dataStack)
+    public function setDataStack(array $dataStack)
     {
         $this->dataStack = $dataStack;
 
@@ -190,7 +190,7 @@ class Context implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function setMetadataStack(\SplStack $metadataStack)
+    public function setMetadataStack(array $metadataStack)
     {
         $this->metadataStack = $metadataStack;
 
@@ -202,8 +202,8 @@ class Context implements ContextInterface
      */
     public function enterScope($data, MetadataInterface $metadata)
     {
-        $this->dataStack->push($data);
-        $this->metadataStack->push($metadata);
+        $this->dataStack[] = $data;
+        $this->metadataStack[] = $metadata;
     }
 
     /**
@@ -211,7 +211,7 @@ class Context implements ContextInterface
      */
     public function leaveScope()
     {
-        $this->dataStack->pop();
-        $this->metadataStack->pop();
+        array_pop($this->dataStack);
+        array_pop($this->metadataStack);
     }
 }

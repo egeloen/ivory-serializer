@@ -38,7 +38,7 @@ class XmlSerializationVisitor extends AbstractVisitor
     private $node;
 
     /**
-     * @var \SplStack
+     * @var \DOMNode[]
      */
     private $stack;
 
@@ -96,9 +96,9 @@ class XmlSerializationVisitor extends AbstractVisitor
      */
     public function prepare($data, ContextInterface $context)
     {
-        $this->stack = new \SplStack();
         $this->document = null;
         $this->node = null;
+        $this->stack = [];
 
         return parent::prepare($data, $context);
     }
@@ -221,13 +221,13 @@ class XmlSerializationVisitor extends AbstractVisitor
      */
     private function enterNodeScope(\DOMNode $node)
     {
-        $this->stack->push($this->node);
+        $this->stack[] = $this->node;
         $this->node = $node;
     }
 
     private function leaveNodeScope()
     {
-        $this->node = $this->stack->pop();
+        $this->node = array_pop($this->stack);
     }
 
     /**

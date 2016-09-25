@@ -21,7 +21,7 @@ use Ivory\Serializer\Mapping\TypeMetadataInterface;
 abstract class AbstractGenericVisitor extends AbstractVisitor
 {
     /**
-     * @var \SplStack
+     * @var mixed[]
      */
     private $stack;
 
@@ -35,7 +35,7 @@ abstract class AbstractGenericVisitor extends AbstractVisitor
      */
     public function prepare($data, ContextInterface $context)
     {
-        $this->stack = new \SplStack();
+        $this->stack = [];
         $this->result = null;
 
         return parent::prepare($data, $context);
@@ -127,7 +127,7 @@ abstract class AbstractGenericVisitor extends AbstractVisitor
 
     private function enterScope()
     {
-        $this->stack->push($this->result);
+        $this->stack[] = $this->result;
     }
 
     /**
@@ -136,7 +136,7 @@ abstract class AbstractGenericVisitor extends AbstractVisitor
     private function leaveScope()
     {
         $result = $this->result;
-        $this->result = $this->stack->pop();
+        $this->result = array_pop($this->stack);
 
         if ($this->result === null) {
             $this->result = $result;

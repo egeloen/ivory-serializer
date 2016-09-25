@@ -83,28 +83,28 @@ interface ContextInterface
     public function setNamingStrategy(NamingStrategyInterface $namingStrategy);
 
     /**
-     * @return \SplStack
+     * @return mixed[]
      */
     public function getDataStack();
 
     /**
-     * @param \SplStack $dataStack
+     * @param mixed[] $dataStack
      *
      * @return ContextInterface
      */
-    public function setDataStack(\SplStack $dataStack);
+    public function setDataStack(array $dataStack);
 
     /**
-     * @return \SplStack
+     * @return MetadataInterface[]
      */
     public function getMetadataStack();
 
     /**
-     * @param \SplStack $metadataStack
+     * @param MetadataInterface[] $metadataStack
      *
      * @return ContextInterface
      */
-    public function setMetadataStack(\SplStack $metadataStack);
+    public function setMetadataStack(array $metadataStack);
 
     /**
      * @param mixed             $data
