@@ -74,6 +74,19 @@ class Context implements ContextInterface
     /**
      * {@inheritdoc}
      */
+    public function initialize(NavigatorInterface $navigator, VisitorInterface $visitor, $direction)
+    {
+        $this
+            ->setNavigator($navigator)
+            ->setVisitor($visitor)
+            ->setDirection($direction)
+            ->setDataStack([])
+            ->setMetadataStack([]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getNavigator()
     {
         return $this->navigator;

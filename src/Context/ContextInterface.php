@@ -23,6 +23,13 @@ use Ivory\Serializer\Visitor\VisitorInterface;
 interface ContextInterface
 {
     /**
+     * @param NavigatorInterface $navigator
+     * @param VisitorInterface   $visitor
+     * @param int                $direction
+     */
+    public function initialize(NavigatorInterface $navigator, VisitorInterface $visitor, $direction);
+
+    /**
      * @return NavigatorInterface
      */
     public function getNavigator();
