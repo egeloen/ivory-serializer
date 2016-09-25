@@ -12,6 +12,7 @@
 namespace Ivory\Serializer\Context;
 
 use Ivory\Serializer\Exclusion\ExclusionStrategyInterface;
+use Ivory\Serializer\Mapping\MetadataInterface;
 use Ivory\Serializer\Naming\NamingStrategyInterface;
 use Ivory\Serializer\Navigator\NavigatorInterface;
 use Ivory\Serializer\Visitor\VisitorInterface;
@@ -58,6 +59,30 @@ interface ContextInterface
     public function setDirection($direction);
 
     /**
+     * @return ExclusionStrategyInterface
+     */
+    public function getExclusionStrategy();
+
+    /**
+     * @param ExclusionStrategyInterface $exclusionStrategy
+     *
+     * @return ContextInterface
+     */
+    public function setExclusionStrategy(ExclusionStrategyInterface $exclusionStrategy);
+
+    /**
+     * @return NamingStrategyInterface
+     */
+    public function getNamingStrategy();
+
+    /**
+     * @param NamingStrategyInterface $namingStrategy
+     *
+     * @return ContextInterface
+     */
+    public function setNamingStrategy(NamingStrategyInterface $namingStrategy);
+
+    /**
      * @return \SplStack
      */
     public function getDataStack();
@@ -82,26 +107,10 @@ interface ContextInterface
     public function setMetadataStack(\SplStack $metadataStack);
 
     /**
-     * @return ExclusionStrategyInterface
+     * @param mixed             $data
+     * @param MetadataInterface $metadata
      */
-    public function getExclusionStrategy();
+    public function enterScope($data, MetadataInterface $metadata);
 
-    /**
-     * @param ExclusionStrategyInterface $exclusionStrategy
-     *
-     * @return ContextInterface
-     */
-    public function setExclusionStrategy(ExclusionStrategyInterface $exclusionStrategy);
-
-    /**
-     * @return NamingStrategyInterface
-     */
-    public function getNamingStrategy();
-
-    /**
-     * @param NamingStrategyInterface $namingStrategy
-     *
-     * @return ContextInterface
-     */
-    public function setNamingStrategy(NamingStrategyInterface $namingStrategy);
+    public function leaveScope();
 }

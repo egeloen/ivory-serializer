@@ -13,7 +13,6 @@ namespace Ivory\Serializer\Visitor;
 
 use Ivory\Serializer\Context\ContextInterface;
 use Ivory\Serializer\Mapping\ClassMetadataInterface;
-use Ivory\Serializer\Mapping\MetadataInterface;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 use Ivory\Serializer\Navigator\NavigatorInterface;
@@ -55,14 +54,14 @@ abstract class AbstractVisitor implements VisitorInterface
      */
     public function visitArray($data, TypeMetadataInterface $type, ContextInterface $context)
     {
-        $this->enterScope($data, $type);
+        $context->enterScope($data, $type);
 
         if ($context->getExclusionStrategy()->skipType($type, $context)) {
             $data = [];
         }
 
         $result = $this->doVisitArray($data, $type, $context);
-        $this->leaveScope();
+        $context->leaveScope();
 
         return $result;
     }
@@ -124,7 +123,7 @@ abstract class AbstractVisitor implements VisitorInterface
             return false;
         }
 
-        $this->enterScope($data, $class);
+        $context->enterScope($data, $class);
 
         return true;
     }
@@ -137,14 +136,14 @@ abstract class AbstractVisitor implements VisitorInterface
         $visited = false;
 
         if (!$context->getExclusionStrategy()->skipProperty($property, $context)) {
-            $this->enterScope($data, $property);
+            $context->enterScope($data, $property);
 
             $name = $property->hasAlias()
                 ? $property->getAlias()
                 : $context->getNamingStrategy()->convert($property->getName());
 
             $visited = $this->doVisitObjectProperty($data, $name, $property, $context);
-            $this->leaveScope();
+            $context->leaveScope();
         }
 
         return $visited;
@@ -155,7 +154,7 @@ abstract class AbstractVisitor implements VisitorInterface
      */
     public function finishVisitingObject($data, ClassMetadataInterface $class, ContextInterface $context)
     {
-        $this->leaveScope();
+        $context->leaveScope();
     }
 
     /**
@@ -181,20 +180,4 @@ abstract class AbstractVisitor implements VisitorInterface
         PropertyMetadataInterface $property,
         ContextInterface $context
     );
-
-    /**
-     * @param mixed             $data
-     * @param MetadataInterface $metadata
-     */
-    private function enterScope($data, MetadataInterface $metadata)
-    {
-        $this->dataStack->push($data);
-        $this->metadataStack->push($metadata);
-    }
-
-    private function leaveScope()
-    {
-        $this->dataStack->pop();
-        $this->metadataStack->pop();
-    }
 }

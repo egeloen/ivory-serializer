@@ -13,6 +13,7 @@ namespace Ivory\Serializer\Context;
 
 use Ivory\Serializer\Exclusion\ExclusionStrategy;
 use Ivory\Serializer\Exclusion\ExclusionStrategyInterface;
+use Ivory\Serializer\Mapping\MetadataInterface;
 use Ivory\Serializer\Naming\IdenticalNamingStrategy;
 use Ivory\Serializer\Naming\NamingStrategyInterface;
 use Ivory\Serializer\Navigator\NavigatorInterface;
@@ -127,6 +128,42 @@ class Context implements ContextInterface
     /**
      * {@inheritdoc}
      */
+    public function getExclusionStrategy()
+    {
+        return $this->exclusionStrategy;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setExclusionStrategy(ExclusionStrategyInterface $exclusionStrategy)
+    {
+        $this->exclusionStrategy = $exclusionStrategy;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNamingStrategy()
+    {
+        return $this->namingStrategy;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setNamingStrategy(NamingStrategyInterface $namingStrategy)
+    {
+        $this->namingStrategy = $namingStrategy;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getDataStack()
     {
         return $this->dataStack;
@@ -163,36 +200,18 @@ class Context implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function getExclusionStrategy()
+    public function enterScope($data, MetadataInterface $metadata)
     {
-        return $this->exclusionStrategy;
+        $this->dataStack->push($data);
+        $this->metadataStack->push($metadata);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setExclusionStrategy(ExclusionStrategyInterface $exclusionStrategy)
+    public function leaveScope()
     {
-        $this->exclusionStrategy = $exclusionStrategy;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getNamingStrategy()
-    {
-        return $this->namingStrategy;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setNamingStrategy(NamingStrategyInterface $namingStrategy)
-    {
-        $this->namingStrategy = $namingStrategy;
-
-        return $this;
+        $this->dataStack->pop();
+        $this->metadataStack->pop();
     }
 }
