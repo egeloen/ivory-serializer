@@ -24,10 +24,12 @@
             <group>group2</group>
         </property>
         
+        <property name="password" exclude="true" />
+        
         <property 
             name="friends" 
             type="array&lt;Acme\Model\User&gt;>" 
-            exclude="true" 
+            expose="true" 
             max-depth="2" 
         />
     </class>

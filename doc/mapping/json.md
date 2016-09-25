@@ -16,9 +16,12 @@
                 "since": "1.0",
                 "until": "2.0"
             },
+            "password": {
+                "exclude": true
+            },
             "friends": {
                 "type": "array<key=int, value=Acme\Model\User>",
-                "exclude": true,
+                "expose": true,
                 "max_depth": 2
             }
         }

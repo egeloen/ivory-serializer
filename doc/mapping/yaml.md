@@ -14,9 +14,11 @@ Acme\Model\User:
             groups: [group1, group2]
             since: "1.0"
             until: "2.0"
+        password:
+            exclude: true
         friends:
             type: array<Acme\Model\User>
-            exclude: true
+            expose: true
             max_depth: 2
 ```
 

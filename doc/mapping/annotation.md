@@ -27,6 +27,13 @@ class User
     
     /**
      * @Serializer\Exclude
+     *
+     * @var string
+     */
+    public $password;
+    
+    /**
+     * @Serializer\Expose
      * @Serializer\Type("array<key=int, value=Acme\Model\User>")
      * @Serializer\MaxDepth(2)
      *
