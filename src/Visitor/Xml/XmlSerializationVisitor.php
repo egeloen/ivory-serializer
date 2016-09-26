@@ -124,7 +124,9 @@ class XmlSerializationVisitor extends AbstractVisitor
      */
     public function visitFloat($data, TypeMetadataInterface $type, ContextInterface $context)
     {
-        if (strpos($data = (string) $data, '.') === false) {
+        $data = (string) $data;
+
+        if (strpos($data, '.') === false) {
             $data .= '.0';
         }
 
