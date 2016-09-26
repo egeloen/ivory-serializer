@@ -21,8 +21,8 @@ $object = $serializer->deserialize($json, \stdClass::class, Format::JSON, $conte
 
 ## Ignore Null
 
-By default, the library serializes all `null` values. If you want to change this behavior, you can use the ignore null 
-flag:
+By default, the library (de)-serializes all `null` values. If you want to change this behavior, you can use the ignore 
+null flag:
   
 ``` php
 $context->setIgnoreNull(true);

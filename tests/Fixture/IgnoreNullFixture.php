@@ -22,12 +22,12 @@ class IgnoreNullFixture implements FixtureInterface
     public $foo;
 
     /**
-     * @var int
+     * @var array
      */
     public $bar;
 
     /**
-     * @var string[]
+     * @var mixed
      */
     public $baz;
 
