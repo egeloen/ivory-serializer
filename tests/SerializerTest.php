@@ -33,6 +33,7 @@ use Ivory\Tests\Serializer\Fixture\ExcludeFixture;
 use Ivory\Tests\Serializer\Fixture\ExposeFixture;
 use Ivory\Tests\Serializer\Fixture\FixtureInterface;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
+use Ivory\Tests\Serializer\Fixture\IgnoreNullFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
 use Ivory\Tests\Serializer\Fixture\MutatorFixture;
 use Ivory\Tests\Serializer\Fixture\NamingFixture;
@@ -127,6 +128,11 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $dateTimeFixture->immutableDateTime = $dateTimeImmutable;
         $dateTimeFixture->formattedImmutableDateTime = $dateTimeImmutable;
         $dateTimeFixture->timeZonedImmutableDateTime = $timeZonedDateTimeImmutable;
+
+        $emptyIgnoreNullFixture = new IgnoreNullFixture();
+        $ignoreNullFixture = clone $emptyIgnoreNullFixture;
+        $ignoreNullFixture->foo = 'oof';
+        $ignoreNullFixture->bar = [null, null];
 
         $namingFixture = new NamingFixture();
         $namingFixture->fooBar = 'foo';
@@ -234,6 +240,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['object_array_empty', $emptyArrayFixture],
             ['object_date_time', $dateTimeFixture],
             ['object_date_time_empty', $emptyDateTimeFixture],
+            ['object_ignore_null', $ignoreNullFixture, (new Context())->setIgnoreNull(true)],
+            ['object_ignore_null_empty', $emptyIgnoreNullFixture, (new Context())->setIgnoreNull(true)],
             ['object_naming', $namingFixture],
             ['object_naming_camel_case', $namingFixture, (new Context())->setNamingStrategy(new CamelCaseNamingStrategy())],
             ['object_naming_kebab_case', $namingFixture, (new Context())->setNamingStrategy(new KebabCaseNamingStrategy())],

@@ -19,6 +19,15 @@ $json = $serializer->serialize(new \stdClass(), Format::JSON, $context);
 $object = $serializer->deserialize($json, \stdClass::class, Format::JSON, $context);
 ```
 
+## Ignore Null
+
+By default, the library serializes all `null` values. If you want to change this behavior, you can use the ignore null 
+flag:
+  
+``` php
+$context->setIgnoreNull(true);
+```
+
 ## Exclusion Strategies
 
 ### Max Depth

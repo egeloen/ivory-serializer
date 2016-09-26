@@ -116,9 +116,18 @@ abstract class AbstractGenericVisitor extends AbstractVisitor
     {
         $this->result = [];
 
+        $keyType = $type->getOption('key');
+        $valueType = $type->getOption('value');
+        $ignoreNull = $context->isNullIgnored();
+
         foreach ($data as $key => $value) {
-            $key = $this->navigator->navigate($key, $context, $type->getOption('key'));
-            $value = $this->navigator->navigate($value, $context, $type->getOption('value'));
+            $value = $this->navigator->navigate($value, $context, $valueType);
+
+            if ($value === null && $ignoreNull) {
+                continue;
+            }
+
+            $key = $this->navigator->navigate($key, $context, $keyType);
             $this->result[$key] = $value;
         }
 

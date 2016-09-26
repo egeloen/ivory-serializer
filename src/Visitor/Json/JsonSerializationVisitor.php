@@ -13,6 +13,7 @@ namespace Ivory\Serializer\Visitor\Json;
 
 use Ivory\Serializer\Accessor\AccessorInterface;
 use Ivory\Serializer\Context\ContextInterface;
+use Ivory\Serializer\Mapping\ClassMetadataInterface;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 use Ivory\Serializer\Visitor\AbstractSerializationVisitor;
 
@@ -47,6 +48,18 @@ class JsonSerializationVisitor extends AbstractSerializationVisitor
         }
 
         return parent::visitData($data, $type, $context);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function finishVisitingObject($data, ClassMetadataInterface $class, ContextInterface $context)
+    {
+        if ($this->result === []) {
+            $this->result = (object) $this->result;
+        }
+
+        return parent::finishVisitingObject($data, $class, $context);
     }
 
     /**

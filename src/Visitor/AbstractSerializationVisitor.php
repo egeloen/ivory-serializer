@@ -62,7 +62,7 @@ abstract class AbstractSerializationVisitor extends AbstractGenericVisitor
         }
 
         // FIXME - Detect errors
-        $this->result[$name] = $this->navigator->navigate(
+        $result = $this->navigator->navigate(
             $this->accessor->getValue(
                 $data,
                 $property->hasAccessor() ? $property->getAccessor() : $property->getName()
@@ -70,6 +70,12 @@ abstract class AbstractSerializationVisitor extends AbstractGenericVisitor
             $context,
             $property->getType()
         );
+
+        if ($result === null && $context->isNullIgnored()) {
+            return false;
+        }
+
+        $this->result[$name] = $result;
 
         return true;
     }

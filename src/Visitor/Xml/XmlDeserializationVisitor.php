@@ -126,8 +126,15 @@ class XmlDeserializationVisitor extends AbstractDeserializationVisitor
      */
     private function visitArrayItem($key, $value, TypeMetadataInterface $type, ContextInterface $context)
     {
-        $keyType = $type->getOption('key');
-        $valueType = $type->getOption('value');
+        $result = $this->navigator->navigate(
+            $this->visitNode($value, $valueType = $type->getOption('value')),
+            $context,
+            $valueType
+        );
+
+        if ($result === null && $context->isNullIgnored()) {
+            return;
+        }
 
         if ($value instanceof \SimpleXMLElement) {
             $key = $value->getName();
@@ -136,14 +143,15 @@ class XmlDeserializationVisitor extends AbstractDeserializationVisitor
                 $attributes = $value->attributes();
                 $key = isset($attributes[$this->entryAttribute]) ? $attributes[$this->entryAttribute] : null;
             }
-
-            $value = $this->visitNode($value, $valueType);
         } elseif ($key === $this->entry) {
             $key = null;
         }
 
-        $key = $this->navigator->navigate($this->visitNode($key, $keyType), $context, $keyType);
-        $result = $this->navigator->navigate($value, $context, $valueType);
+        $key = $this->navigator->navigate(
+            $this->visitNode($key, $keyType = $type->getOption('key')),
+            $context,
+            $keyType
+        );
 
         if ($key === null) {
             $this->result[] = $result;

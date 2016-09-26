@@ -161,19 +161,19 @@ class XmlSerializationVisitor extends AbstractVisitor
             return false;
         }
 
-        $node = $this->createNode($name);
-        $this->enterNodeScope($node);
-
         // FIXME - Detect errors
-        $this->navigator->navigate(
-            $this->accessor->getValue(
-                $data,
-                $property->hasAccessor() ? $property->getAccessor() : $property->getName()
-            ),
-            $context,
-            $property->getType()
+        $value = $this->accessor->getValue(
+            $data,
+            $property->hasAccessor() ? $property->getAccessor() : $property->getName()
         );
 
+        if ($value === null && $context->isNullIgnored()) {
+            return false;
+        }
+
+        $node = $this->createNode($name);
+        $this->enterNodeScope($node);
+        $this->navigator->navigate($value, $context, $property->getType());
         $this->leaveNodeScope();
         $this->visitNode($node);
 
@@ -185,9 +185,16 @@ class XmlSerializationVisitor extends AbstractVisitor
      */
     protected function doVisitArray($data, TypeMetadataInterface $type, ContextInterface $context)
     {
+        $ignoreNull = $context->isNullIgnored();
+        $valueType = $type->getOption('value');
+
         $this->getDocument();
 
         foreach ($data as $key => $value) {
+            if ($value === null && $ignoreNull) {
+                continue;
+            }
+
             $node = $this->createNode(is_string($key) ? $key : $this->entry);
 
             if (is_int($key)) {
@@ -195,7 +202,7 @@ class XmlSerializationVisitor extends AbstractVisitor
             }
 
             $this->enterNodeScope($node);
-            $this->navigator->navigate($value, $context, $type->getOption('value'));
+            $this->navigator->navigate($value, $context, $valueType);
             $this->leaveNodeScope();
             $this->visitNode($node);
         }

@@ -82,11 +82,17 @@ abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
             return false;
         }
 
+        $value = $this->navigator->navigate($data[$name], $context, $property->getType());
+
+        if ($value === null && $context->isNullIgnored()) {
+            return false;
+        }
+
         // FIXME - Detect errors
         $this->mutator->setValue(
             $this->result,
             $property->hasMutator() ? $property->getMutator() : $property->getName(),
-            $this->navigator->navigate($data[$name], $context, $property->getType())
+            $value
         );
 
         return true;

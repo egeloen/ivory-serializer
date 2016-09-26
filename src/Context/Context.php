@@ -40,6 +40,11 @@ class Context implements ContextInterface
     private $direction;
 
     /**
+     * @var bool
+     */
+    private $ignoreNull = false;
+
+    /**
      * @var ExclusionStrategyInterface
      */
     private $exclusionStrategy;
@@ -134,6 +139,24 @@ class Context implements ContextInterface
     public function setDirection($direction)
     {
         $this->direction = $direction;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isNullIgnored()
+    {
+        return $this->ignoreNull;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setIgnoreNull($ignoreNull)
+    {
+        $this->ignoreNull = $ignoreNull;
 
         return $this;
     }

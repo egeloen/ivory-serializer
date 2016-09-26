@@ -66,6 +66,18 @@ interface ContextInterface
     public function setDirection($direction);
 
     /**
+     * @return bool
+     */
+    public function isNullIgnored();
+
+    /**
+     * @param bool $considerNull
+     *
+     * @return ContextInterface
+     */
+    public function setIgnoreNull($considerNull);
+
+    /**
      * @return ExclusionStrategyInterface
      */
     public function getExclusionStrategy();
