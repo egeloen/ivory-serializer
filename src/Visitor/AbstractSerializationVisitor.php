@@ -57,6 +57,10 @@ abstract class AbstractSerializationVisitor extends AbstractGenericVisitor
         PropertyMetadataInterface $property,
         ContextInterface $context
     ) {
+        if (!$property->isReadable()) {
+            return false;
+        }
+
         // FIXME - Detect errors
         $this->result[$name] = $this->navigator->navigate(
             $this->accessor->getValue(

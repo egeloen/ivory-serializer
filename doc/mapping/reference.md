@@ -38,6 +38,16 @@ The alias mapping allows you to configure a different name for a property. This 
 serializing and deserializing the property instead of the property name. Be aware that, if a custom naming strategy is 
 configured, it will be not be apply on the alias.
 
+## Readable
+
+The readable mapping allows you to define if the property is readable or not. This mapping is only useful if you want 
+to make your property not readable since by default a property is readable.
+
+## Writable
+
+The writable mapping allows you to define if the property is writable or not. This mapping is only useful if you want 
+to make your property not writable since by default a property is writable.
+
 ## Accessor
 
 The accessor mapping allows you to configure the method to use in order to fetch the data when serializing.

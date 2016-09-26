@@ -34,8 +34,8 @@ class AbstractSeparatorNamingStrategy extends AbstractNamingStrategy
      */
     protected function doConvert($name)
     {
-        $name = str_replace(['--', '__', '  ',], ' ', $name);
-        $name  = lcfirst(str_replace(['-', '_', ' '], $this->separator, $name));
+        $name = str_replace(['--', '__', '  '], ' ', $name);
+        $name = lcfirst(str_replace(['-', '_', ' '], $this->separator, $name));
 
         return strtolower(preg_replace('/([A-Z])/', $this->separator.'$1', $name));
     }

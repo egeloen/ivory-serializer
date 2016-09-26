@@ -140,6 +140,40 @@
             "bar": {}
         }
     },
+    "Ivory\\Tests\\Serializer\\Fixture\\ReadableFixture": {
+        "properties": {
+            "foo": {
+                "readable": false
+            },
+            "bar": {}
+        }
+    },
+    "Ivory\\Tests\\Serializer\\Fixture\\ReadableClassFixture": {
+        "readable": false,
+        "properties": {
+            "foo": {
+                "readable": true
+            },
+            "bar": {}
+        }
+    },
+    "Ivory\\Tests\\Serializer\\Fixture\\WritableFixture": {
+        "properties": {
+            "foo": {
+                "writable": false
+            },
+            "bar": {}
+        }
+    },
+    "Ivory\\Tests\\Serializer\\Fixture\\WritableClassFixture": {
+        "writable": false,
+        "properties": {
+            "foo": {
+                "writable": true
+            },
+            "bar": {}
+        }
+    },
     "Ivory\\Tests\\Serializer\\Fixture\\VersionFixture": {
         "properties": {
             "foo": {

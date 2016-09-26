@@ -26,8 +26,12 @@ use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
 use Ivory\Tests\Serializer\Fixture\MutatorFixture;
 use Ivory\Tests\Serializer\Fixture\OrderFixture;
+use Ivory\Tests\Serializer\Fixture\ReadableClassFixture;
+use Ivory\Tests\Serializer\Fixture\ReadableFixture;
 use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
+use Ivory\Tests\Serializer\Fixture\WritableClassFixture;
+use Ivory\Tests\Serializer\Fixture\WritableFixture;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -111,6 +115,50 @@ abstract class AbstractClassMetadataLoaderTest extends \PHPUnit_Framework_TestCa
         $this->assertTrue($this->loadClassMetadata($classMetadata));
         $this->assertClassMetadata($classMetadata, [
             'foo' => [],
+        ]);
+    }
+
+    public function testReadableFixture()
+    {
+        $classMetadata = new ClassMetadata(ReadableFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'foo' => ['readable' => false],
+            'bar' => [],
+        ]);
+    }
+
+    public function testReadableClassFixture()
+    {
+        $classMetadata = new ClassMetadata(ReadableClassFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'foo' => ['readable' => true],
+            'bar' => ['readable' => false],
+        ]);
+    }
+
+    public function testWritableFixture()
+    {
+        $classMetadata = new ClassMetadata(WritableFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'foo' => ['writable' => false],
+            'bar' => [],
+        ]);
+    }
+
+    public function testWritableClassFixture()
+    {
+        $classMetadata = new ClassMetadata(WritableClassFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'foo' => ['writable' => true],
+            'bar' => ['writable' => false],
         ]);
     }
 
@@ -252,6 +300,9 @@ abstract class AbstractClassMetadataLoaderTest extends \PHPUnit_Framework_TestCa
             isset($data['type']) ? $data['type'] : null,
             $propertyMetadata->hasType() ? (string) $propertyMetadata->getType() : null
         );
+
+        $this->assertSame(isset($data['readable']) ? $data['readable'] : true, $propertyMetadata->isReadable());
+        $this->assertSame(isset($data['writable']) ? $data['writable'] : true, $propertyMetadata->isWritable());
 
         $this->assertSame(isset($data['accessor']), $propertyMetadata->hasAccessor());
         $this->assertSame(isset($data['accessor']) ? $data['accessor'] : null, $propertyMetadata->getAccessor());

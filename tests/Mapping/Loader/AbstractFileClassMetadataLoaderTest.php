@@ -19,8 +19,12 @@ use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
 use Ivory\Tests\Serializer\Fixture\MutatorFixture;
 use Ivory\Tests\Serializer\Fixture\OrderFixture;
+use Ivory\Tests\Serializer\Fixture\ReadableClassFixture;
+use Ivory\Tests\Serializer\Fixture\ReadableFixture;
 use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
+use Ivory\Tests\Serializer\Fixture\WritableClassFixture;
+use Ivory\Tests\Serializer\Fixture\WritableFixture;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -77,6 +81,42 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
     {
         $this->setLoader($this->createLoader('expose'));
         $this->loadClassMetadata(new ClassMetadata(ExposeFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testReadable()
+    {
+        $this->setLoader($this->createLoader('readable'));
+        $this->loadClassMetadata(new ClassMetadata(ReadableFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testReadableClass()
+    {
+        $this->setLoader($this->createLoader('readable_class'));
+        $this->loadClassMetadata(new ClassMetadata(ReadableClassFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testWritable()
+    {
+        $this->setLoader($this->createLoader('writable'));
+        $this->loadClassMetadata(new ClassMetadata(WritableFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testWritableClass()
+    {
+        $this->setLoader($this->createLoader('writable_class'));
+        $this->loadClassMetadata(new ClassMetadata(WritableClassFixture::class));
     }
 
     /**

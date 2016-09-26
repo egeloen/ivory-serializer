@@ -21,8 +21,12 @@ use Ivory\Tests\Serializer\Fixture\ExposeFixture;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
 use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
 use Ivory\Tests\Serializer\Fixture\MutatorFixture;
+use Ivory\Tests\Serializer\Fixture\ReadableClassFixture;
+use Ivory\Tests\Serializer\Fixture\ReadableFixture;
 use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
+use Ivory\Tests\Serializer\Fixture\WritableClassFixture;
+use Ivory\Tests\Serializer\Fixture\WritableFixture;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -88,6 +92,50 @@ class ReflectionClassMetadataLoaderTest extends AbstractReflectionClassMetadataL
         $this->assertTrue($this->loadClassMetadata($classMetadata));
         $this->assertClassMetadata($classMetadata, [
             'foo' => [],
+        ]);
+    }
+
+    public function testReadableFixture()
+    {
+        $classMetadata = new ClassMetadata(ReadableFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'foo' => [],
+            'bar' => [],
+        ]);
+    }
+
+    public function testReadableClassFixture()
+    {
+        $classMetadata = new ClassMetadata(ReadableClassFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'foo' => [],
+            'bar' => [],
+        ]);
+    }
+
+    public function testWritableFixture()
+    {
+        $classMetadata = new ClassMetadata(WritableFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'foo' => [],
+            'bar' => [],
+        ]);
+    }
+
+    public function testWritableClassFixture()
+    {
+        $classMetadata = new ClassMetadata(WritableClassFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'foo' => [],
+            'bar' => [],
         ]);
     }
 

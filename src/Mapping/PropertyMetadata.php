@@ -32,6 +32,16 @@ class PropertyMetadata implements PropertyMetadataInterface
     private $type;
 
     /**
+     * @var bool
+     */
+    private $readable = true;
+
+    /**
+     * @var bool
+     */
+    private $writable = true;
+
+    /**
      * @var string|null
      */
     private $accessor;
@@ -131,6 +141,38 @@ class PropertyMetadata implements PropertyMetadataInterface
     public function setType(TypeMetadataInterface $type = null)
     {
         $this->type = $type;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isReadable()
+    {
+        return $this->readable;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setReadable($readable)
+    {
+        $this->readable = $readable;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isWritable()
+    {
+        return $this->writable;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setWritable($writable)
+    {
+        $this->writable = $writable;
     }
 
     /**
@@ -319,6 +361,9 @@ class PropertyMetadata implements PropertyMetadataInterface
      */
     public function merge(PropertyMetadataInterface $propertyMetadata)
     {
+        $this->setReadable($propertyMetadata->isReadable());
+        $this->setWritable($propertyMetadata->isWritable());
+
         if ($propertyMetadata->hasAlias()) {
             $this->setAlias($propertyMetadata->getAlias());
         }
@@ -361,6 +406,8 @@ class PropertyMetadata implements PropertyMetadataInterface
             $this->name,
             $this->alias,
             $this->type,
+            $this->readable,
+            $this->writable,
             $this->accessor,
             $this->mutator,
             $this->since,
@@ -379,6 +426,8 @@ class PropertyMetadata implements PropertyMetadataInterface
             $this->name,
             $this->alias,
             $this->type,
+            $this->readable,
+            $this->writable,
             $this->accessor,
             $this->mutator,
             $this->since,

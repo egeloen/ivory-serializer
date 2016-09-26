@@ -49,6 +49,26 @@ interface PropertyMetadataInterface extends MetadataInterface
     /**
      * @return bool
      */
+    public function isReadable();
+
+    /**
+     * @param bool $readable
+     */
+    public function setReadable($readable);
+
+    /**
+     * @return bool
+     */
+    public function isWritable();
+
+    /**
+     * @param bool $writable
+     */
+    public function setWritable($writable);
+
+    /**
+     * @return bool
+     */
     public function hasAccessor();
 
     /**

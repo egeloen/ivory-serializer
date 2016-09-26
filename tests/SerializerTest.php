@@ -37,8 +37,12 @@ use Ivory\Tests\Serializer\Fixture\MaxDepthFixture;
 use Ivory\Tests\Serializer\Fixture\MutatorFixture;
 use Ivory\Tests\Serializer\Fixture\NamingFixture;
 use Ivory\Tests\Serializer\Fixture\OrderFixture;
+use Ivory\Tests\Serializer\Fixture\ReadableClassFixture;
+use Ivory\Tests\Serializer\Fixture\ReadableFixture;
 use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
+use Ivory\Tests\Serializer\Fixture\WritableClassFixture;
+use Ivory\Tests\Serializer\Fixture\WritableFixture;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -172,6 +176,22 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $orderFixture->foo = 'oof';
         $orderFixture->bar = 'rab';
 
+        $readableFixture = new ReadableFixture();
+        $readableFixture->foo = 'oof';
+        $readableFixture->bar = 'rab';
+
+        $readableClassFixture = new ReadableClassFixture();
+        $readableClassFixture->foo = 'oof';
+        $readableClassFixture->bar = 'rab';
+
+        $writableFixture = new WritableFixture();
+        $writableFixture->foo = 'oof';
+        $writableFixture->bar = 'rab';
+
+        $writableClassFixture = new WritableClassFixture();
+        $writableClassFixture->foo = 'oof';
+        $writableClassFixture->bar = 'rab';
+
         $emptyScalarFixture = new ScalarFixture();
         $scalarFixture = clone $emptyScalarFixture;
         $scalarFixture->bool = true;
@@ -235,6 +255,10 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['object_order', $orderFixture],
             ['object_order_asc', $ascFixture],
             ['object_order_desc', $descFixture],
+            ['object_readable', $readableFixture],
+            ['object_readable_class', $readableClassFixture],
+            ['object_writable', $writableFixture],
+            ['object_writable_class', $writableClassFixture],
             ['object_scalar', $scalarFixture],
             ['object_scalar_empty', $emptyScalarFixture],
             ['object_scalar', $scalarExtendedFixture],

@@ -48,6 +48,14 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
             $definition['order'] = (string) $class['order'];
         }
 
+        if (isset($class['readable'])) {
+            $definition['readable'] = (string) $class['readable'] === 'true';
+        }
+
+        if (isset($class['writable'])) {
+            $definition['writable'] = (string) $class['writable'] === 'true';
+        }
+
         $properties = [];
 
         foreach ($class->property as $property) {
@@ -86,6 +94,14 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
 
         if (isset($element['accessor'])) {
             $property['accessor'] = (string) $element['accessor'];
+        }
+
+        if (isset($element['readable'])) {
+            $property['readable'] = (string) $element['readable'] === 'true';
+        }
+
+        if (isset($element['writable'])) {
+            $property['writable'] = (string) $element['writable'] === 'true';
         }
 
         if (isset($element['mutator'])) {

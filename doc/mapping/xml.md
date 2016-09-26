@@ -15,6 +15,8 @@
             alias="identifier" 
             type="string"
             expose="true" 
+            readable="true"
+            writable="false"
             accessor="getUsername"
             mutator="setUsername"
             since="1.0" 

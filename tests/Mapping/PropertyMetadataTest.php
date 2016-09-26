@@ -51,6 +51,8 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($this->propertyMetadata->getAlias());
         $this->assertFalse($this->propertyMetadata->hasType());
         $this->assertNull($this->propertyMetadata->getType());
+        $this->assertTrue($this->propertyMetadata->isReadable());
+        $this->assertTrue($this->propertyMetadata->isWritable());
         $this->assertFalse($this->propertyMetadata->hasAccessor());
         $this->assertNull($this->propertyMetadata->getAccessor());
         $this->assertFalse($this->propertyMetadata->hasMutator());
@@ -86,6 +88,20 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($this->propertyMetadata->hasType());
         $this->assertSame($type, $this->propertyMetadata->getType());
+    }
+
+    public function testReadable()
+    {
+        $this->propertyMetadata->setReadable(false);
+
+        $this->assertFalse($this->propertyMetadata->isReadable());
+    }
+
+    public function testWritable()
+    {
+        $this->propertyMetadata->setWritable(false);
+
+        $this->assertFalse($this->propertyMetadata->isWritable());
     }
 
     public function testAccessor()
@@ -171,6 +187,8 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
         $propertyMetadata = new PropertyMetadata($name = 'foo');
         $propertyMetadata->setAlias($alias = 'bar');
         $propertyMetadata->setType($type = $this->createTypeMetadataMock());
+        $propertyMetadata->setReadable(true);
+        $propertyMetadata->setWritable(false);
         $propertyMetadata->setAccessor($accessor = 'getFoo');
         $propertyMetadata->setMutator($mutator = 'setFoo');
         $propertyMetadata->setSinceVersion($sinceVersion = '1.0');
@@ -183,6 +201,8 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($name, $this->propertyMetadata->getName());
         $this->assertSame($alias, $this->propertyMetadata->getAlias());
         $this->assertSame($type, $this->propertyMetadata->getType());
+        $this->assertTrue($this->propertyMetadata->isReadable());
+        $this->assertFalse($this->propertyMetadata->isWritable());
         $this->assertSame($accessor, $this->propertyMetadata->getAccessor());
         $this->assertSame($mutator, $this->propertyMetadata->getMutator());
         $this->assertSame($sinceVersion, $this->propertyMetadata->getSinceVersion());

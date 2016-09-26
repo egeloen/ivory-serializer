@@ -100,6 +100,26 @@
         <property name="bar" />
     </class>
 
+    <class name="Ivory\Tests\Serializer\Fixture\ReadableFixture">
+        <property name="foo" readable="false" />
+        <property name="bar" />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\ReadableClassFixture" readable="false">
+        <property name="foo" readable="true" />
+        <property name="bar" />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\WritableFixture">
+        <property name="foo" writable="false" />
+        <property name="bar" />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\WritableClassFixture" writable="false">
+        <property name="foo" writable="true" />
+        <property name="bar" />
+    </class>
+
     <class name="Ivory\Tests\Serializer\Fixture\VersionFixture">
         <property name="foo" since="1.0" until="2.0" />
         <property name="bar" since="1.0" />

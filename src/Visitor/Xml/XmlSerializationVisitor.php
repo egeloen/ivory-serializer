@@ -157,6 +157,10 @@ class XmlSerializationVisitor extends AbstractVisitor
         PropertyMetadataInterface $property,
         ContextInterface $context
     ) {
+        if (!$property->isReadable()) {
+            return false;
+        }
+
         $node = $this->createNode($name);
         $this->enterNodeScope($node);
 

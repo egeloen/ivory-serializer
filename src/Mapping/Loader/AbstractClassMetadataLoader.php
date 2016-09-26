@@ -81,12 +81,14 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
             ));
         }
 
-        $properties = $classMetadata->getProperties();
         $policy = $this->getExclusionPolicy($data);
+        $readableClass = $this->getReadable($data);
+        $writableClass = $this->getWritable($data);
+        $properties = $classMetadata->getProperties();
 
         foreach ($data['properties'] as $property => $value) {
             $propertyMetadata = $classMetadata->getProperty($property) ?: new PropertyMetadata($property);
-            $this->loadPropertyMetadata($propertyMetadata, $value);
+            $this->loadPropertyMetadata($propertyMetadata, $value, $readableClass, $writableClass);
 
             if ($this->isPropertyMetadataExposed($value, $policy)) {
                 $properties[$property] = $propertyMetadata;
@@ -103,12 +105,21 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
     /**
      * @param PropertyMetadataInterface $propertyMetadata
      * @param mixed                     $data
+     * @param bool                      $classReadable
+     * @param bool                      $classWritable
      */
-    private function loadPropertyMetadata(PropertyMetadataInterface $propertyMetadata, $data)
-    {
+    private function loadPropertyMetadata(
+        PropertyMetadataInterface $propertyMetadata,
+        $data,
+        $classReadable,
+        $classWritable
+    ) {
         if (!is_array($data)) {
-            return;
+            $data = [];
         }
+
+        $propertyMetadata->setReadable($this->getReadable($data, $classReadable));
+        $propertyMetadata->setWritable($this->getWritable($data, $classWritable));
 
         if (array_key_exists('exclude', $data)) {
             $this->validatePropertyMetadataExclude($data['exclude']);
@@ -369,6 +380,54 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
         }
 
         return $policy;
+    }
+
+    /**
+     * @param mixed[] $data
+     * @param bool    $default
+     *
+     * @return bool|null
+     */
+    private function getReadable(array $data, $default = true)
+    {
+        if (!array_key_exists('readable', $data)) {
+            return $default;
+        }
+
+        $readable = $data['readable'];
+
+        if (!is_bool($readable)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping readable must be a boolean, got "%s".',
+                is_object($readable) ? get_class($readable) : gettype($readable)
+            ));
+        }
+
+        return $readable;
+    }
+
+    /**
+     * @param mixed[] $data
+     * @param bool    $default
+     *
+     * @return bool|null
+     */
+    private function getWritable(array $data, $default = true)
+    {
+        if (!array_key_exists('writable', $data)) {
+            return $default;
+        }
+
+        $writable = $data['writable'];
+
+        if (!is_bool($writable)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping readable must be a boolean, got "%s".',
+                is_object($writable) ? get_class($writable) : gettype($writable)
+            ));
+        }
+
+        return $writable;
     }
 
     /**

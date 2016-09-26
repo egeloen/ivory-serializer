@@ -1,0 +1,4 @@
+Ivory\Tests\Serializer\Fixture\WritableFixture:
+    properties:
+        foo:
+            readable: ~

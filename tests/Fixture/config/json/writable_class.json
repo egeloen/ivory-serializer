@@ -1,0 +1,8 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\WritableClassFixture": {
+        "writable": "invalid",
+        "properties": {
+            "foo": {}
+        }
+    }
+}

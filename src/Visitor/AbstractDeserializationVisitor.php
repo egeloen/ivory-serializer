@@ -78,7 +78,7 @@ abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
         PropertyMetadataInterface $property,
         ContextInterface $context
     ) {
-        if (!isset($data[$name])) {
+        if (!$property->isWritable() || !isset($data[$name])) {
             return false;
         }
 

@@ -10,6 +10,8 @@
                 "alias": "user_name",
                 "type": "string",
                 "expose": true,
+                "readable": true,
+                "writable": false,
                 "accessor": "getUsername",
                 "mutator": "setUsername",
                 "groups": ["group1", "group2"],

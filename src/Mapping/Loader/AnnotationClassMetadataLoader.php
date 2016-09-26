@@ -22,9 +22,11 @@ use Ivory\Serializer\Mapping\Annotation\Groups;
 use Ivory\Serializer\Mapping\Annotation\MaxDepth;
 use Ivory\Serializer\Mapping\Annotation\Mutator;
 use Ivory\Serializer\Mapping\Annotation\Order;
+use Ivory\Serializer\Mapping\Annotation\Readable;
 use Ivory\Serializer\Mapping\Annotation\Since;
 use Ivory\Serializer\Mapping\Annotation\Type;
 use Ivory\Serializer\Mapping\Annotation\Until;
+use Ivory\Serializer\Mapping\Annotation\Writable;
 use Ivory\Serializer\Type\Parser\TypeParserInterface;
 
 /**
@@ -60,6 +62,10 @@ class AnnotationClassMetadataLoader extends AbstractReflectionClassMetadataLoade
                 $definition['exclusion_policy'] = $annotation->getPolicy();
             } elseif ($annotation instanceof Order) {
                 $definition['order'] = $annotation->getOrder();
+            } elseif ($annotation instanceof Readable) {
+                $definition['readable'] = $annotation->isReadable();
+            } elseif ($annotation instanceof Writable) {
+                $definition['writable'] = $annotation->isWritable();
             }
         }
 
@@ -104,6 +110,10 @@ class AnnotationClassMetadataLoader extends AbstractReflectionClassMetadataLoade
                 $definition['expose'] = true;
             } elseif ($annotation instanceof Exclude) {
                 $definition['exclude'] = true;
+            } elseif ($annotation instanceof Readable) {
+                $definition['readable'] = $annotation->isReadable();
+            } elseif ($annotation instanceof Writable) {
+                $definition['writable'] = $annotation->isWritable();
             } elseif ($annotation instanceof Accessor) {
                 $definition['accessor'] = $annotation->getAccessor();
             } elseif ($annotation instanceof Mutator) {
