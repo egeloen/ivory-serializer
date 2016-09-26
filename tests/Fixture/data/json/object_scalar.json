@@ -1,1 +1,1 @@
-{"boolean":true,"int":123,"float":123.45,"string":"foo","type":{"boolean":true,"int":123,"float":123.45,"string":"foo","type":null}}
+{"boolean":true,"int":123,"float":123.0,"string":"foo","type":{"boolean":true,"int":123,"float":123.0,"string":"foo","type":null}}

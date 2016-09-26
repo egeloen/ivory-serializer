@@ -35,6 +35,10 @@ class JsonSerializationVisitor extends AbstractSerializationVisitor
     {
         parent::__construct($accessor);
 
+        if (defined('JSON_PRESERVE_ZERO_FRACTION')) {
+            $options |= JSON_PRESERVE_ZERO_FRACTION;
+        }
+
         $this->options = $options;
     }
 

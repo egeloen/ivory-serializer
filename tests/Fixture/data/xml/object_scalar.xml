@@ -2,12 +2,12 @@
 <result>
   <boolean>true</boolean>
   <int>123</int>
-  <float>123.45</float>
+  <float>123.0</float>
   <string>foo</string>
   <type>
     <boolean>true</boolean>
     <int>123</int>
-    <float>123.45</float>
+    <float>123.0</float>
     <string>foo</string>
     <type/>
   </type>

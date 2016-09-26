@@ -122,6 +122,18 @@ class XmlSerializationVisitor extends AbstractVisitor
     /**
      * {@inheritdoc}
      */
+    public function visitFloat($data, TypeMetadataInterface $type, ContextInterface $context)
+    {
+        if (strpos($data = (string) $data, '.') === false) {
+            $data .= '.0';
+        }
+
+        return $this->visitText($data);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function visitString($data, TypeMetadataInterface $type, ContextInterface $context)
     {
         $document = $this->getDocument();

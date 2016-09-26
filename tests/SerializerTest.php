@@ -201,7 +201,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $emptyScalarFixture = new ScalarFixture();
         $scalarFixture = clone $emptyScalarFixture;
         $scalarFixture->bool = true;
-        $scalarFixture->float = 123.45;
+        $scalarFixture->float = 123.0;
         $scalarFixture->int = 123;
         $scalarFixture->string = 'foo';
         $scalarFixture->setType(clone $scalarFixture);
@@ -209,7 +209,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $emptyScalarExtendedFixture = new ScalarFixture();
         $scalarExtendedFixture = clone $emptyScalarExtendedFixture;
         $scalarExtendedFixture->bool = true;
-        $scalarExtendedFixture->float = 123.45;
+        $scalarExtendedFixture->float = 123.0;
         $scalarExtendedFixture->int = 123;
         $scalarExtendedFixture->string = 'foo';
         $scalarExtendedFixture->setType(clone $scalarExtendedFixture);
@@ -230,7 +230,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['array', []],
             ['boolean', true],
             ['integer', 123],
-            ['float', 123.45],
+            ['float', 123.0],
             ['null', null],
             ['string', 'foo'],
             ['date_time', $dateTime],
