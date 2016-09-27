@@ -38,7 +38,7 @@ class StdClassType extends AbstractClassType
      */
     protected function serialize($data, TypeMetadataInterface $type, ContextInterface $context)
     {
-        return $this->visit($data, $type, $context);
+        return $this->visit((array) $data, $type, $context);
     }
 
     /**
@@ -64,6 +64,6 @@ class StdClassType extends AbstractClassType
      */
     private function visit($data, TypeMetadataInterface $type, ContextInterface $context)
     {
-        return $context->getVisitor()->visitArray((array) $data, $type, $context);
+        return $context->getVisitor()->visitArray($data, $type, $context);
     }
 }

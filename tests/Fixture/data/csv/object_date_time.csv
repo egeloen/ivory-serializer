@@ -1,0 +1,2 @@
+dateTime,formattedDateTime,timeZonedDateTime,immutableDateTime,formattedImmutableDateTime,timeZonedImmutableDateTime
+2017-01-01T00:00:00+00:00,"2017-01-01, 00:00:00, +00:00",2017-01-01T00:00:00+01:00,2017-01-01T00:00:00+00:00,"2017-01-01, 00:00:00, +00:00",2017-01-01T00:00:00+01:00

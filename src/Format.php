@@ -16,6 +16,7 @@ namespace Ivory\Serializer;
  */
 final class Format
 {
+    const CSV = 'csv';
     const JSON = 'json';
     const XML = 'xml';
     const YAML = 'yaml';

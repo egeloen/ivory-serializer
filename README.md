@@ -10,10 +10,12 @@
 [![Total Downloads](https://poser.pugx.org/egeloen/serializer/downloads.svg)](https://packagist.org/packages/egeloen/serializer)
 [![License](https://poser.pugx.org/egeloen/serializer/license.svg)](https://packagist.org/packages/egeloen/serializer)
 
-The Ivory Serializer is a PHP 5.6+ library allowing you to (de)-serialize complex data using the visitor pattern on 
-each node of the graph recursively. Natively, it supports JSON, XML and YAML. It also supports features such as 
-exclusion strategies (groups, max depth, version), naming strategies (camel case, snake case, studly caps), 
-automatic/explicit mapping (reflection, annotation, XML, YAML, JSON) and many others...
+## Overview
+
+The Ivory Serializer is a PHP 5.6+ library allowing you to (de)-serialize complex data using the visitor pattern 
+recursively on each node of the graph. It supports the CSV, JSON, XML and YAML formats. It also supports features such 
+as exclusion strategies (groups, max depth, circular reference, version, ...), naming strategies (camel case, snake 
+case, studly caps), automatic/explicit mapping (reflection, annotation, XML, YAML, JSON) and many others...
 
 ``` php
 use Ivory\Serializer\Format;

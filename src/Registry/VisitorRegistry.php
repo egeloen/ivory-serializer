@@ -16,6 +16,8 @@ use Ivory\Serializer\Direction;
 use Ivory\Serializer\Format;
 use Ivory\Serializer\Instantiator\DoctrineInstantiator;
 use Ivory\Serializer\Mutator\ReflectionMutator;
+use Ivory\Serializer\Visitor\Csv\CsvDeserializationVisitor;
+use Ivory\Serializer\Visitor\Csv\CsvSerializationVisitor;
 use Ivory\Serializer\Visitor\Json\JsonDeserializationVisitor;
 use Ivory\Serializer\Visitor\Json\JsonSerializationVisitor;
 use Ivory\Serializer\Visitor\VisitorInterface;
@@ -59,11 +61,13 @@ class VisitorRegistry implements VisitorRegistryInterface
 
         return new static(array_replace_recursive([
             Direction::SERIALIZATION => [
+                Format::CSV  => new CsvSerializationVisitor($accessor),
                 Format::JSON => new JsonSerializationVisitor($accessor),
                 Format::XML  => new XmlSerializationVisitor($accessor),
                 Format::YAML => new YamlSerializationVisitor($accessor),
             ],
             Direction::DESERIALIZATION => [
+                Format::CSV  => new CsvDeserializationVisitor($instantiator, $mutator),
                 Format::JSON => new JsonDeserializationVisitor($instantiator, $mutator),
                 Format::XML  => new XmlDeserializationVisitor($instantiator, $mutator),
                 Format::YAML => new YamlDeserializationVisitor($instantiator, $mutator),

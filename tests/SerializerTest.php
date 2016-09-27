@@ -280,7 +280,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         $providers = [];
 
-        foreach ([Format::JSON, Format::XML, Format::YAML] as $format) {
+        foreach ([Format::CSV, Format::JSON, Format::XML, Format::YAML] as $format) {
             foreach ($cases as $case) {
                 if (isset($case[2])) {
                     $case[3] = $case[2];
