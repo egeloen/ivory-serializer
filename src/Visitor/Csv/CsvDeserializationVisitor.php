@@ -123,13 +123,11 @@ class CsvDeserializationVisitor extends AbstractDeserializationVisitor
             return;
         }
 
-        $result = $first;
-
-        if (count($result) === 1) {
-            $result = reset($result);
+        if (count($first) === 1) {
+            return reset($first);
         }
 
-        return $result;
+        return $first;
     }
 
     /**
