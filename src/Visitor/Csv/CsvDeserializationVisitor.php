@@ -105,7 +105,11 @@ class CsvDeserializationVisitor extends AbstractDeserializationVisitor
             }
 
             if ($fieldsCount !== $headersCount) {
-                throw new \InvalidArgumentException('FIXME');
+                throw new \InvalidArgumentException(sprintf(
+                    'The input dimension is not equals for all entries (Expected: %d, got %d).',
+                    $headersCount,
+                    $fieldsCount
+                ));
             }
 
             foreach ($fields as $key => $value) {
