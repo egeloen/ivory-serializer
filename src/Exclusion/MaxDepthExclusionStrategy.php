@@ -22,6 +22,19 @@ use Ivory\Serializer\Mapping\TypeMetadataInterface;
 class MaxDepthExclusionStrategy extends ExclusionStrategy
 {
     /**
+     * @var int
+     */
+    private $circularReferenceLimit;
+
+    /**
+     * @param int $circularReferenceLimit
+     */
+    public function __construct($circularReferenceLimit = 1)
+    {
+        $this->circularReferenceLimit = $circularReferenceLimit;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function skipClass(ClassMetadataInterface $class, ContextInterface $context)
@@ -44,10 +57,27 @@ class MaxDepthExclusionStrategy extends ExclusionStrategy
      */
     private function skip(ContextInterface $context)
     {
+        $dataStack = $context->getDataStack();
+        $metadataStack = $context->getMetadataStack();
+        $references = [];
         $depth = 0;
-        $dataDepth = count($context->getDataStack());
 
-        foreach ($context->getMetadataStack() as $metadata) {
+        for ($index = count($metadataStack) - 1; $index >= 0; --$index) {
+            $metadata = $metadataStack[$index];
+            $data = $dataStack[$index];
+
+            if ($metadata instanceof ClassMetadataInterface) {
+                $hash = spl_object_hash($data);
+
+                if (!isset($references[$hash])) {
+                    $references[$hash] = 0;
+                }
+
+                if (++$references[$hash] > $this->circularReferenceLimit) {
+                    return true;
+                }
+            }
+
             if ($metadata instanceof TypeMetadataInterface) {
                 ++$depth;
             }
@@ -62,7 +92,7 @@ class MaxDepthExclusionStrategy extends ExclusionStrategy
                 continue;
             }
 
-            if ($dataDepth - $depth > $metadata->getMaxDepth()) {
+            if ($depth > $metadata->getMaxDepth()) {
                 return true;
             }
         }

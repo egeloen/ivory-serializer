@@ -107,11 +107,13 @@ abstract class AbstractVisitor implements VisitorInterface
      */
     public function startVisitingObject($data, ClassMetadataInterface $class, ContextInterface $context)
     {
+        $context->enterScope($data, $class);
+
         if ($context->getExclusionStrategy()->skipClass($class, $context)) {
+            $context->leaveScope();
+
             return false;
         }
-
-        $context->enterScope($data, $class);
 
         return true;
     }

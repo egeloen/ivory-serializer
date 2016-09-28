@@ -32,7 +32,8 @@ $context->setIgnoreNull(true);
 
 ### Max Depth
 
-In order to control depth navigation of your graph, you have to use the max depth exclusion strategy:
+In order to control depth navigation of your graph as well as circular reference, you have to use the max depth 
+exclusion strategy:
 
 ``` php
 use Ivory\Serializer\Exclusion\MaxDepthExclusionStrategy;
@@ -42,19 +43,6 @@ $context->setExclusionStrategy(new MaxDepthExclusionStrategy());
 
 **Since this exclusion impacts performance, you need to explicitly enable it otherwise your mapping configuration 
 is ignored.**
-
-## Circular Reference
-
-The circular reference strategy allows you to stop the graph traversal when a circular reference is detected:  
-
-``` php
-use Ivory\Serializer\Exclusion\CircularReferenceExclusionStrategy;
-
-$context->setExclusionStrategy(new CircularReferenceExclusionStrategy());
-```
-
-**Since this exclusion impacts performance, you need to explicitly enable it otherwise your (de)-serialization will 
-enter in an infinite recursion.**
 
 ### Groups
 
