@@ -103,7 +103,7 @@ class Serializer implements SerializerInterface
         $visitor = $this->visitorRegistry->getVisitor($direction, $format);
 
         $context = $context ?: new Context();
-        $context->initialize($this->navigator, $visitor, $direction);
+        $context->initialize($this->navigator, $visitor, $direction, $format);
         $this->navigator->navigate($visitor->prepare($data, $context), $context, $type);
 
         return $visitor->getResult();

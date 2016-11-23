@@ -1,6 +1,6 @@
 {
     "name": "egeloen/serializer",
-    "description": "Serializer for PHP 5.6+ supporting JSON, XML & YAML",
+    "description": "Serializer for PHP 5.6+ supporting JSON, XML, YAML & CSV",
     "keywords": [ "serializer" ],
     "license": "MIT",
     "authors": [
@@ -23,6 +23,7 @@
         "phpdocumentor/reflection": "^3.0",
         "phpunit/phpunit": "^5.4",
         "psr/cache": "^1.0",
+        "symfony/event-dispatcher": "^2.8|^3.0",
         "symfony/property-info": "^2.8|^3.0",
         "symfony/property-access": "^2.8|^3.0",
         "symfony/yaml": "^2.6|^3.0"
@@ -33,6 +34,7 @@
         "ext-dom": "Allow you to use the XML serialization visitor and mapping.",
         "ext-json": "Allow you to use the JSON serialization/deserialization visitors and mapping.",
         "ext-simplexml": "Allow you to use the XML deserialization visitor and mapping.",
+        "symfony/event-dispatcher": "Allow you to use the event dispatching system.",
         "symfony/property-access": "Allow you to use the Symfony accessor/mutator.",
         "symfony/property-info": "Allow you to use the mapping type auto discovery.",
         "symfony/yaml": "Allow you to use the YAML serialization/deserialization visitors and mapping."

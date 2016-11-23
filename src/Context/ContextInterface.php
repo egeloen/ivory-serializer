@@ -26,8 +26,9 @@ interface ContextInterface
      * @param NavigatorInterface $navigator
      * @param VisitorInterface   $visitor
      * @param int                $direction
+     * @param string             $format
      */
-    public function initialize(NavigatorInterface $navigator, VisitorInterface $visitor, $direction);
+    public function initialize(NavigatorInterface $navigator, VisitorInterface $visitor, $direction, $format);
 
     /**
      * @return NavigatorInterface
@@ -64,6 +65,18 @@ interface ContextInterface
      * @return ContextInterface
      */
     public function setDirection($direction);
+
+    /**
+     * @return string
+     */
+    public function getFormat();
+
+    /**
+     * @param string $format
+     *
+     * @return ContextInterface
+     */
+    public function setFormat($format);
 
     /**
      * @return bool

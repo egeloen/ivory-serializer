@@ -40,6 +40,11 @@ class Context implements ContextInterface
     private $direction;
 
     /**
+     * @var string
+     */
+    private $format;
+
+    /**
      * @var bool
      */
     private $ignoreNull = false;
@@ -79,12 +84,13 @@ class Context implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function initialize(NavigatorInterface $navigator, VisitorInterface $visitor, $direction)
+    public function initialize(NavigatorInterface $navigator, VisitorInterface $visitor, $direction, $format)
     {
         $this
             ->setNavigator($navigator)
             ->setVisitor($visitor)
             ->setDirection($direction)
+            ->setFormat($format)
             ->setDataStack([])
             ->setMetadataStack([]);
     }
@@ -139,6 +145,24 @@ class Context implements ContextInterface
     public function setDirection($direction)
     {
         $this->direction = $direction;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFormat($format)
+    {
+        $this->format = $format;
 
         return $this;
     }
