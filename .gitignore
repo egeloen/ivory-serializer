@@ -1,6 +1,13 @@
-/.php_cs.cache
-/build
+# Composer
 /composer.lock
-/phpunit.xml
-/tests/Fixture/config/*/lock.*
 /vendor
+
+# PHP CS Fixer
+/.php_cs.cache
+
+# PHPUnit
+/phpunit.xml
+/build
+
+# Tests
+/tests/Fixture/config/*/lock.*
