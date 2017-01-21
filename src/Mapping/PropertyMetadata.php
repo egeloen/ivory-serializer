@@ -77,6 +77,41 @@ class PropertyMetadata implements PropertyMetadataInterface
     private $groups = [];
 
     /**
+     * @var bool
+     */
+    private $xmlAttribute = false;
+
+    /**
+     * @var bool
+     */
+    private $xmlValue = false;
+
+    /**
+     * @var bool
+     */
+    private $xmlInline = false;
+
+    /**
+     * @var string|null
+     */
+    private $xmlEntry;
+
+    /**
+     * @var string|null
+     */
+    private $xmlEntryAttribute;
+
+    /**
+     * @var bool|null
+     */
+    private $xmlKeyAsAttribute;
+
+    /**
+     * @var bool|null
+     */
+    private $xmlKeyAsNode;
+
+    /**
      * @param string $name
      * @param string $class
      */
@@ -382,10 +417,157 @@ class PropertyMetadata implements PropertyMetadataInterface
     /**
      * {@inheritdoc}
      */
+    public function isXmlAttribute()
+    {
+        return $this->xmlAttribute;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setXmlAttribute($xmlAttribute)
+    {
+        $this->xmlAttribute = $xmlAttribute;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isXmlValue()
+    {
+        return $this->xmlValue;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setXmlValue($xmlValue)
+    {
+        $this->xmlValue = $xmlValue;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isXmlInline()
+    {
+        return $this->xmlInline;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setXmlInline($xmlInline)
+    {
+        $this->xmlInline = $xmlInline;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasXmlEntry()
+    {
+        return $this->xmlEntry !== null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getXmlEntry()
+    {
+        return $this->xmlEntry;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setXmlEntry($xmlEntry)
+    {
+        $this->xmlEntry = $xmlEntry;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasXmlEntryAttribute()
+    {
+        return $this->xmlEntryAttribute !== null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getXmlEntryAttribute()
+    {
+        return $this->xmlEntryAttribute;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setXmlEntryAttribute($xmlEntryAttribute)
+    {
+        $this->xmlEntryAttribute = $xmlEntryAttribute;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasXmlKeyAsAttribute()
+    {
+        return $this->xmlKeyAsAttribute !== null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function useXmlKeyAsAttribute()
+    {
+        return $this->xmlKeyAsAttribute;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setXmlKeyAsAttribute($xmlKeyAsAttribute)
+    {
+        $this->xmlKeyAsAttribute = $xmlKeyAsAttribute;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasXmlKeyAsNode()
+    {
+        return $this->xmlKeyAsNode !== null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function useXmlKeyAsNode()
+    {
+        return $this->xmlKeyAsNode;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setXmlKeyAsNode($xmlKeyAsNode)
+    {
+        $this->xmlKeyAsNode = $xmlKeyAsNode;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function merge(PropertyMetadataInterface $propertyMetadata)
     {
         $this->setReadable($propertyMetadata->isReadable());
         $this->setWritable($propertyMetadata->isWritable());
+        $this->setXmlAttribute($propertyMetadata->isXmlAttribute());
+        $this->setXmlValue($propertyMetadata->isXmlValue());
+        $this->setXmlInline($propertyMetadata->isXmlInline());
 
         if ($propertyMetadata->hasAlias()) {
             $this->setAlias($propertyMetadata->getAlias());
@@ -418,6 +600,22 @@ class PropertyMetadata implements PropertyMetadataInterface
         foreach ($propertyMetadata->getGroups() as $group) {
             $this->addGroup($group);
         }
+
+        if ($propertyMetadata->hasXmlEntry()) {
+            $this->setXmlEntry($propertyMetadata->getXmlEntry());
+        }
+
+        if ($propertyMetadata->hasXmlEntryAttribute()) {
+            $this->setXmlEntryAttribute($propertyMetadata->getXmlEntryAttribute());
+        }
+
+        if ($propertyMetadata->hasXmlKeyAsAttribute()) {
+            $this->setXmlKeyAsAttribute($propertyMetadata->useXmlKeyAsAttribute());
+        }
+
+        if ($propertyMetadata->hasXmlKeyAsNode()) {
+            $this->setXmlKeyAsNode($propertyMetadata->useXmlKeyAsNode());
+        }
     }
 
     /**
@@ -438,6 +636,13 @@ class PropertyMetadata implements PropertyMetadataInterface
             $this->until,
             $this->maxDepth,
             $this->groups,
+            $this->xmlAttribute,
+            $this->xmlValue,
+            $this->xmlInline,
+            $this->xmlEntry,
+            $this->xmlEntryAttribute,
+            $this->xmlKeyAsAttribute,
+            $this->xmlKeyAsNode,
         ]);
     }
 
@@ -458,7 +663,14 @@ class PropertyMetadata implements PropertyMetadataInterface
             $this->since,
             $this->until,
             $this->maxDepth,
-            $this->groups
+            $this->groups,
+            $this->xmlAttribute,
+            $this->xmlValue,
+            $this->xmlInline,
+            $this->xmlEntry,
+            $this->xmlEntryAttribute,
+            $this->xmlKeyAsAttribute,
+            $this->xmlKeyAsNode
         ) = unserialize($serialized);
     }
 }

@@ -25,6 +25,8 @@ use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
 use Ivory\Tests\Serializer\Fixture\WritableClassFixture;
 use Ivory\Tests\Serializer\Fixture\WritableFixture;
+use Ivory\Tests\Serializer\Fixture\XmlFixture;
+use Ivory\Tests\Serializer\Fixture\XmlValueFixture;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -225,5 +227,77 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
     {
         $this->setLoader($this->createLoader('groups'));
         $this->loadClassMetadata(new ClassMetadata(GroupFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testXmlRoot()
+    {
+        $this->setLoader($this->createLoader('xml_root'));
+        $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testXmlAttribute()
+    {
+        $this->setLoader($this->createLoader('xml_attribute'));
+        $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testXmlEntry()
+    {
+        $this->setLoader($this->createLoader('xml_entry'));
+        $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testXmlEntryAttribute()
+    {
+        $this->setLoader($this->createLoader('xml_entry_attribute'));
+        $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testXmlKeyAsAttribute()
+    {
+        $this->setLoader($this->createLoader('xml_key_as_attribute'));
+        $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testXmlKeyAsNode()
+    {
+        $this->setLoader($this->createLoader('xml_key_as_node'));
+        $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testXmlInline()
+    {
+        $this->setLoader($this->createLoader('xml_inline'));
+        $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testXmlValue()
+    {
+        $this->setLoader($this->createLoader('xml_value'));
+        $this->loadClassMetadata(new ClassMetadata(XmlValueFixture::class));
     }
 }

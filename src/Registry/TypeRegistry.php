@@ -11,7 +11,6 @@
 
 namespace Ivory\Serializer\Registry;
 
-use Ivory\Serializer\Instantiator\DoctrineInstantiator;
 use Ivory\Serializer\Type\ArrayType;
 use Ivory\Serializer\Type\BooleanType;
 use Ivory\Serializer\Type\ClosureType;
@@ -67,7 +66,7 @@ class TypeRegistry implements TypeRegistryInterface
             Type::NUMERIC   => $floatType,
             Type::OBJECT    => new ObjectType(),
             Type::RESOURCE  => new ResourceType(),
-            Type::STD_CLASS => new StdClassType(new DoctrineInstantiator()),
+            Type::STD_CLASS => new StdClassType(),
             Type::STRING    => new StringType(),
         ], $types));
     }

@@ -104,6 +104,10 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
         }
 
         $classMetadata->setProperties($properties);
+
+        if (array_key_exists('xml_root', $data)) {
+            $this->loadClassMetadataXmlRoot($classMetadata, $data['xml_root']);
+        }
     }
 
     /**
@@ -164,6 +168,62 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
         if (array_key_exists('groups', $data)) {
             $this->loadPropertyMetadataGroups($propertyMetadata, $data['groups']);
         }
+
+        if (array_key_exists('xml_attribute', $data)) {
+            $this->loadPropertyMetadataXmlAttribute($propertyMetadata, $data['xml_attribute']);
+        }
+
+        if (array_key_exists('xml_value', $data)) {
+            $this->loadPropertyMetadataXmlValue($propertyMetadata, $data['xml_value']);
+        }
+
+        if (array_key_exists('xml_inline', $data)) {
+            $this->loadPropertyMetadataXmlInline($propertyMetadata, $data['xml_inline']);
+
+            if (!array_key_exists('xml_key_as_attribute', $data)) {
+                $data['xml_key_as_attribute'] = true;
+            }
+
+            if (!array_key_exists('xml_key_as_node', $data)) {
+                $data['xml_key_as_node'] = false;
+            }
+        }
+
+        if (array_key_exists('xml_entry', $data)) {
+            $this->loadPropertyMetadataXmlEntry($propertyMetadata, $data['xml_entry']);
+        }
+
+        if (array_key_exists('xml_entry_attribute', $data)) {
+            $this->loadPropertyMetadataXmlEntryAttribute($propertyMetadata, $data['xml_entry_attribute']);
+        }
+
+        if (array_key_exists('xml_key_as_attribute', $data)) {
+            $this->loadPropertyMetadataXmlKeyAsAttribute($propertyMetadata, $data['xml_key_as_attribute']);
+        }
+
+        if (array_key_exists('xml_key_as_node', $data)) {
+            $this->loadPropertyMetadataXmlKeyAsNode($propertyMetadata, $data['xml_key_as_node']);
+        }
+    }
+
+    /**
+     * @param ClassMetadataInterface $classMetadata
+     * @param string                 $xmlRoot
+     */
+    private function loadClassMetadataXmlRoot(ClassMetadataInterface $classMetadata, $xmlRoot)
+    {
+        if (!is_string($xmlRoot)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping xml root must be a non empty string, got "%s".',
+                is_object($xmlRoot) ? get_class($xmlRoot) : gettype($xmlRoot)
+            ));
+        }
+
+        if (empty($xmlRoot)) {
+            throw new \InvalidArgumentException('The mapping xml root must be a non empty string.');
+        }
+
+        $classMetadata->setXmlRoot($xmlRoot);
     }
 
     /**
@@ -348,6 +408,132 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
 
             $propertyMetadata->addGroup($group);
         }
+    }
+
+    /**
+     * @param PropertyMetadataInterface $propertyMetadata
+     * @param bool                      $xmlAttribute
+     */
+    private function loadPropertyMetadataXmlAttribute(PropertyMetadataInterface $propertyMetadata, $xmlAttribute)
+    {
+        if (!is_bool($xmlAttribute)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property xml attribute must be a boolean, got "%s".',
+                is_object($xmlAttribute) ? get_class($xmlAttribute) : gettype($xmlAttribute)
+            ));
+        }
+
+        $propertyMetadata->setXmlAttribute($xmlAttribute);
+    }
+
+    /**
+     * @param PropertyMetadataInterface $propertyMetadata
+     * @param bool                      $xmlValue
+     */
+    private function loadPropertyMetadataXmlValue(PropertyMetadataInterface $propertyMetadata, $xmlValue)
+    {
+        if (!is_bool($xmlValue)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property xml value must be a boolean, got "%s".',
+                is_object($xmlValue) ? get_class($xmlValue) : gettype($xmlValue)
+            ));
+        }
+
+        $propertyMetadata->setXmlValue($xmlValue);
+    }
+
+    /**
+     * @param PropertyMetadataInterface $propertyMetadata
+     * @param bool                      $xmlInline
+     */
+    private function loadPropertyMetadataXmlInline(PropertyMetadataInterface $propertyMetadata, $xmlInline)
+    {
+        if (!is_bool($xmlInline)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property xml inline must be a boolean, got "%s".',
+                is_object($xmlInline) ? get_class($xmlInline) : gettype($xmlInline)
+            ));
+        }
+
+        $propertyMetadata->setXmlInline($xmlInline);
+    }
+
+    /**
+     * @param PropertyMetadataInterface $propertyMetadata
+     * @param string                    $xmlEntry
+     */
+    private function loadPropertyMetadataXmlEntry(PropertyMetadataInterface $propertyMetadata, $xmlEntry)
+    {
+        if (!is_string($xmlEntry)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property xml entry must be a non empty string, got "%s".',
+                is_object($xmlEntry) ? get_class($xmlEntry) : gettype($xmlEntry)
+            ));
+        }
+
+        if (empty($xmlEntry)) {
+            throw new \InvalidArgumentException('The mapping property xml entry must be a non empty string.');
+        }
+
+        $propertyMetadata->setXmlEntry($xmlEntry);
+    }
+
+    /**
+     * @param PropertyMetadataInterface $propertyMetadata
+     * @param string                    $xmlEntryAttribute
+     */
+    private function loadPropertyMetadataXmlEntryAttribute(
+        PropertyMetadataInterface $propertyMetadata,
+        $xmlEntryAttribute
+    ) {
+        if (!is_string($xmlEntryAttribute)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property xml entry attribute must be a non empty string, got "%s".',
+                is_object($xmlEntryAttribute) ? get_class($xmlEntryAttribute) : gettype($xmlEntryAttribute)
+            ));
+        }
+
+        if (empty($xmlEntryAttribute)) {
+            throw new \InvalidArgumentException(
+                'The mapping property xml entry attribute must be a non empty string.'
+            );
+        }
+
+        $propertyMetadata->setXmlEntryAttribute($xmlEntryAttribute);
+    }
+
+    /**
+     * @param PropertyMetadataInterface $propertyMetadata
+     * @param string                    $xmlKeyAsAttribute
+     */
+    private function loadPropertyMetadataXmlKeyAsAttribute(
+        PropertyMetadataInterface $propertyMetadata,
+        $xmlKeyAsAttribute
+    ) {
+        if (!is_bool($xmlKeyAsAttribute)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property xml key as attribute must be a boolean, got "%s".',
+                is_object($xmlKeyAsAttribute) ? get_class($xmlKeyAsAttribute) : gettype($xmlKeyAsAttribute)
+            ));
+        }
+
+        $propertyMetadata->setXmlKeyAsAttribute($xmlKeyAsAttribute);
+    }
+
+    /**
+     * @param PropertyMetadataInterface $propertyMetadata
+     * @param string                    $xmlKeyAsNode
+     */
+    private function loadPropertyMetadataXmlKeyAsNode(PropertyMetadataInterface $propertyMetadata, $xmlKeyAsNode)
+    {
+        if (!is_bool($xmlKeyAsNode)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping property xml key as node must be a boolean, got "%s".',
+                is_object($xmlKeyAsNode) ? get_class($xmlKeyAsNode) : gettype($xmlKeyAsNode)
+            ));
+        }
+
+        $propertyMetadata->setXmlKeyAsNode($xmlKeyAsNode);
     }
 
     /**

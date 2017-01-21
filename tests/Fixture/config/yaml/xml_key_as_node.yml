@@ -1,0 +1,4 @@
+Ivory\Tests\Serializer\Fixture\XmlFixture:
+    properties:
+        keyAsNode:
+            xml_key_as_node: "invalid"

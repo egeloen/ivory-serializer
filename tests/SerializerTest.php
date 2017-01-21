@@ -43,6 +43,8 @@ use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
 use Ivory\Tests\Serializer\Fixture\WritableClassFixture;
 use Ivory\Tests\Serializer\Fixture\WritableFixture;
+use Ivory\Tests\Serializer\Fixture\XmlFixture;
+use Ivory\Tests\Serializer\Fixture\XmlValueFixture;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -225,6 +227,20 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $versionFixture->baz = 'zab';
         $versionFixture->bat = 'tab';
 
+        $xmlFixture = new XmlFixture();
+        $xmlFixture->foo = 'oof';
+        $xmlFixture->bar = 'rab';
+        $xmlFixture->list = ['foo', 'bar'];
+        $xmlFixture->keyAsAttribute = ['ban', 'bit' => 'bot'];
+        $xmlFixture->keyAsNode = ['bit', 'bot' => 'ban'];
+        $xmlFixture->entry = ['baz', 'bat'];
+        $xmlFixture->entryAttribute = ['baz', 'bin' => 'bat'];
+        $xmlFixture->inline = ['biz' => 'boz', 'bot' => 'ban'];
+
+        $xmlValueFixture = new XmlValueFixture();
+        $xmlValueFixture->foo = 'oof';
+        $xmlValueFixture->bar = 'rab';
+
         $cases = [
             ['array', []],
             ['boolean', true],
@@ -275,6 +291,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['object_version_1_0', $versionFixture, (new Context())->setExclusionStrategy(new VersionExclusionStrategy('1.0'))],
             ['object_version_2_0', $versionFixture, (new Context())->setExclusionStrategy(new VersionExclusionStrategy('2.0'))],
             ['object_version_2_1', $versionFixture, (new Context())->setExclusionStrategy(new VersionExclusionStrategy('2.1'))],
+            ['xml', $xmlFixture],
+            ['xml_value', $xmlValueFixture],
         ];
 
         $providers = [];

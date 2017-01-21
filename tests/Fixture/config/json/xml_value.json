@@ -1,0 +1,9 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\XmlValueFixture": {
+        "properties": {
+            "bar": {
+                "xml_value": "invalid"
+            }
+        }
+    }
+}

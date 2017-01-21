@@ -1,0 +1,9 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\XmlFixture": {
+        "properties": {
+            "inline": {
+                "xml_inline": "invalid"
+            }
+        }
+    },
+}

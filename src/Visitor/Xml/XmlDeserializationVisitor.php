@@ -14,10 +14,8 @@ namespace Ivory\Serializer\Visitor\Xml;
 use Ivory\Serializer\Context\ContextInterface;
 use Ivory\Serializer\Instantiator\InstantiatorInterface;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
-use Ivory\Serializer\Mapping\TypeMetadata;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 use Ivory\Serializer\Mutator\MutatorInterface;
-use Ivory\Serializer\Type\Type;
 use Ivory\Serializer\Visitor\AbstractDeserializationVisitor;
 
 /**
@@ -58,17 +56,32 @@ class XmlDeserializationVisitor extends AbstractDeserializationVisitor
      */
     protected function decode($data)
     {
-        $internalErrors = libxml_use_internal_errors(true);
-        $disableEntityLoader = libxml_disable_entity_loader(true);
+        $internalErrors = libxml_use_internal_errors();
+        $disableEntityLoader = libxml_disable_entity_loader();
 
+        $this->setLibXmlState(true, true);
         $document = simplexml_load_string($data);
 
-        libxml_use_internal_errors($internalErrors);
-        libxml_disable_entity_loader($disableEntityLoader);
-
         if ($document === false) {
-            throw new \InvalidArgumentException(libxml_get_last_error());
+            $errors = [];
+
+            foreach (libxml_get_errors() as $error) {
+                $errors[] = sprintf('[%s %s] %s (in %s - line %d, column %d)',
+                    $error->level === LIBXML_ERR_WARNING ? 'WARNING' : 'ERROR',
+                    $error->code,
+                    trim($error->message),
+                    $error->file ?: 'n/a',
+                    $error->line,
+                    $error->column
+                );
+            }
+
+            $this->setLibXmlState($internalErrors, $disableEntityLoader);
+
+            throw new \InvalidArgumentException(implode(PHP_EOL, $errors));
         }
+
+        $this->setLibXmlState($internalErrors, $disableEntityLoader);
 
         return $document;
     }
@@ -80,18 +93,67 @@ class XmlDeserializationVisitor extends AbstractDeserializationVisitor
     {
         $this->result = [];
 
-        if (isset($data[$this->entry])) {
-            $entries = $data[$this->entry];
-            $entries = is_array($entries) ? $entries : [$entries];
+        $entry = $this->entry;
+        $entryAttribute = $this->entryAttribute;
+        $keyAsAttribute = false;
+        $inline = false;
 
-            foreach ($entries as $key => $value) {
-                $this->visitArrayItem($key, $value, $type, $context);
+        $metadataStack = $context->getMetadataStack();
+        $metadataIndex = count($metadataStack) - 2;
+        $metadata = isset($metadataStack[$metadataIndex]) ? $metadataStack[$metadataIndex] : null;
+
+        if ($metadata instanceof PropertyMetadataInterface) {
+            $inline = $metadata->isXmlInline();
+
+            if ($metadata->hasXmlEntry()) {
+                $entry = $metadata->getXmlEntry();
+            }
+
+            if ($metadata->hasXmlEntryAttribute()) {
+                $entryAttribute = $metadata->getXmlEntryAttribute();
+            }
+
+            if ($metadata->hasXmlKeyAsAttribute()) {
+                $keyAsAttribute = $metadata->useXmlKeyAsAttribute();
             }
         }
 
+        $keyType = $type->getOption('key');
+        $valueType = $type->getOption('value');
+
+        if ($data instanceof \SimpleXMLElement && !$inline) {
+            $data = $data->children();
+        }
+
         foreach ($data as $key => $value) {
-            if ($key !== $this->entry) {
-                $this->visitArrayItem($key, $value, $type, $context);
+            $result = $value;
+            $isElement = $value instanceof \SimpleXMLElement;
+
+            if ($isElement && $valueType === null) {
+                $result = $this->visitNode($value, $entry);
+            }
+
+            $result = $this->navigator->navigate($result, $context, $valueType);
+
+            if ($result === null && $context->isNullIgnored()) {
+                continue;
+            }
+
+            if ($key === $entry) {
+                $key = null;
+            }
+
+            if ($isElement && ($keyAsAttribute || $key === null)) {
+                $attributes = $value->attributes();
+                $key = isset($attributes[$entryAttribute]) ? $this->visitNode($attributes[$entryAttribute]) : null;
+            }
+
+            $key = $this->navigator->navigate($key, $context, $keyType);
+
+            if ($key === null) {
+                $this->result[] = $result;
+            } else {
+                $this->result[$key] = $result;
             }
         }
 
@@ -107,83 +169,81 @@ class XmlDeserializationVisitor extends AbstractDeserializationVisitor
         PropertyMetadataInterface $property,
         ContextInterface $context
     ) {
-        $data = $this->visitNode($data, new TypeMetadata(Type::ARRAY_));
-
-        if (!isset($data[$name])) {
+        if ($property->isXmlInline() && $property->useXmlKeyAsNode()) {
             return false;
         }
 
-        $data[$name] = $this->visitNode($data[$name], $property->getType());
+        if ($property->isXmlAttribute()) {
+            return parent::doVisitObjectProperty($data->attributes(), $name, $property, $context);
+        }
 
-        return parent::doVisitObjectProperty($data, $name, $property, $context);
+        if ($property->isXmlValue()) {
+            return parent::doVisitObjectProperty([$name => $data], $name, $property, $context);
+        }
+
+        $key = $name;
+
+        if ($property->isXmlInline()) {
+            $key = $property->hasXmlEntry() ? $property->getXmlEntry() : $this->entry;
+        }
+
+        if (!isset($data->$key)) {
+            return false;
+        }
+
+        $data = $data->$key;
+
+        if ($data->count() === 1 && (string) $data === '') {
+            return false;
+        }
+
+        return parent::doVisitObjectProperty([$name => $data], $name, $property, $context);
     }
 
     /**
-     * @param mixed                 $key
-     * @param mixed                 $value
-     * @param TypeMetadataInterface $type
-     * @param ContextInterface      $context
-     */
-    private function visitArrayItem($key, $value, TypeMetadataInterface $type, ContextInterface $context)
-    {
-        $result = $this->navigator->navigate(
-            $this->visitNode($value, $valueType = $type->getOption('value')),
-            $context,
-            $valueType
-        );
-
-        if ($result === null && $context->isNullIgnored()) {
-            return;
-        }
-
-        if ($value instanceof \SimpleXMLElement) {
-            $key = $value->getName();
-
-            if ($key === $this->entry) {
-                $attributes = $value->attributes();
-                $key = isset($attributes[$this->entryAttribute]) ? $attributes[$this->entryAttribute] : null;
-            }
-        } elseif ($key === $this->entry) {
-            $key = null;
-        }
-
-        $key = $this->navigator->navigate(
-            $this->visitNode($key, $keyType = $type->getOption('key')),
-            $context,
-            $keyType
-        );
-
-        if ($key === null) {
-            $this->result[] = $result;
-        } else {
-            $this->result[$key] = $result;
-        }
-    }
-
-    /**
-     * @param mixed                      $data
-     * @param TypeMetadataInterface|null $type
+     * @param \SimpleXMLElement $data
+     * @param string|null       $entry
      *
      * @return mixed
      */
-    private function visitNode($data, TypeMetadataInterface $type = null)
+    private function visitNode(\SimpleXMLElement $data, $entry = null)
     {
-        if (!$data instanceof \SimpleXMLElement) {
-            return $data;
+        if ($data->count() === 0) {
+            $data = (string) $data;
+
+            return $data !== '' ? $data : null;
         }
 
-        if (count($data)) {
-            return (array) $data;
+        $result = [];
+        $entry = $entry ?: $this->entry;
+
+        foreach ($data as $value) {
+            $key = $value->getName();
+
+            if ($key === $entry) {
+                $result[] = $value;
+            } elseif (isset($result[$key])) {
+                if (!is_array($result[$key])) {
+                    $result[$key] = [$result[$key]];
+                }
+
+                $result[$key][] = $value;
+            } else {
+                $result[$key] = $value;
+            }
         }
 
-        $data = (string) $data;
+        return $result;
+    }
 
-        if ($data !== '') {
-            return $data;
-        }
-
-        if ($type !== null && $type->getName() === Type::ARRAY_) {
-            return [];
-        }
+    /**
+     * @param bool $internalErrors
+     * @param bool $disableEntities
+     */
+    private function setLibXmlState($internalErrors, $disableEntities)
+    {
+        libxml_use_internal_errors($internalErrors);
+        libxml_disable_entity_loader($disableEntities);
+        libxml_clear_errors();
     }
 }

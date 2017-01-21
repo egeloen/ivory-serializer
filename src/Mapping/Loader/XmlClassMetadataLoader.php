@@ -56,6 +56,10 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
             $definition['writable'] = (string) $class['writable'] === 'true';
         }
 
+        if (isset($class['xml-root'])) {
+            $definition['xml_root'] = (string) $class['xml-root'];
+        }
+
         $properties = [];
 
         foreach ($class->property as $property) {
@@ -124,6 +128,34 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
             $property['groups'][] = (string) $group;
         }
 
+        if (isset($element['xml-attribute'])) {
+            $property['xml_attribute'] = (string) $element['xml-attribute'] === 'true';
+        }
+
+        if (isset($element['xml-value'])) {
+            $property['xml_value'] = (string) $element['xml-value'] === 'true';
+        }
+
+        if (isset($element['xml-inline'])) {
+            $property['xml_inline'] = (string) $element['xml-inline'] === 'true';
+        }
+
+        if (isset($element['xml-entry'])) {
+            $property['xml_entry'] = (string) $element['xml-entry'];
+        }
+
+        if (isset($element['xml-entry-attribute'])) {
+            $property['xml_entry_attribute'] = (string) $element['xml-entry-attribute'];
+        }
+
+        if (isset($element['xml-key-as-attribute'])) {
+            $property['xml_key_as_attribute'] = (string) $element['xml-key-as-attribute'] === 'true';
+        }
+
+        if (isset($element['xml-key-as-node'])) {
+            $property['xml_key_as_node'] = (string) $element['xml-key-as-node'] === 'true';
+        }
+
         return $property;
     }
 
@@ -143,18 +175,34 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
         $internalErrors = libxml_use_internal_errors();
         $disableEntities = libxml_disable_entity_loader();
 
-        $this->setState(true, true);
+        $this->setLibXmlState(true, true);
+        $document = $this->createDocument($data, $internalErrors, $disableEntities);
+        $this->setLibXmlState($internalErrors, $disableEntities);
 
+        return $document;
+    }
+
+    /**
+     * @param string $data
+     * @param bool   $internalErrors
+     * @param bool   $disableEntities
+     *
+     * @return \DOMDocument
+     */
+    private function createDocument($data, $internalErrors, $disableEntities)
+    {
         $document = new \DOMDocument();
         $document->validateOnParse = true;
 
-        if (!$document->loadXML($data, LIBXML_NONET | LIBXML_COMPACT)) {
-            $this->setState($internalErrors, $disableEntities);
-
-            throw new \InvalidArgumentException();
+        if (!@$document->loadXML($data, LIBXML_NONET | LIBXML_COMPACT)) {
+            $this->dispatchErrors($internalErrors, $disableEntities);
         }
 
         $document->normalizeDocument();
+
+        if (!@$document->schemaValidateSource(file_get_contents(__DIR__.'/../Resource/mapping.xsd'))) {
+            $this->dispatchErrors($internalErrors, $disableEntities);
+        }
 
         foreach ($document->childNodes as $child) {
             if ($child->nodeType === XML_DOCUMENT_TYPE_NODE) {
@@ -162,28 +210,20 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
             }
         }
 
-        $this->validateDocument($document, $internalErrors, $disableEntities);
-        $this->setState($internalErrors, $disableEntities);
-
         return $document;
     }
 
     /**
-     * @param \DOMDocument $document
-     * @param bool         $internalErrors
-     * @param bool         $disableEntities
+     * @param bool $internalErrors
+     * @param bool $disableEntities
      */
-    private function validateDocument(\DOMDocument $document, $internalErrors, $disableEntities)
+    private function dispatchErrors($internalErrors, $disableEntities)
     {
-        if (@$document->schemaValidateSource(file_get_contents(__DIR__.'/../Resource/mapping.xsd'))) {
-            return;
-        }
-
         $errors = [];
 
         foreach (libxml_get_errors() as $error) {
             $errors[] = sprintf('[%s %s] %s (in %s - line %d, column %d)',
-                LIBXML_ERR_WARNING === $error->level ? 'WARNING' : 'ERROR',
+                $error->level === LIBXML_ERR_WARNING ? 'WARNING' : 'ERROR',
                 $error->code,
                 trim($error->message),
                 $error->file ?: 'n/a',
@@ -192,7 +232,7 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
             );
         }
 
-        $this->setState($internalErrors, $disableEntities);
+        $this->setLibXmlState($internalErrors, $disableEntities);
 
         throw new \InvalidArgumentException(implode(PHP_EOL, $errors));
     }
@@ -201,7 +241,7 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
      * @param bool $internalErrors
      * @param bool $disableEntities
      */
-    private function setState($internalErrors, $disableEntities)
+    private function setLibXmlState($internalErrors, $disableEntities)
     {
         libxml_use_internal_errors($internalErrors);
         libxml_disable_entity_loader($disableEntities);

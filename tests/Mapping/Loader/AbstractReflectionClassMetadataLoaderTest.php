@@ -207,4 +207,12 @@ abstract class AbstractReflectionClassMetadataLoaderTest extends AbstractClassMe
     public function testDescFixture()
     {
     }
+
+    public function testXmlFixture()
+    {
+    }
+
+    public function testXmlValueFixture()
+    {
+    }
 }

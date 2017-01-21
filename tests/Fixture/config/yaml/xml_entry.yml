@@ -1,0 +1,4 @@
+Ivory\Tests\Serializer\Fixture\XmlFixture:
+    properties:
+        entry:
+            xml_entry: ~

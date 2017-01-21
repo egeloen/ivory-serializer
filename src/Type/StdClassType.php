@@ -12,7 +12,6 @@
 namespace Ivory\Serializer\Type;
 
 use Ivory\Serializer\Context\ContextInterface;
-use Ivory\Serializer\Instantiator\InstantiatorInterface;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 
 /**
@@ -20,19 +19,6 @@ use Ivory\Serializer\Mapping\TypeMetadataInterface;
  */
 class StdClassType extends AbstractClassType
 {
-    /**
-     * @var InstantiatorInterface
-     */
-    private $instantiator;
-
-    /**
-     * @param InstantiatorInterface $instantiator
-     */
-    public function __construct(InstantiatorInterface $instantiator)
-    {
-        $this->instantiator = $instantiator;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -46,13 +32,7 @@ class StdClassType extends AbstractClassType
      */
     protected function deserialize($data, TypeMetadataInterface $type, ContextInterface $context)
     {
-        $result = $this->instantiator->instantiate($type->getName());
-
-        foreach ($this->visit($data, $type, $context) as $key => $value) {
-            $result->$key = $value;
-        }
-
-        return $result;
+        return (object) $this->visit($data, $type, $context);
     }
 
     /**

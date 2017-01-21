@@ -27,6 +27,11 @@ class ClassMetadata implements ClassMetadataInterface
     private $properties = [];
 
     /**
+     * @var string|null
+     */
+    private $xmlRoot;
+
+    /**
      * @param string $name
      */
     public function __construct($name)
@@ -123,8 +128,36 @@ class ClassMetadata implements ClassMetadataInterface
     /**
      * {@inheritdoc}
      */
+    public function hasXmlRoot()
+    {
+        return $this->xmlRoot !== null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getXmlRoot()
+    {
+        return $this->xmlRoot;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setXmlRoot($xmlRoot)
+    {
+        $this->xmlRoot = $xmlRoot;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function merge(ClassMetadataInterface $classMetadata)
     {
+        if ($classMetadata->hasXmlRoot()) {
+            $this->setXmlRoot($classMetadata->getXmlRoot());
+        }
+
         foreach ($classMetadata->getProperties() as $property) {
             $this->addProperty($property);
         }
@@ -138,6 +171,7 @@ class ClassMetadata implements ClassMetadataInterface
         return serialize([
             $this->name,
             $this->properties,
+            $this->xmlRoot,
         ]);
     }
 
@@ -148,7 +182,8 @@ class ClassMetadata implements ClassMetadataInterface
     {
         list(
             $this->name,
-            $this->properties
+            $this->properties,
+            $this->xmlRoot
         ) = unserialize($serialized);
     }
 }

@@ -1,0 +1,8 @@
+{
+    "Ivory\\Tests\\Serializer\\Fixture\\XmlFixture": {
+        "xml_root": true,
+        "properties": {
+            "foo": {}
+        }
+    },
+}

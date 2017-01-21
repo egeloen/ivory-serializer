@@ -13,6 +13,7 @@ namespace Ivory\Serializer\Visitor\Xml;
 
 use Ivory\Serializer\Accessor\AccessorInterface;
 use Ivory\Serializer\Context\ContextInterface;
+use Ivory\Serializer\Mapping\ClassMetadataInterface;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 use Ivory\Serializer\Visitor\AbstractVisitor;
@@ -33,12 +34,12 @@ class XmlSerializationVisitor extends AbstractVisitor
     private $document;
 
     /**
-     * @var \DOMNode|null
+     * @var \DOMElement|null
      */
     private $node;
 
     /**
-     * @var \DOMNode[]
+     * @var \DOMElement[]
      */
     private $stack;
 
@@ -51,6 +52,11 @@ class XmlSerializationVisitor extends AbstractVisitor
      * @var string
      */
     private $encoding;
+
+    /**
+     * @var bool
+     */
+    private $formatOutput;
 
     /**
      * @var string
@@ -71,6 +77,7 @@ class XmlSerializationVisitor extends AbstractVisitor
      * @param AccessorInterface $accessor
      * @param string            $version
      * @param string            $encoding
+     * @param bool              $formatOutput
      * @param string            $root
      * @param string            $entry
      * @param string            $entryAttribute
@@ -79,6 +86,7 @@ class XmlSerializationVisitor extends AbstractVisitor
         AccessorInterface $accessor,
         $version = '1.0',
         $encoding = 'UTF-8',
+        $formatOutput = true,
         $root = 'result',
         $entry = 'entry',
         $entryAttribute = 'key'
@@ -86,6 +94,7 @@ class XmlSerializationVisitor extends AbstractVisitor
         $this->accessor = $accessor;
         $this->version = $version;
         $this->encoding = $encoding;
+        $this->formatOutput = $formatOutput;
         $this->root = $root;
         $this->entry = $entry;
         $this->entryAttribute = $entryAttribute;
@@ -141,11 +150,25 @@ class XmlSerializationVisitor extends AbstractVisitor
         $document = $this->getDocument();
         $data = (string) $data;
 
-        $node = $this->requireCData($data)
+        $node = strpos($data, '<') !== false || strpos($data, '>') !== false || strpos($data, '&') !== false
             ? $document->createCDATASection($data)
             : $document->createTextNode($data);
 
         return $this->visitNode($node);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function startVisitingObject($data, ClassMetadataInterface $class, ContextInterface $context)
+    {
+        $result = parent::startVisitingObject($data, $class, $context);
+
+        if ($result && $class->hasXmlRoot()) {
+            $this->getDocument($class->getXmlRoot());
+        }
+
+        return $result;
     }
 
     /**
@@ -175,7 +198,6 @@ class XmlSerializationVisitor extends AbstractVisitor
             return false;
         }
 
-        // FIXME - Detect errors
         $value = $this->accessor->getValue(
             $data,
             $property->hasAccessor() ? $property->getAccessor() : $property->getName()
@@ -189,7 +211,21 @@ class XmlSerializationVisitor extends AbstractVisitor
         $this->enterNodeScope($node);
         $this->navigator->navigate($value, $context, $property->getType());
         $this->leaveNodeScope();
-        $this->visitNode($node);
+
+        if ($property->isXmlAttribute()) {
+            $this->node->setAttribute($name, $node->nodeValue);
+        } elseif ($property->isXmlValue()) {
+            $this->visitNode($node->firstChild);
+        } elseif ($property->isXmlInline()) {
+            $children = $node->childNodes;
+            $count = $children->length;
+
+            for ($index = 0; $index < $count; ++$index) {
+                $this->visitNode($children->item(0));
+            }
+        } else {
+            $this->visitNode($node);
+        }
 
         return true;
     }
@@ -199,8 +235,35 @@ class XmlSerializationVisitor extends AbstractVisitor
      */
     protected function doVisitArray($data, TypeMetadataInterface $type, ContextInterface $context)
     {
-        $ignoreNull = $context->isNullIgnored();
+        $entry = $this->entry;
+        $entryAttribute = $this->entryAttribute;
+        $keyAsAttribute = false;
+        $keyAsNode = true;
+
+        $metadataStack = $context->getMetadataStack();
+        $metadataIndex = count($metadataStack) - 2;
+        $metadata = isset($metadataStack[$metadataIndex]) ? $metadataStack[$metadataIndex] : null;
+
+        if ($metadata instanceof PropertyMetadataInterface) {
+            if ($metadata->hasXmlEntry()) {
+                $entry = $metadata->getXmlEntry();
+            }
+
+            if ($metadata->hasXmlEntryAttribute()) {
+                $entryAttribute = $metadata->getXmlEntryAttribute();
+            }
+
+            if ($metadata->hasXmlKeyAsAttribute()) {
+                $keyAsAttribute = $metadata->useXmlKeyAsAttribute();
+            }
+
+            if ($metadata->hasXmlKeyAsNode()) {
+                $keyAsNode = $metadata->useXmlKeyAsNode();
+            }
+        }
+
         $valueType = $type->getOption('value');
+        $ignoreNull = $context->isNullIgnored();
 
         $this->getDocument();
 
@@ -209,10 +272,10 @@ class XmlSerializationVisitor extends AbstractVisitor
                 continue;
             }
 
-            $node = $this->createNode(is_string($key) ? $key : $this->entry);
+            $node = $this->createNode($keyAsNode ? $key : $entry, $entry, $entryAttribute);
 
-            if (is_int($key)) {
-                $node->setAttribute($this->entryAttribute, $key);
+            if ($keyAsAttribute) {
+                $node->setAttribute($entryAttribute, $key);
             }
 
             $this->enterNodeScope($node);
@@ -245,9 +308,9 @@ class XmlSerializationVisitor extends AbstractVisitor
     }
 
     /**
-     * @param \DOMNode $node
+     * @param \DOMElement $node
      */
-    private function enterNodeScope(\DOMNode $node)
+    private function enterNodeScope(\DOMElement $node)
     {
         $this->stack[] = $this->node;
         $this->node = $node;
@@ -259,51 +322,47 @@ class XmlSerializationVisitor extends AbstractVisitor
     }
 
     /**
-     * @param string $data
+     * @param string|null $root
      *
-     * @return bool
-     */
-    private function requireCData($data)
-    {
-        return strpos($data, '<') !== false || strpos($data, '>') !== false || strpos($data, '&') !== false;
-    }
-
-    /**
      * @return \DOMDocument
      */
-    private function getDocument()
+    private function getDocument($root = null)
     {
-        return $this->document !== null ? $this->document : $this->document = $this->createDocument();
+        return $this->document !== null ? $this->document : $this->document = $this->createDocument($root);
     }
 
     /**
-     * @param string $name
+     * @param string      $name
+     * @param string|null $entry
+     * @param string|null $entryAttribute
      *
      * @return \DOMElement
      */
-    private function createNode($name)
+    private function createNode($name, $entry = null, $entryAttribute = null)
     {
         $document = $this->getDocument();
 
         try {
-            $element = $document->createElement($name);
+            $node = $document->createElement($name);
         } catch (\DOMException $e) {
-            $element = $document->createElement($this->entry);
-            $element->setAttribute($this->entryAttribute, $name);
+            $node = $document->createElement($entry ?: $this->entry);
+            $node->setAttribute($entryAttribute ?: $this->entryAttribute, $name);
         }
 
-        return $element;
+        return $node;
     }
 
     /**
+     * @param string|null $root
+     *
      * @return \DOMDocument
      */
-    private function createDocument()
+    private function createDocument($root = null)
     {
         $document = new \DOMDocument($this->version, $this->encoding);
-        $document->formatOutput = true;
+        $document->formatOutput = $this->formatOutput;
 
-        $this->node = $document->createElement($this->root);
+        $this->node = $document->createElement($root ?: $this->root);
         $document->appendChild($this->node);
 
         return $document;

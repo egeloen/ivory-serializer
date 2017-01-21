@@ -77,4 +77,24 @@ class XmlClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
     public function testWritableClass()
     {
     }
+
+    public function testXmlAttribute()
+    {
+    }
+
+    public function testXmlValue()
+    {
+    }
+
+    public function testXmlInline()
+    {
+    }
+
+    public function testXmlKeyAsAttribute()
+    {
+    }
+
+    public function testXmlKeyAsNode()
+    {
+    }
 }

@@ -56,6 +56,21 @@ interface ClassMetadataInterface extends MetadataInterface
     public function removeProperty($name);
 
     /**
+     * @return bool
+     */
+    public function hasXmlRoot();
+
+    /**
+     * @return string|null
+     */
+    public function getXmlRoot();
+
+    /**
+     * @param string|null $xmlRoot
+     */
+    public function setXmlRoot($xmlRoot);
+
+    /**
      * @param ClassMetadataInterface $classMetadata
      */
     public function merge(ClassMetadataInterface $classMetadata);

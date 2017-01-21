@@ -24,6 +24,21 @@ The `serialize` method also accepts a context as third argument which is useful 
 according to groups or API version. If you want to learn more about it, you can read this 
 [documentation](/doc/context.md).
 
+``` php
+use Acme\Model\AcmeObject;
+use Ivory\Serializer\Context\Context;
+use Ivory\Serializer\Format;
+
+$context = new Context();
+// Configure the context...
+
+$json = $serializer->serialize(
+    new AcmeObject(), 
+    Format::JSON, 
+    $context
+);
+```
+
 ## Deserialization
 
 For deserializing data, call `deserialize` with your data as first argument, your type as second argument and your 
@@ -39,3 +54,19 @@ $object = $serializer->deserialize('{"foo":"bar"}', AcmeObject::class, Format::J
 The `deserialize` method also accepts a context as fourth argument which is useful if you want to exclude properties 
 according to groups or API version. If you want to learn more about it, you can read this 
 [documentation](/doc/context.md).
+
+``` php
+use Acme\Model\AcmeObject;
+use Ivory\Serializer\Context\Context;
+use Ivory\Serializer\Format;
+
+$context = new Context();
+// Configure the context...
+
+$object = $serializer->deserialize(
+    '{"foo":"bar"}', 
+    AcmeObject::class, 
+    Format::JSON, 
+    $context
+);
+```

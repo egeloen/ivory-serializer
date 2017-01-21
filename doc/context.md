@@ -41,6 +41,8 @@ use Ivory\Serializer\Exclusion\MaxDepthExclusionStrategy;
 $context->setExclusionStrategy(new MaxDepthExclusionStrategy());
 ```
 
+To configure max depth, please read this [documentation](/doc/definition/max_depth.md).
+
 **Since this exclusion impacts performance, you need to explicitly enable it otherwise your mapping configuration 
 is ignored.**
 
@@ -54,6 +56,11 @@ use Ivory\Serializer\Exclusion\GroupsExclusionStrategy;
 $context->setExclusionStrategy(new GroupsExclusionStrategy(['group1', 'group2']));
 ```
 
+To configure groups, please read this [documentation](/doc/definition/groups.md).
+
+**If you don't provide this exclusion strategy, all your properties will be (de)-serialized regardless configured 
+groups.**
+
 ### Version
 
 The version exclusion strategy allows you to exclude class properties according to your application version:
@@ -63,6 +70,11 @@ use Ivory\Serializer\Exclusion\VersionExclusionStrategy;
 
 $context->setExclusionStrategy(new VersionExclusionStrategy('1.0.1'));
 ```
+
+To configure version, please read this [documentation](/doc/definition/version.md).
+
+**If you don't provide this exclusion strategy, all your properties will be (de)-serialized regardless configured 
+since or until versions.**
 
 ### Chain
 
@@ -135,7 +147,7 @@ use Ivory\Serializer\Naming\KebabCaseNamingStrategy;
 $context->setNamingStrategy(new KebabCaseNamingStrategy());
 ```
 
-## Space
+### Space
 
 The space naming strategy converts property into this representation (eg. `foo bar baz`):
 
@@ -145,7 +157,7 @@ use Ivory\Serializer\Naming\SpaceNamingStrategy;
 $context->setNamingStrategy(new SpaceNamingStrategy());
 ```
 
-## Cache
+### Cache
 
 The naming strategies is optimized but it impacts performance. In order to reduce it you can use the cache naming 
 strategy which is basically a decorator:

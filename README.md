@@ -38,16 +38,11 @@ $deserialize = $serializer->deserialize($json, \stdClass::class, Format::JSON);
 
   - [Installation](/doc/installation.md)
   - [Usage](/doc/usage.md)
+  - [Mapping](/doc/mapping.md)
   - [Type](/doc/type.md)
   - [Context](/doc/context.md)
     - [Exclusion strategies](/doc/context.md#exclusion-strategies)
     - [Naming strategies](/doc/context.md#naming-strategies)
-  - [Mapping](/doc/mapping.md)
-    - [Reference](/doc/mapping/reference.md)
-    - [Annotation](/doc/mapping/annotation.md)
-    - [XML](/doc/mapping/xml.md)
-    - [YAML](/doc/mapping/yaml.md)
-    - [JSON](/doc/mapping/json.md)
 
 ## Testing
 

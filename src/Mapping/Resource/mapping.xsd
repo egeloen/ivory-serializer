@@ -24,6 +24,7 @@
         <xsd:attribute name="order" type="xsd:string" />
         <xsd:attribute name="readable" type="xsd:string" />
         <xsd:attribute name="writable" type="xsd:string" />
+        <xsd:attribute name="xml-root" type="xsd:string" />
     </xsd:complexType>
 
     <xsd:complexType name="property">
@@ -42,6 +43,13 @@
         <xsd:attribute name="mutator" type="xsd:string" />
         <xsd:attribute name="since" type="xsd:string" />
         <xsd:attribute name="until" type="xsd:string" />
+        <xsd:attribute name="xml-attribute" type="xsd:string" />
+        <xsd:attribute name="xml-value" type="xsd:string" />
+        <xsd:attribute name="xml-inline" type="xsd:string" />
+        <xsd:attribute name="xml-entry" type="xsd:string" />
+        <xsd:attribute name="xml-entry-attribute" type="xsd:string" />
+        <xsd:attribute name="xml-key-as-attribute" type="xsd:string" />
+        <xsd:attribute name="xml-key-as-node" type="xsd:string" />
 
         <xsd:attribute name="max-depth">
             <xsd:simpleType>

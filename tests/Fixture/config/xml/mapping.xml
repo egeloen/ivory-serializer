@@ -126,4 +126,20 @@
         <property name="baz" until="2.0" />
         <property name="bat" />
     </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\XmlFixture" xml-root="xml">
+        <property name="foo" />
+        <property name="bar" xml-attribute="true" />
+        <property name="list" />
+        <property name="keyAsNode" xml-key-as-node="true" />
+        <property name="keyAsAttribute" xml-key-as-attribute="true" />
+        <property name="entry" xml-entry="item" />
+        <property name="entryAttribute" xml-entry-attribute="name" />
+        <property name="inline" xml-inline="true" xml-entry="inline" xml-entry-attribute="index" />
+    </class>
+
+    <class name="Ivory\Tests\Serializer\Fixture\XmlValueFixture" xml-root="xml">
+        <property name="foo" xml-attribute="true" />
+        <property name="bar" xml-value="true" />
+    </class>
 </serializer>

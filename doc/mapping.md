@@ -2,6 +2,40 @@
 
 The metadata mapping allows you to expose your object structure to the serializer.
 
+## Definition
+
+A mapping is a set of definitions which allow you to configure how your object should be (de)-serialized.
+
+### Property
+
+ - [Alias](/doc/definition/alias.md): Rename a property.
+ - [Type](/doc/definition/type.md): Configure a property type.
+ - [Order](/doc/definition/order.md): Configure properties order.
+
+### Visibility
+
+ - [Readable](/doc/definition/readable.md): Configure if a property is serializable.
+ - [Writable](/doc/definition/writable.md): Configure if a property is de-serializable.
+ 
+### Access
+ 
+ - [Accessor](/doc/definition/accessor.md): Configure how to get a property when serializing.
+ - [Mutator](/doc/definition/mutator.md): Configure how to set a property when de-serializing.
+ 
+### Exclusion
+
+ - [Exclusion Policy](/doc/definition/exclusion_policy.md): Configure global property exclusions.
+ - [Groups](/doc/definition/groups.md): Configure exclusion based on property groups.
+ - [MaxDepth](/doc/definition/max_depth.md): Configure exclusion based on property max depth.
+ - [Version](/doc/definition/version.md): Configure from which version a property is available.
+ 
+### Xml
+
+ - [XmlRoot](/doc/definition/xml_root.md): Configure the XML root node of a class.
+ - [XmlAttribute](/doc/definition/xml_attribute.md): Configure if a property is an XML attribute.
+ - [XmlValue](/doc/definition/xml_value.md): Configure if a property is an XML value.
+ - [XmlCollection](/doc/definition/xml_collection.md): Configure how a collection is (de)-serialized in XML.
+
 ## Factory
 
 In order to create your metadatas, the library uses a factory relying on a loader. Let's create a factory: 
@@ -9,8 +43,17 @@ In order to create your metadatas, the library uses a factory relying on a loade
 ``` php
 use Ivory\Serializer\Mapping\Factory\ClassMetadataFactory;
 
-$classMetadataFactory = new ClassMetadataFactory();
-// or
+// Create a factory with reflection/annotation loaders
+$classMetadataFactory = ClassMetadataFactory::create();
+
+// Create a factory with an array of loaders
+$classMetadataFactory = ClassMetadataFactory::create([
+    $loader1,
+    $loader2,
+    // ...
+]);
+
+// Create a factory with an explicit loader
 $classMetadataFactory = new ClassMetadataFactory($loader);
 ```
 
@@ -23,13 +66,18 @@ use Ivory\Serializer\Registry\TypeRegistry;
 use Ivory\Serializer\Type\ObjectType;
 use Ivory\Serializer\Type\Type;
 
-$classMetadataFactory = new ClassMetadataFactory();
+// Create a factory
+$classMetadataFactory = new ClassMetadataFactory($loader);
+
+// Create a cached factory using a PSR-6 pool 
 $cacheClassMetadataFactory = new CacheClassMetadataFactory($classMetadataFactory, $psr6CachePool);
 
+// Register the cached factory
 $typeRegistry = TypeRegistry::create([
     Type::OBJECT => new ObjectType($cacheClassMetadataFactory),
 ]);
 
+// Create the serializer
 $serializer = new Serializer(new Navigator($typeRegistry));
 ```
 
@@ -37,9 +85,8 @@ $serializer = new Serializer(new Navigator($typeRegistry));
 
 ### Reflection
 
-The reflection loader is the default one if doctrine annotation is not installed. It is able to find all your 
-properties for serialization but will not be sufficient for deserialization since it is not able to parse complex 
-types.
+The reflection loader is used by default if you don't provide loaders manually. It is able to find all your 
+properties/methods for (de)-serialization based on the reflection.
 
 ``` php
 use Ivory\Serializer\Mapping\Loader\ReflectionClassMetadataLoader;
@@ -47,17 +94,30 @@ use Ivory\Serializer\Mapping\Loader\ReflectionClassMetadataLoader;
 $loader = new ReflectionClassMetadataLoader();
 ```
 
-### Annotation
-
-The annotation loader works the same way as the reflection one except that it also parses annotations.
+If you create it manually, be aware that the reflection loader requires a property info extractor 
+([`symfony/property-info`](http://symfony.com/doc/current/components/property_info.html)) in order to efficiently 
+detect types during deserialization.
 
 ``` php
-use Ivory\Serializer\Mapping\Loader\AnnotationClassMetadataLoader;
-
-$loader = new AnnotationClassMetadataLoader();
+use Ivory\Serializer\Mapping\Loader\ReflectionClassMetadataLoader;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
+            
+$extractor = new PropertyInfoExtractor(/* ... */);
+$loader = new ReflectionClassMetadataLoader($propertyInfoExtractor);
 ```
 
-An example of all annotations is available [here](/doc/mapping/annotation.md).
+### Annotation
+
+The annotation loader is used by default if the `doctrine/annotation` library is installed and you don't provide 
+loaders manually. This loader will use the annotations put on your class:
+
+``` php
+use Doctrine\Common\Annotations\AnnotationReader;
+use Ivory\Serializer\Mapping\Loader\AnnotationClassMetadataLoader;
+
+$reader = new AnnotationReader();
+$loader = new AnnotationClassMetadataLoader($reader);
+```
 
 ### XML
 
@@ -69,8 +129,6 @@ use Ivory\Serializer\Mapping\Loader\XmlClassMetadataLoader;
 $loader = new XmlClassMetadataLoader('/path/to/file.xml');
 ```
 
-An example of XML configuration is available [here](/doc/mapping/xml.md).
-
 ### YAML
 
 The YAML loader allows you to use a YAML mapping file:
@@ -80,8 +138,6 @@ use Ivory\Serializer\Mapping\Loader\YamlClassMetadataLoader;
 
 $loader = new YamlClassMetadataLoader('/path/to/file.yml');
 ```
-
-An example of YAML configuration is available [here](/doc/mapping/yaml.md).
 
 ### JSON
 
@@ -93,8 +149,6 @@ use Ivory\Serializer\Mapping\Loader\JsonClassMetadataLoader;
 $loader = new JsonClassMetadataLoader('/path/to/file.json');
 ```
 
-An example of JSON configuration is available [here](/doc/mapping/json.md).
-
 ### Chain
 
 The chain loader allows you to load a metadata by delegating it to a chain of loaders. When loading a metadata, the 
@@ -105,10 +159,12 @@ us to support multiple metadata formats in the same application.
 use Ivory\Serializer\Mapping\Loader\AnnotationClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\ChainClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\JsonClassMetadataLoader;
+use Ivory\Serializer\Mapping\Loader\ReflectionClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\XmlClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\YamlClassMetadataLoader;
 
 $loaders = [
+    new ReflectionClassMetadataLoader(),
     new AnnotationClassMetadataLoader(),
     new XmlClassMetadataLoader('/path/to/file.xml'),
     new YamlClassMetadataLoader('/path/to/file.yml'),

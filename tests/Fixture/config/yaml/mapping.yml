@@ -138,3 +138,31 @@ Ivory\Tests\Serializer\Fixture\VersionFixture:
         baz:
             until: "2.0"
         bat: ~
+
+Ivory\Tests\Serializer\Fixture\XmlFixture:
+    xml_root: xml
+    properties:
+        foo: ~
+        bar:
+            xml_attribute: true
+        list: ~
+        keyAsAttribute:
+            xml_key_as_attribute: true
+        keyAsNode:
+            xml_key_as_node: true
+        entry:
+            xml_entry: item
+        entryAttribute:
+            xml_entry_attribute: name
+        inline:
+            xml_inline: true
+            xml_entry: inline
+            xml_entry_attribute: index
+
+Ivory\Tests\Serializer\Fixture\XmlValueFixture:
+    xml_root: xml
+    properties:
+        foo:
+            xml_attribute: true
+        bar:
+            xml_value: true

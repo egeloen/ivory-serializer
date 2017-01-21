@@ -189,6 +189,96 @@ interface PropertyMetadataInterface extends MetadataInterface
     public function removeGroup($group);
 
     /**
+     * @return bool
+     */
+    public function isXmlAttribute();
+
+    /**
+     * @param bool $xmlAttribute
+     */
+    public function setXmlAttribute($xmlAttribute);
+
+    /**
+     * @return bool
+     */
+    public function isXmlValue();
+
+    /**
+     * @param bool $xmlValue
+     */
+    public function setXmlValue($xmlValue);
+
+    /**
+     * @return bool
+     */
+    public function isXmlInline();
+
+    /**
+     * @param bool $xmlInline
+     */
+    public function setXmlInline($xmlInline);
+
+    /**
+     * @return bool
+     */
+    public function hasXmlEntry();
+
+    /**
+     * @return string|null
+     */
+    public function getXmlEntry();
+
+    /**
+     * @param string $xmlEntry
+     */
+    public function setXmlEntry($xmlEntry);
+
+    /**
+     * @return bool
+     */
+    public function hasXmlEntryAttribute();
+
+    /**
+     * @return string|null
+     */
+    public function getXmlEntryAttribute();
+
+    /**
+     * @param string $xmlEntryAttribute
+     */
+    public function setXmlEntryAttribute($xmlEntryAttribute);
+
+    /**
+     * @return bool
+     */
+    public function hasXmlKeyAsAttribute();
+
+    /**
+     * @return bool
+     */
+    public function useXmlKeyAsAttribute();
+
+    /**
+     * @param bool $xmlKeyAsAttribute
+     */
+    public function setXmlKeyAsAttribute($xmlKeyAsAttribute);
+
+    /**
+     * @return bool
+     */
+    public function hasXmlKeyAsNode();
+
+    /**
+     * @return bool
+     */
+    public function useXmlKeyAsNode();
+
+    /**
+     * @param bool $xmlKeyAsNode
+     */
+    public function setXmlKeyAsNode($xmlKeyAsNode);
+
+    /**
      * @param PropertyMetadataInterface $propertyMetadata
      */
     public function merge(PropertyMetadataInterface $propertyMetadata);

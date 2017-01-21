@@ -32,6 +32,8 @@ use Ivory\Tests\Serializer\Fixture\ScalarFixture;
 use Ivory\Tests\Serializer\Fixture\VersionFixture;
 use Ivory\Tests\Serializer\Fixture\WritableClassFixture;
 use Ivory\Tests\Serializer\Fixture\WritableFixture;
+use Ivory\Tests\Serializer\Fixture\XmlFixture;
+use Ivory\Tests\Serializer\Fixture\XmlValueFixture;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -244,6 +246,40 @@ abstract class AbstractClassMetadataLoaderTest extends \PHPUnit_Framework_TestCa
         ]);
     }
 
+    public function testXmlFixture()
+    {
+        $classMetadata = new ClassMetadata(XmlFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'foo'            => [],
+            'bar'            => ['xml_attribute' => true],
+            'list'           => [],
+            'keyAsAttribute' => ['xml_key_as_attribute' => true],
+            'keyAsNode'      => ['xml_key_as_node' => true],
+            'entry'          => ['xml_entry' => 'item'],
+            'entryAttribute' => ['xml_entry_attribute' => 'name'],
+            'inline'         => [
+                'xml_inline'           => true,
+                'xml_entry'            => 'inline',
+                'xml_entry_attribute'  => 'index',
+                'xml_key_as_attribute' => true,
+                'xml_key_as_node'      => false,
+            ],
+        ], ['xml_root' => 'xml']);
+    }
+
+    public function testXmlValueFixture()
+    {
+        $classMetadata = new ClassMetadata(XmlValueFixture::class);
+
+        $this->assertTrue($this->loadClassMetadata($classMetadata));
+        $this->assertClassMetadata($classMetadata, [
+            'foo' => ['xml_attribute' => true],
+            'bar' => ['xml_value' => true],
+        ], ['xml_root' => 'xml']);
+    }
+
     public function testUnknownFixture()
     {
         $this->assertFalse($this->loadClassMetadata(new ClassMetadata(\stdClass::class)));
@@ -277,9 +313,16 @@ abstract class AbstractClassMetadataLoaderTest extends \PHPUnit_Framework_TestCa
     /**
      * @param ClassMetadataInterface $classMetadata
      * @param mixed[][]              $properties
+     * @param mixed[]                $options
      */
-    protected function assertClassMetadata(ClassMetadataInterface $classMetadata, array $properties)
-    {
+    protected function assertClassMetadata(
+        ClassMetadataInterface $classMetadata,
+        array $properties,
+        array $options = []
+    ) {
+        $this->assertSame(isset($options['xml_root']), $classMetadata->hasXmlRoot());
+        $this->assertSame(isset($options['xml_root']) ? $options['xml_root'] : null, $classMetadata->getXmlRoot());
+
         foreach ($properties as $property => $data) {
             $this->assertTrue($classMetadata->hasProperty($property));
             $this->assertPropertyMetadata($classMetadata->getProperty($property), $data);
@@ -321,5 +364,25 @@ abstract class AbstractClassMetadataLoaderTest extends \PHPUnit_Framework_TestCa
 
         $this->assertSame(isset($data['groups']), $propertyMetadata->hasGroups());
         $this->assertSame(isset($data['groups']) ? $data['groups'] : [], $propertyMetadata->getGroups());
+
+        $this->assertSame(isset($data['xml_attribute']) && $data['xml_attribute'], $propertyMetadata->isXmlAttribute());
+        $this->assertSame(isset($data['xml_inline']) && $data['xml_inline'], $propertyMetadata->isXmlInline());
+        $this->assertSame(isset($data['xml_value']) && $data['xml_value'], $propertyMetadata->isXmlValue());
+        $this->assertSame(isset($data['xml_entry']) ? $data['xml_entry'] : null, $propertyMetadata->getXmlEntry());
+
+        $this->assertSame(
+            isset($data['xml_entry_attribute']) ? $data['xml_entry_attribute'] : null,
+            $propertyMetadata->getXmlEntryAttribute()
+        );
+
+        $this->assertSame(
+            isset($data['xml_key_as_attribute']) ? $data['xml_key_as_attribute'] : null,
+            $propertyMetadata->useXmlKeyAsAttribute()
+        );
+
+        $this->assertSame(
+            isset($data['xml_key_as_node']) ? $data['xml_key_as_node'] : null,
+            $propertyMetadata->useXmlKeyAsNode()
+        );
     }
 }

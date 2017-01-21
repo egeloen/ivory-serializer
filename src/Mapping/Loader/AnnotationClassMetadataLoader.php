@@ -27,6 +27,10 @@ use Ivory\Serializer\Mapping\Annotation\Since;
 use Ivory\Serializer\Mapping\Annotation\Type;
 use Ivory\Serializer\Mapping\Annotation\Until;
 use Ivory\Serializer\Mapping\Annotation\Writable;
+use Ivory\Serializer\Mapping\Annotation\XmlAttribute;
+use Ivory\Serializer\Mapping\Annotation\XmlCollection;
+use Ivory\Serializer\Mapping\Annotation\XmlRoot;
+use Ivory\Serializer\Mapping\Annotation\XmlValue;
 use Ivory\Serializer\Type\Parser\TypeParserInterface;
 
 /**
@@ -66,6 +70,8 @@ class AnnotationClassMetadataLoader extends AbstractReflectionClassMetadataLoade
                 $definition['readable'] = $annotation->isReadable();
             } elseif ($annotation instanceof Writable) {
                 $definition['writable'] = $annotation->isWritable();
+            } elseif ($annotation instanceof XmlRoot) {
+                $definition['xml_root'] = $annotation->getName();
             }
         }
 
@@ -126,6 +132,30 @@ class AnnotationClassMetadataLoader extends AbstractReflectionClassMetadataLoade
                 $definition['max_depth'] = $annotation->getMaxDepth();
             } elseif ($annotation instanceof Groups) {
                 $definition['groups'] = $annotation->getGroups();
+            } elseif ($annotation instanceof XmlAttribute) {
+                $definition['xml_attribute'] = true;
+            } elseif ($annotation instanceof XmlValue) {
+                $definition['xml_value'] = true;
+            } elseif ($annotation instanceof XmlCollection) {
+                if ($annotation->hasEntry()) {
+                    $definition['xml_entry'] = $annotation->getEntry();
+                }
+
+                if ($annotation->hasEntryAttribute()) {
+                    $definition['xml_entry_attribute'] = $annotation->getEntryAttribute();
+                }
+
+                if ($annotation->hasKeyAsAttribute()) {
+                    $definition['xml_key_as_attribute'] = $annotation->useKeyAsAttribute();
+                }
+
+                if ($annotation->hasKeyAsNode()) {
+                    $definition['xml_key_as_node'] = $annotation->useKeyAsNode();
+                }
+
+                if ($annotation->hasInline()) {
+                    $definition['xml_inline'] = $annotation->isInline();
+                }
             }
         }
 
