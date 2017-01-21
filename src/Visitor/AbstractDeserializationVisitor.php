@@ -78,9 +78,11 @@ abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
         PropertyMetadataInterface $property,
         ContextInterface $context
     ) {
-        if ($property->getType() === null) {
+        $type = $property->getType();
+
+        if ($type === null) {
             throw new \RuntimeException(sprintf(
-                'You must define the type of the "%s" property of the "%s".',
+                'You must define the type of the %s:%s.',
                 $property->getName(),
                 $property->getClass()
             ));
@@ -90,7 +92,7 @@ abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
             return false;
         }
 
-        $value = $this->navigator->navigate($data[$name], $context, $property->getType());
+        $value = $this->navigator->navigate($data[$name], $context, $type);
 
         if ($value === null && $context->isNullIgnored()) {
             return false;
