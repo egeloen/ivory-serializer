@@ -78,6 +78,14 @@ abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
         PropertyMetadataInterface $property,
         ContextInterface $context
     ) {
+        if ($property->getType() === null) {
+            throw new \RuntimeException(sprintf(
+                'You must define the type of the "%s" property of the "%s".',
+                $property->getName(),
+                $property->getClass()
+            ));
+        }
+
         if (!$property->isWritable() || !isset($data[$name])) {
             return false;
         }
@@ -88,7 +96,6 @@ abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
             return false;
         }
 
-        // FIXME - Detect errors
         $this->mutator->setValue(
             $this->result,
             $property->hasMutator() ? $property->getMutator() : $property->getName(),

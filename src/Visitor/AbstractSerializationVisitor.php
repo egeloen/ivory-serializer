@@ -61,7 +61,6 @@ abstract class AbstractSerializationVisitor extends AbstractGenericVisitor
             return false;
         }
 
-        // FIXME - Detect errors
         $result = $this->navigator->navigate(
             $this->accessor->getValue(
                 $data,

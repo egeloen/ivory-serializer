@@ -17,6 +17,16 @@ namespace Ivory\Serializer\Mapping;
 interface PropertyMetadataInterface extends MetadataInterface
 {
     /**
+     * @return string
+     */
+    public function getClass();
+
+    /**
+     * @param string $class
+     */
+    public function setClass($class);
+
+    /**
      * @return bool
      */
     public function hasAlias();

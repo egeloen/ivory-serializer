@@ -18,6 +18,10 @@ use Ivory\Serializer\Mapping\Loader\AnnotationClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\ChainClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\ClassMetadataLoaderInterface;
 use Ivory\Serializer\Mapping\Loader\ReflectionClassMetadataLoader;
+use phpDocumentor\Reflection\ClassReflector;
+use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -45,9 +49,23 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
     public static function create(array $loaders = [])
     {
         if (empty($loaders)) {
-            $loaders[] = class_exists(AnnotationReader::class)
-                ? new AnnotationClassMetadataLoader(new AnnotationReader())
-                : new ReflectionClassMetadataLoader();
+            $extractor = null;
+
+            if (class_exists(PropertyInfoExtractor::class)) {
+                $extractors = $typeExtractors = [new ReflectionExtractor()];
+
+                if (class_exists(ClassReflector::class)) {
+                    array_unshift($typeExtractors, new PhpDocExtractor());
+                }
+
+                $extractor = new PropertyInfoExtractor($extractors, $typeExtractors, [], $extractors);
+            }
+
+            $loaders = [new ReflectionClassMetadataLoader($extractor)];
+
+            if (class_exists(AnnotationReader::class)) {
+                $loaders[] = new AnnotationClassMetadataLoader(new AnnotationReader());
+            }
         }
 
         return new static(count($loaders) > 1 ? new ChainClassMetadataLoader($loaders) : array_shift($loaders));

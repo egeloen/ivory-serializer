@@ -31,12 +31,19 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
     private $name;
 
     /**
+     * @var string
+     */
+    private $class;
+
+    /**
      * {@inheritdoc}
      */
     protected function setUp()
     {
         $this->name = 'foo';
-        $this->propertyMetadata = new PropertyMetadata($this->name);
+        $this->class = 'bar';
+
+        $this->propertyMetadata = new PropertyMetadata($this->name, $this->class);
     }
 
     public function testInheritance()
@@ -47,6 +54,7 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
     public function testDefaultState()
     {
         $this->assertSame($this->name, $this->propertyMetadata->getName());
+        $this->assertSame($this->class, $this->propertyMetadata->getClass());
         $this->assertFalse($this->propertyMetadata->hasAlias());
         $this->assertNull($this->propertyMetadata->getAlias());
         $this->assertFalse($this->propertyMetadata->hasType());
@@ -72,6 +80,13 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
         $this->propertyMetadata->setName($name = 'bar');
 
         $this->assertSame($name, $this->propertyMetadata->getName());
+    }
+
+    public function tesClass()
+    {
+        $this->propertyMetadata->setClass($name = 'baz');
+
+        $this->assertSame($name, $this->propertyMetadata->getClass());
     }
 
     public function testAlias()
@@ -184,8 +199,8 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
 
     public function testMerge()
     {
-        $propertyMetadata = new PropertyMetadata($name = 'foo');
-        $propertyMetadata->setAlias($alias = 'bar');
+        $propertyMetadata = new PropertyMetadata($name = 'foo', $class = 'bar');
+        $propertyMetadata->setAlias($alias = 'baz');
         $propertyMetadata->setType($type = $this->createTypeMetadataMock());
         $propertyMetadata->setReadable(true);
         $propertyMetadata->setWritable(false);
@@ -199,6 +214,7 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
         $this->propertyMetadata->merge($propertyMetadata);
 
         $this->assertSame($name, $this->propertyMetadata->getName());
+        $this->assertSame($class, $this->propertyMetadata->getClass());
         $this->assertSame($alias, $this->propertyMetadata->getAlias());
         $this->assertSame($type, $this->propertyMetadata->getType());
         $this->assertTrue($this->propertyMetadata->isReadable());

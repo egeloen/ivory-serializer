@@ -87,11 +87,15 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
         $properties = $classMetadata->getProperties();
 
         foreach ($data['properties'] as $property => $value) {
-            $propertyMetadata = $classMetadata->getProperty($property) ?: new PropertyMetadata($property);
+            $propertyMetadata = $classMetadata->getProperty($property)
+                ?: new PropertyMetadata($property, $classMetadata->getName());
+
             $this->loadPropertyMetadata($propertyMetadata, $value, $readableClass, $writableClass);
 
             if ($this->isPropertyMetadataExposed($value, $policy)) {
                 $properties[$property] = $propertyMetadata;
+            } else {
+                unset($properties[$property]);
             }
         }
 

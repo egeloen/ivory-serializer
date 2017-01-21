@@ -24,6 +24,11 @@ class PropertyMetadata implements PropertyMetadataInterface
     /**
      * @var string
      */
+    private $class;
+
+    /**
+     * @var string
+     */
     private $alias;
 
     /**
@@ -73,10 +78,12 @@ class PropertyMetadata implements PropertyMetadataInterface
 
     /**
      * @param string $name
+     * @param string $class
      */
-    public function __construct($name)
+    public function __construct($name, $class)
     {
         $this->setName($name);
+        $this->setClass($class);
     }
 
     /**
@@ -93,6 +100,22 @@ class PropertyMetadata implements PropertyMetadataInterface
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
     }
 
     /**
@@ -404,6 +427,7 @@ class PropertyMetadata implements PropertyMetadataInterface
     {
         return serialize([
             $this->name,
+            $this->class,
             $this->alias,
             $this->type,
             $this->readable,
@@ -424,6 +448,7 @@ class PropertyMetadata implements PropertyMetadataInterface
     {
         list(
             $this->name,
+            $this->class,
             $this->alias,
             $this->type,
             $this->readable,
