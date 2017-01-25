@@ -166,42 +166,28 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
      */
     private function loadDocument($file)
     {
-        $data = trim(file_get_contents($file));
+        $data = trim(@file_get_contents($file));
 
         if (empty($data)) {
-            throw new \InvalidArgumentException();
+            throw new \InvalidArgumentException(sprintf('The XML mapping file "%s" is not valid.', $file));
         }
 
         $internalErrors = libxml_use_internal_errors();
         $disableEntities = libxml_disable_entity_loader();
 
         $this->setLibXmlState(true, true);
-        $document = $this->createDocument($data, $internalErrors, $disableEntities);
-        $this->setLibXmlState($internalErrors, $disableEntities);
 
-        return $document;
-    }
-
-    /**
-     * @param string $data
-     * @param bool   $internalErrors
-     * @param bool   $disableEntities
-     *
-     * @return \DOMDocument
-     */
-    private function createDocument($data, $internalErrors, $disableEntities)
-    {
         $document = new \DOMDocument();
         $document->validateOnParse = true;
 
         if (!@$document->loadXML($data, LIBXML_NONET | LIBXML_COMPACT)) {
-            $this->dispatchErrors($internalErrors, $disableEntities);
+            $this->dispatchErrors($file, $internalErrors, $disableEntities);
         }
 
         $document->normalizeDocument();
 
         if (!@$document->schemaValidateSource(file_get_contents(__DIR__.'/../Resource/mapping.xsd'))) {
-            $this->dispatchErrors($internalErrors, $disableEntities);
+            $this->dispatchErrors($file, $internalErrors, $disableEntities);
         }
 
         foreach ($document->childNodes as $child) {
@@ -210,14 +196,17 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
             }
         }
 
+        $this->setLibXmlState($internalErrors, $disableEntities);
+
         return $document;
     }
 
     /**
-     * @param bool $internalErrors
-     * @param bool $disableEntities
+     * @param string $file
+     * @param bool  $internalErrors
+     * @param bool  $disableEntities
      */
-    private function dispatchErrors($internalErrors, $disableEntities)
+    private function dispatchErrors($file, $internalErrors, $disableEntities)
     {
         $errors = [];
 
@@ -226,7 +215,7 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
                 $error->level === LIBXML_ERR_WARNING ? 'WARNING' : 'ERROR',
                 $error->code,
                 trim($error->message),
-                $error->file ?: 'n/a',
+                $file,
                 $error->line,
                 $error->column
             );

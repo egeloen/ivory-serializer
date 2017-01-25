@@ -57,7 +57,7 @@ class TypeRegistry implements TypeRegistryInterface
             Type::BOOL      => $booleanType = new BooleanType(),
             Type::BOOLEAN   => $booleanType,
             Type::CLOSURE   => new ClosureType(),
-            Type::DATE_TIME => $dateTimeType = new DateTimeType(),
+            Type::DATE_TIME => new DateTimeType(),
             Type::DOUBLE    => $floatType = new FloatType(),
             Type::FLOAT     => $floatType,
             Type::INT       => $integerType = new IntegerType(),
