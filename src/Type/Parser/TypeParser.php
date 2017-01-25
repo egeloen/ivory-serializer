@@ -11,7 +11,6 @@
 
 namespace Ivory\Serializer\Type\Parser;
 
-use Doctrine\Common\Lexer;
 use Ivory\Serializer\Mapping\TypeMetadata;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 
@@ -21,14 +20,14 @@ use Ivory\Serializer\Mapping\TypeMetadataInterface;
 class TypeParser implements TypeParserInterface
 {
     /**
-     * @var Lexer
+     * @var TypeLexer
      */
     private $lexer;
 
     /**
-     * @param Lexer|null $lexer
+     * @param TypeLexer|null $lexer
      */
-    public function __construct(Lexer $lexer = null)
+    public function __construct(TypeLexer $lexer = null)
     {
         $this->lexer = $lexer ?: new TypeLexer();
     }

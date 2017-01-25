@@ -11,7 +11,9 @@
     ],
     "require": {
         "php": "^5.6|^7.0",
-        "doctrine/common": "^2.1.4"
+        "doctrine/instantiator": "^1.0",
+        "doctrine/lexer": "^1.0",
+        "symfony/options-resolver": "^2.8|^3.0"
     },
     "require-dev": {
         "doctrine/annotations": "^1.0",
@@ -30,10 +32,10 @@
     },
     "suggest": {
         "doctrine/annotations": "Allow you to use the mapping annotations.",
-        "doctrine/common": "Allow you to use the doctrine instantiator.",
         "ext-dom": "Allow you to use the XML serialization visitor and mapping.",
         "ext-json": "Allow you to use the JSON serialization/deserialization visitors and mapping.",
         "ext-simplexml": "Allow you to use the XML deserialization visitor and mapping.",
+        "phpdocumentor/reflection": "Allow you to parse PHP type more efficiently",
         "symfony/event-dispatcher": "Allow you to use the event dispatching system.",
         "symfony/property-access": "Allow you to use the Symfony accessor/mutator.",
         "symfony/property-info": "Allow you to use the mapping type auto discovery.",

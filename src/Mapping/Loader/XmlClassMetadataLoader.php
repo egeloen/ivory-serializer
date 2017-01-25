@@ -121,7 +121,7 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
         }
 
         if (isset($element['max-depth'])) {
-            $property['max_depth'] = (string) $element['max-depth'];
+            $property['max_depth'] = (int) $element['max-depth'];
         }
 
         foreach ($element->group as $group) {
@@ -203,8 +203,8 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
 
     /**
      * @param string $file
-     * @param bool  $internalErrors
-     * @param bool  $disableEntities
+     * @param bool   $internalErrors
+     * @param bool   $disableEntities
      */
     private function dispatchErrors($file, $internalErrors, $disableEntities)
     {

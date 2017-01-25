@@ -62,17 +62,28 @@ In production, it is highly recommended to use the cache factory:
 ``` php
 use Ivory\Serializer\Mapping\Factory\CacheClassMetadataFactory;
 use Ivory\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Ivory\Serializer\Registry\TypeRegistry;
-use Ivory\Serializer\Type\ObjectType;
-use Ivory\Serializer\Type\Type;
 
 // Create a factory
 $classMetadataFactory = new ClassMetadataFactory($loader);
 
 // Create a cached factory using a PSR-6 pool 
 $cacheClassMetadataFactory = new CacheClassMetadataFactory($classMetadataFactory, $psr6CachePool);
+```
 
-// Register the cached factory
+Once you have created your factory, you need to register it on the serializer:
+
+``` php
+use Ivory\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Ivory\Serializer\Navigator\Navigator;
+use Ivory\Serializer\Registry\TypeRegistry;
+use Ivory\Serializer\Serializer;
+use Ivory\Serializer\Type\ObjectType;
+use Ivory\Serializer\Type\Type;
+
+// Create a factory
+$classMetadataFactory = ClassMetadataFactory::create();
+
+// Register the factory
 $typeRegistry = TypeRegistry::create([
     Type::OBJECT => new ObjectType($cacheClassMetadataFactory),
 ]);

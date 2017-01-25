@@ -11,12 +11,12 @@
 
 namespace Ivory\Serializer\Type\Parser;
 
-use Doctrine\Common\Lexer;
+use Doctrine\Common\Lexer\AbstractLexer;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class TypeLexer extends Lexer
+class TypeLexer extends AbstractLexer
 {
     const T_NONE = 1;
     const T_NAME = 2;

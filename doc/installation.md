@@ -21,6 +21,50 @@ Require the library in your `composer.json` file:
 $ composer require egeloen/serializer
 ```
 
+## Download additional libraries
+
+The Ivory Serializer relies on third libraries in order to not reinvent the wheel...
+
+### Doctrine annotations
+
+The Doctrine annotations library allows you to use the annotations mapping on your classes.
+
+``` bash
+$ composer require doctrine/annotations
+```
+
+### Symfony event dispatcher
+
+The Symfony event dispatcher library allows you to hook into the (de)-serialization.
+
+``` bash
+$ composer require symfony/event-dispatcher
+```
+
+### Symfony property info
+
+The Symfony property info library allows you to get a more efficient mapping discovery.
+ 
+``` bash
+$ composer require symfony/property-info
+```
+
+### Symfony property access
+
+The Symfony property access library allows you to get/set values from your objects.
+
+``` bash
+$ composer require symfony/property-access
+```
+
+### Symfony yaml
+
+The Symfony yaml library allows you to use the yaml format in your mapping or your (de)-serialization.
+
+``` bash
+$ composer require symfony/yaml
+```
+
 ## Autoload
 
 So easy, you just have to require the generated autoload file and you are already ready to play:

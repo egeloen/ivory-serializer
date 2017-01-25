@@ -17,6 +17,9 @@ use Ivory\Serializer\Mapping\PropertyMetadata;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
 use Ivory\Serializer\Type\Parser\TypeParser;
 use Ivory\Serializer\Type\Parser\TypeParserInterface;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -32,6 +35,21 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
      * @var mixed[][]
      */
     private $data = [];
+
+    /**
+     * @var OptionsResolver|null
+     */
+    private $classResolver;
+
+    /**
+     * @var OptionsResolver|null
+     */
+    private $propertyResolver;
+
+    /**
+     * @var \Closure|null
+     */
+    private $emptyValidator;
 
     /**
      * @param TypeParserInterface|null $typeParser
@@ -56,6 +74,19 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
             return false;
         }
 
+        if ($this->classResolver === null) {
+            $this->configureClassOptions($this->classResolver = new OptionsResolver());
+        }
+
+        try {
+            $data = $this->classResolver->resolve($data);
+        } catch (\InvalidArgumentException $e) {
+            throw new \InvalidArgumentException(sprintf(
+                'The mapping for the class "%s" is not valid.',
+                $class
+            ), 0, $e);
+        }
+
         $this->doLoadClassMetadata($classMetadata, $data);
 
         return true;
@@ -74,40 +105,33 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
      */
     private function doLoadClassMetadata(ClassMetadataInterface $classMetadata, array $data)
     {
-        if (!isset($data['properties']) || empty($data['properties'])) {
-            throw new \InvalidArgumentException(sprintf(
-                'No mapping properties found for "%s".',
-                $classMetadata->getName()
-            ));
-        }
-
-        $policy = $this->getExclusionPolicy($data);
-        $readableClass = $this->getReadable($data);
-        $writableClass = $this->getWritable($data);
         $properties = $classMetadata->getProperties();
 
         foreach ($data['properties'] as $property => $value) {
-            $propertyMetadata = $classMetadata->getProperty($property)
-                ?: new PropertyMetadata($property, $classMetadata->getName());
+            $propertyMetadata = $classMetadata->getProperty($property);
 
-            $this->loadPropertyMetadata($propertyMetadata, $value, $readableClass, $writableClass);
+            if ($propertyMetadata === null) {
+                $propertyMetadata = new PropertyMetadata($property, $classMetadata->getName());
+            }
 
-            if ($this->isPropertyMetadataExposed($value, $policy)) {
+            $this->loadPropertyMetadata($propertyMetadata, $value, $data['readable'], $data['writable']);
+
+            if ($this->isPropertyExposed($value, $data['exclusion_policy'])) {
                 $properties[$property] = $propertyMetadata;
             } else {
                 unset($properties[$property]);
             }
         }
 
-        if (($order = $this->getOrder($data, $properties)) !== null) {
-            $properties = $this->sortProperties($properties, $order);
+        if (isset($data['order'])) {
+            $properties = $this->sortProperties($properties, $data['order']);
+        }
+
+        if (isset($data['xml_root'])) {
+            $classMetadata->setXmlRoot($data['xml_root']);
         }
 
         $classMetadata->setProperties($properties);
-
-        if (array_key_exists('xml_root', $data)) {
-            $this->loadClassMetadataXmlRoot($classMetadata, $data['xml_root']);
-        }
     }
 
     /**
@@ -122,569 +146,76 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
         $classReadable,
         $classWritable
     ) {
-        if (!is_array($data)) {
-            $data = [];
+        $propertyMetadata->setReadable(isset($data['readable']) ? $data['readable'] : $classReadable);
+        $propertyMetadata->setWritable(isset($data['writable']) ? $data['writable'] : $classWritable);
+
+        if (isset($data['alias'])) {
+            $propertyMetadata->setAlias($data['alias']);
         }
 
-        $propertyMetadata->setReadable($this->getReadable($data, $classReadable));
-        $propertyMetadata->setWritable($this->getWritable($data, $classWritable));
-
-        if (array_key_exists('exclude', $data)) {
-            $this->validatePropertyMetadataExclude($data['exclude']);
+        if (isset($data['type'])) {
+            $propertyMetadata->setType($this->typeParser->parse($data['type']));
         }
 
-        if (array_key_exists('expose', $data)) {
-            $this->validatePropertyMetadataExpose($data['expose']);
+        if (isset($data['accessor'])) {
+            $propertyMetadata->setAccessor($data['accessor']);
         }
 
-        if (array_key_exists('alias', $data)) {
-            $this->loadPropertyMetadataAlias($propertyMetadata, $data['alias']);
+        if (isset($data['mutator'])) {
+            $propertyMetadata->setMutator($data['mutator']);
         }
 
-        if (array_key_exists('type', $data)) {
-            $this->loadPropertyMetadataType($propertyMetadata, $data['type']);
+        if (isset($data['since'])) {
+            $propertyMetadata->setSinceVersion($data['since']);
         }
 
-        if (array_key_exists('accessor', $data)) {
-            $this->loadPropertyMetadataAccessor($propertyMetadata, $data['accessor']);
+        if (isset($data['until'])) {
+            $propertyMetadata->setUntilVersion($data['until']);
         }
 
-        if (array_key_exists('mutator', $data)) {
-            $this->loadPropertyMetadataMutator($propertyMetadata, $data['mutator']);
+        if (isset($data['max_depth'])) {
+            $propertyMetadata->setMaxDepth($data['max_depth']);
         }
 
-        if (array_key_exists('since', $data)) {
-            $this->loadPropertyMetadataSinceVersion($propertyMetadata, $data['since']);
+        if (isset($data['groups'])) {
+            $propertyMetadata->setGroups($data['groups']);
         }
 
-        if (array_key_exists('until', $data)) {
-            $this->loadPropertyMetadataUntilVersion($propertyMetadata, $data['until']);
+        if (isset($data['xml_attribute'])) {
+            $propertyMetadata->setXmlAttribute($data['xml_attribute']);
         }
 
-        if (array_key_exists('max_depth', $data)) {
-            $this->loadPropertyMetadataMaxDepth($propertyMetadata, $data['max_depth']);
+        if (isset($data['xml_value'])) {
+            $propertyMetadata->setXmlValue($data['xml_value']);
         }
 
-        if (array_key_exists('groups', $data)) {
-            $this->loadPropertyMetadataGroups($propertyMetadata, $data['groups']);
-        }
+        if (isset($data['xml_inline'])) {
+            $propertyMetadata->setXmlInline($data['xml_inline']);
 
-        if (array_key_exists('xml_attribute', $data)) {
-            $this->loadPropertyMetadataXmlAttribute($propertyMetadata, $data['xml_attribute']);
-        }
-
-        if (array_key_exists('xml_value', $data)) {
-            $this->loadPropertyMetadataXmlValue($propertyMetadata, $data['xml_value']);
-        }
-
-        if (array_key_exists('xml_inline', $data)) {
-            $this->loadPropertyMetadataXmlInline($propertyMetadata, $data['xml_inline']);
-
-            if (!array_key_exists('xml_key_as_attribute', $data)) {
+            if (!isset($data['xml_key_as_attribute'])) {
                 $data['xml_key_as_attribute'] = true;
             }
 
-            if (!array_key_exists('xml_key_as_node', $data)) {
+            if (!isset($data['xml_key_as_node'])) {
                 $data['xml_key_as_node'] = false;
             }
         }
 
-        if (array_key_exists('xml_entry', $data)) {
-            $this->loadPropertyMetadataXmlEntry($propertyMetadata, $data['xml_entry']);
+        if (isset($data['xml_entry'])) {
+            $propertyMetadata->setXmlEntry($data['xml_entry']);
         }
 
-        if (array_key_exists('xml_entry_attribute', $data)) {
-            $this->loadPropertyMetadataXmlEntryAttribute($propertyMetadata, $data['xml_entry_attribute']);
+        if (isset($data['xml_entry_attribute'])) {
+            $propertyMetadata->setXmlEntryAttribute($data['xml_entry_attribute']);
         }
 
-        if (array_key_exists('xml_key_as_attribute', $data)) {
-            $this->loadPropertyMetadataXmlKeyAsAttribute($propertyMetadata, $data['xml_key_as_attribute']);
+        if (isset($data['xml_key_as_attribute'])) {
+            $propertyMetadata->setXmlKeyAsAttribute($data['xml_key_as_attribute']);
         }
 
-        if (array_key_exists('xml_key_as_node', $data)) {
-            $this->loadPropertyMetadataXmlKeyAsNode($propertyMetadata, $data['xml_key_as_node']);
+        if (isset($data['xml_key_as_node'])) {
+            $propertyMetadata->setXmlKeyAsNode($data['xml_key_as_node']);
         }
-    }
-
-    /**
-     * @param ClassMetadataInterface $classMetadata
-     * @param string                 $xmlRoot
-     */
-    private function loadClassMetadataXmlRoot(ClassMetadataInterface $classMetadata, $xmlRoot)
-    {
-        if (!is_string($xmlRoot)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping xml root must be a non empty string, got "%s".',
-                is_object($xmlRoot) ? get_class($xmlRoot) : gettype($xmlRoot)
-            ));
-        }
-
-        if (empty($xmlRoot)) {
-            throw new \InvalidArgumentException('The mapping xml root must be a non empty string.');
-        }
-
-        $classMetadata->setXmlRoot($xmlRoot);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string                    $alias
-     */
-    private function loadPropertyMetadataAlias(PropertyMetadataInterface $propertyMetadata, $alias)
-    {
-        if (!is_string($alias)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property alias must be a non empty string, got "%s".',
-                is_object($alias) ? get_class($alias) : gettype($alias)
-            ));
-        }
-
-        $alias = trim($alias);
-
-        if (empty($alias)) {
-            throw new \InvalidArgumentException('The mapping property alias must be a non empty string.');
-        }
-
-        $propertyMetadata->setAlias($alias);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string                    $type
-     */
-    private function loadPropertyMetadataType(PropertyMetadataInterface $propertyMetadata, $type)
-    {
-        if (!is_string($type)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property type must be a non empty string, got "%s".',
-                is_object($type) ? get_class($type) : gettype($type)
-            ));
-        }
-
-        $propertyMetadata->setType($this->typeParser->parse($type));
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string                    $accessor
-     */
-    private function loadPropertyMetadataAccessor(PropertyMetadataInterface $propertyMetadata, $accessor)
-    {
-        if (!is_string($accessor)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property accessor must be a non empty string, got "%s".',
-                is_object($accessor) ? get_class($accessor) : gettype($accessor)
-            ));
-        }
-
-        $accessor = trim($accessor);
-
-        if (empty($accessor)) {
-            throw new \InvalidArgumentException('The mapping property accessor must be a non empty string.');
-        }
-
-        $propertyMetadata->setAccessor($accessor);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string                    $mutator
-     */
-    private function loadPropertyMetadataMutator(PropertyMetadataInterface $propertyMetadata, $mutator)
-    {
-        if (!is_string($mutator)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property mutator must be a non empty string, got "%s".',
-                is_object($mutator) ? get_class($mutator) : gettype($mutator)
-            ));
-        }
-
-        $mutator = trim($mutator);
-
-        if (empty($mutator)) {
-            throw new \InvalidArgumentException('The mapping property mutator must be a non empty string.');
-        }
-
-        $propertyMetadata->setMutator($mutator);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string                    $version
-     */
-    private function loadPropertyMetadataSinceVersion(PropertyMetadataInterface $propertyMetadata, $version)
-    {
-        if (!is_string($version)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property since version must be a non empty string, got "%s".',
-                is_object($version) ? get_class($version) : gettype($version)
-            ));
-        }
-
-        $version = trim($version);
-
-        if (empty($version)) {
-            throw new \InvalidArgumentException('The mapping property since version must be a non empty string.');
-        }
-
-        $propertyMetadata->setSinceVersion($version);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string                    $version
-     */
-    private function loadPropertyMetadataUntilVersion(PropertyMetadataInterface $propertyMetadata, $version)
-    {
-        if (!is_string($version)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property until version must be a non empty string, got "%s".',
-                is_object($version) ? get_class($version) : gettype($version)
-            ));
-        }
-
-        $version = trim($version);
-
-        if (empty($version)) {
-            throw new \InvalidArgumentException('The mapping property until version must be a non empty string.');
-        }
-
-        $propertyMetadata->setUntilVersion($version);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string|int                $maxDepth
-     */
-    private function loadPropertyMetadataMaxDepth(PropertyMetadataInterface $propertyMetadata, $maxDepth)
-    {
-        if (!is_int($maxDepth) && !is_string($maxDepth) && !ctype_digit($maxDepth)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property max depth must be a positive integer, got "%s".',
-                is_object($maxDepth) ? get_class($maxDepth) : gettype($maxDepth)
-            ));
-        }
-
-        $maxDepth = (int) $maxDepth;
-
-        if ($maxDepth <= 0) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property max depth must be a positive integer, got "%d".',
-                $maxDepth
-            ));
-        }
-
-        $propertyMetadata->setMaxDepth($maxDepth);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string[]                  $groups
-     */
-    private function loadPropertyMetadataGroups(PropertyMetadataInterface $propertyMetadata, $groups)
-    {
-        if (!is_array($groups)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property groups must be an array of non empty strings, got "%s".',
-                is_object($groups) ? get_class($groups) : gettype($groups)
-            ));
-        }
-
-        foreach ($groups as $group) {
-            if (!is_string($group)) {
-                throw new \InvalidArgumentException(sprintf(
-                    'The mapping property groups must be an array of non empty strings, got "%s".',
-                    is_object($group) ? get_class($group) : gettype($group)
-                ));
-            }
-
-            $group = trim($group);
-
-            if (empty($group)) {
-                throw new \InvalidArgumentException(
-                    'The mapping property groups must be an array of non empty strings.'
-                );
-            }
-
-            $propertyMetadata->addGroup($group);
-        }
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param bool                      $xmlAttribute
-     */
-    private function loadPropertyMetadataXmlAttribute(PropertyMetadataInterface $propertyMetadata, $xmlAttribute)
-    {
-        if (!is_bool($xmlAttribute)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property xml attribute must be a boolean, got "%s".',
-                is_object($xmlAttribute) ? get_class($xmlAttribute) : gettype($xmlAttribute)
-            ));
-        }
-
-        $propertyMetadata->setXmlAttribute($xmlAttribute);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param bool                      $xmlValue
-     */
-    private function loadPropertyMetadataXmlValue(PropertyMetadataInterface $propertyMetadata, $xmlValue)
-    {
-        if (!is_bool($xmlValue)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property xml value must be a boolean, got "%s".',
-                is_object($xmlValue) ? get_class($xmlValue) : gettype($xmlValue)
-            ));
-        }
-
-        $propertyMetadata->setXmlValue($xmlValue);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param bool                      $xmlInline
-     */
-    private function loadPropertyMetadataXmlInline(PropertyMetadataInterface $propertyMetadata, $xmlInline)
-    {
-        if (!is_bool($xmlInline)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property xml inline must be a boolean, got "%s".',
-                is_object($xmlInline) ? get_class($xmlInline) : gettype($xmlInline)
-            ));
-        }
-
-        $propertyMetadata->setXmlInline($xmlInline);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string                    $xmlEntry
-     */
-    private function loadPropertyMetadataXmlEntry(PropertyMetadataInterface $propertyMetadata, $xmlEntry)
-    {
-        if (!is_string($xmlEntry)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property xml entry must be a non empty string, got "%s".',
-                is_object($xmlEntry) ? get_class($xmlEntry) : gettype($xmlEntry)
-            ));
-        }
-
-        if (empty($xmlEntry)) {
-            throw new \InvalidArgumentException('The mapping property xml entry must be a non empty string.');
-        }
-
-        $propertyMetadata->setXmlEntry($xmlEntry);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string                    $xmlEntryAttribute
-     */
-    private function loadPropertyMetadataXmlEntryAttribute(
-        PropertyMetadataInterface $propertyMetadata,
-        $xmlEntryAttribute
-    ) {
-        if (!is_string($xmlEntryAttribute)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property xml entry attribute must be a non empty string, got "%s".',
-                is_object($xmlEntryAttribute) ? get_class($xmlEntryAttribute) : gettype($xmlEntryAttribute)
-            ));
-        }
-
-        if (empty($xmlEntryAttribute)) {
-            throw new \InvalidArgumentException(
-                'The mapping property xml entry attribute must be a non empty string.'
-            );
-        }
-
-        $propertyMetadata->setXmlEntryAttribute($xmlEntryAttribute);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string                    $xmlKeyAsAttribute
-     */
-    private function loadPropertyMetadataXmlKeyAsAttribute(
-        PropertyMetadataInterface $propertyMetadata,
-        $xmlKeyAsAttribute
-    ) {
-        if (!is_bool($xmlKeyAsAttribute)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property xml key as attribute must be a boolean, got "%s".',
-                is_object($xmlKeyAsAttribute) ? get_class($xmlKeyAsAttribute) : gettype($xmlKeyAsAttribute)
-            ));
-        }
-
-        $propertyMetadata->setXmlKeyAsAttribute($xmlKeyAsAttribute);
-    }
-
-    /**
-     * @param PropertyMetadataInterface $propertyMetadata
-     * @param string                    $xmlKeyAsNode
-     */
-    private function loadPropertyMetadataXmlKeyAsNode(PropertyMetadataInterface $propertyMetadata, $xmlKeyAsNode)
-    {
-        if (!is_bool($xmlKeyAsNode)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property xml key as node must be a boolean, got "%s".',
-                is_object($xmlKeyAsNode) ? get_class($xmlKeyAsNode) : gettype($xmlKeyAsNode)
-            ));
-        }
-
-        $propertyMetadata->setXmlKeyAsNode($xmlKeyAsNode);
-    }
-
-    /**
-     * @param mixed[] $data
-     *
-     * @return string|null
-     */
-    private function getExclusionPolicy(array $data)
-    {
-        if (!isset($data['exclusion_policy'])) {
-            return ExclusionPolicy::NONE;
-        }
-
-        $policy = $data['exclusion_policy'];
-
-        if (!is_string($policy)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping exclusion policy must be "%s" or "%s", got "%s".',
-                ExclusionPolicy::ALL,
-                ExclusionPolicy::NONE,
-                is_object($policy) ? get_class($policy) : gettype($policy)
-            ));
-        }
-
-        $policy = strtolower(trim($policy));
-
-        if ($policy !== ExclusionPolicy::ALL && $policy !== ExclusionPolicy::NONE) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping exclusion policy must be "%s" or "%s", got "%s".',
-                ExclusionPolicy::ALL,
-                ExclusionPolicy::NONE,
-                $policy
-            ));
-        }
-
-        return $policy;
-    }
-
-    /**
-     * @param mixed[] $data
-     * @param bool    $default
-     *
-     * @return bool|null
-     */
-    private function getReadable(array $data, $default = true)
-    {
-        if (!array_key_exists('readable', $data)) {
-            return $default;
-        }
-
-        $readable = $data['readable'];
-
-        if (!is_bool($readable)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping readable must be a boolean, got "%s".',
-                is_object($readable) ? get_class($readable) : gettype($readable)
-            ));
-        }
-
-        return $readable;
-    }
-
-    /**
-     * @param mixed[] $data
-     * @param bool    $default
-     *
-     * @return bool|null
-     */
-    private function getWritable(array $data, $default = true)
-    {
-        if (!array_key_exists('writable', $data)) {
-            return $default;
-        }
-
-        $writable = $data['writable'];
-
-        if (!is_bool($writable)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping readable must be a boolean, got "%s".',
-                is_object($writable) ? get_class($writable) : gettype($writable)
-            ));
-        }
-
-        return $writable;
-    }
-
-    /**
-     * @param mixed[]                     $data
-     * @param PropertyMetadataInterface[] $properties
-     *
-     * @return string|string[]|null
-     */
-    private function getOrder(array $data, array $properties)
-    {
-        if (!isset($data['order'])) {
-            return;
-        }
-
-        $order = $data['order'];
-
-        if (is_string($order)) {
-            $order = trim($order);
-
-            if (empty($order)) {
-                throw new \InvalidArgumentException(
-                    'The mapping order must be an non empty strings or an array of non empty strings.'
-                );
-            }
-
-            if (strcasecmp($order, 'ASC') === 0 || strcasecmp($order, 'DESC') === 0) {
-                return strtoupper($order);
-            }
-
-            $order = explode(',', $order);
-        } elseif (!is_array($order)) {
-            throw new \InvalidArgumentException(
-                'The mapping order must be an non empty strings or an array of non empty strings.'
-            );
-        }
-
-        if (empty($order)) {
-            throw new \InvalidArgumentException(
-                'The mapping order must be an non empty strings or an array of non empty strings.'
-            );
-        }
-
-        foreach ($order as &$property) {
-            if (!is_string($property)) {
-                throw new \InvalidArgumentException(sprintf(
-                    'The mapping order must be an non empty strings or an array of non empty strings, got "%s".',
-                    is_object($property) ? get_class($property) : gettype($property)
-                ));
-            }
-
-            $property = trim($property);
-
-            if (empty($property)) {
-                throw new \InvalidArgumentException(
-                    'The mapping order must be an non empty strings or an array of non empty strings.'
-                );
-            }
-
-            if (!isset($properties[$property])) {
-                throw new \InvalidArgumentException(sprintf(
-                    'The property "%s" defined in the mapping order does not exist.',
-                    $property
-                ));
-            }
-        }
-
-        return $order;
     }
 
     /**
@@ -709,42 +240,179 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
     }
 
     /**
-     * @param bool $exclude
-     */
-    private function validatePropertyMetadataExclude($exclude)
-    {
-        if (!is_bool($exclude)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property exclude must be a boolean, got "%s".',
-                is_object($exclude) ? get_class($exclude) : gettype($exclude)
-            ));
-        }
-    }
-
-    /**
-     * @param bool $expose
-     */
-    private function validatePropertyMetadataExpose($expose)
-    {
-        if (!is_bool($expose)) {
-            throw new \InvalidArgumentException(sprintf(
-                'The mapping property expose must be a boolean, got "%s".',
-                is_object($expose) ? get_class($expose) : gettype($expose)
-            ));
-        }
-    }
-
-    /**
      * @param mixed[] $property
      * @param string  $policy
      *
      * @return bool
      */
-    private function isPropertyMetadataExposed($property, $policy)
+    private function isPropertyExposed($property, $policy)
     {
         $expose = isset($property['expose']) && $property['expose'];
         $exclude = isset($property['exclude']) && $property['exclude'];
 
         return ($policy === ExclusionPolicy::ALL && $expose) || ($policy === ExclusionPolicy::NONE && !$exclude);
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    private function configureClassOptions(OptionsResolver $resolver)
+    {
+        $emptyValidator = $this->getEmptyValidator();
+
+        $resolver
+            ->setRequired(['properties'])
+            ->setDefaults([
+                'exclusion_policy' => ExclusionPolicy::NONE,
+                'readable'         => true,
+                'writable'         => true,
+            ])
+            ->setDefined([
+                'order',
+                'xml_root',
+            ])
+            ->setAllowedTypes('order', ['array', 'string'])
+            ->setAllowedTypes('properties', 'array')
+            ->setAllowedTypes('readable', 'bool')
+            ->setAllowedTypes('writable', 'bool')
+            ->setAllowedTypes('xml_root', 'string')
+            ->setAllowedValues('exclusion_policy', [ExclusionPolicy::NONE, ExclusionPolicy::ALL])
+            ->setAllowedValues('order', $emptyValidator)
+            ->setAllowedValues('xml_root', $emptyValidator)
+            ->setAllowedValues('properties', function ($properties) {
+                return count($properties) > 0;
+            })
+            ->setNormalizer('order', function (Options $options, $order) use ($emptyValidator) {
+                if (is_string($order)) {
+                    if (strcasecmp($order, 'ASC') === 0 || strcasecmp($order, 'DESC') === 0) {
+                        return strtoupper($order);
+                    }
+
+                    $order = array_map('trim', explode(',', $order));
+                }
+
+                if (is_array($order)) {
+                    $properties = $options['properties'];
+
+                    foreach ($order as $property) {
+                        if (!isset($properties[$property])) {
+                            throw new InvalidOptionsException(sprintf(
+                                'The property "%s" defined in the mapping order does not exist.',
+                                $property
+                            ));
+                        }
+                    }
+                }
+
+                return $order;
+            })
+            ->setNormalizer('properties', function (Options $options, array $properties) {
+                if ($this->propertyResolver === null) {
+                    $this->configurePropertyOptions($this->propertyResolver = new OptionsResolver());
+                }
+
+                $results = [];
+
+                foreach ($properties as $key => $property) {
+                    if ($property === null) {
+                        $property = [];
+                    }
+
+                    try {
+                        $results[$key] = $this->propertyResolver->resolve($property);
+                    } catch (\InvalidArgumentException $e) {
+                        throw new \InvalidArgumentException(sprintf(
+                            'The mapping for the property "%s" is not valid.',
+                            $key
+                        ), 0, $e);
+                    }
+                }
+
+                return $results;
+            });
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    private function configurePropertyOptions(OptionsResolver $resolver)
+    {
+        $emptyValidator = $this->getEmptyValidator();
+
+        $resolver
+            ->setDefined([
+                'accessor',
+                'alias',
+                'exclude',
+                'expose',
+                'groups',
+                'max_depth',
+                'mutator',
+                'readable',
+                'since',
+                'type',
+                'until',
+                'writable',
+                'xml_attribute',
+                'xml_entry',
+                'xml_entry_attribute',
+                'xml_inline',
+                'xml_key_as_attribute',
+                'xml_key_as_node',
+                'xml_value',
+            ])
+            ->setAllowedTypes('accessor', 'string')
+            ->setAllowedTypes('alias', 'string')
+            ->setAllowedTypes('exclude', 'bool')
+            ->setAllowedTypes('expose', 'bool')
+            ->setAllowedTypes('groups', 'array')
+            ->setAllowedTypes('max_depth', 'int')
+            ->setAllowedTypes('mutator', 'string')
+            ->setAllowedTypes('readable', 'bool')
+            ->setAllowedTypes('since', 'string')
+            ->setAllowedTypes('type', 'string')
+            ->setAllowedTypes('until', 'string')
+            ->setAllowedTypes('writable', 'bool')
+            ->setAllowedTypes('xml_attribute', 'bool')
+            ->setAllowedTypes('xml_entry', 'string')
+            ->setAllowedTypes('xml_entry_attribute', 'string')
+            ->setAllowedTypes('xml_inline', 'bool')
+            ->setAllowedTypes('xml_key_as_attribute', 'bool')
+            ->setAllowedTypes('xml_key_as_node', 'bool')
+            ->setAllowedTypes('xml_value', 'bool')
+            ->setAllowedValues('accessor', $emptyValidator)
+            ->setAllowedValues('alias', $emptyValidator)
+            ->setAllowedValues('mutator', $emptyValidator)
+            ->setAllowedValues('since', $emptyValidator)
+            ->setAllowedValues('type', $emptyValidator)
+            ->setAllowedValues('until', $emptyValidator)
+            ->setAllowedValues('xml_entry', $emptyValidator)
+            ->setAllowedValues('xml_entry_attribute', $emptyValidator)
+            ->setAllowedValues('groups', function (array $groups) use ($emptyValidator) {
+                foreach ($groups as $group) {
+                    if (!is_string($group) || !call_user_func($emptyValidator, $group)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            })
+            ->setAllowedValues('max_depth', function ($maxDepth) {
+                return $maxDepth >= 0;
+            });
+    }
+
+    /**
+     * @return \Closure
+     */
+    private function getEmptyValidator()
+    {
+        if ($this->emptyValidator === null) {
+            $this->emptyValidator = function ($value) {
+                return !empty($value);
+            };
+        }
+
+        return $this->emptyValidator;
     }
 }
