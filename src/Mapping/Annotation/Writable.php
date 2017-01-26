@@ -22,21 +22,5 @@ class Writable
     /**
      * @var bool
      */
-    private $writable;
-
-    /**
-     * @param mixed[] $data
-     */
-    public function __construct(array $data)
-    {
-        $this->writable = isset($data['value']) ? $data['value'] : true;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isWritable()
-    {
-        return $this->writable;
-    }
+    public $writable = true;
 }

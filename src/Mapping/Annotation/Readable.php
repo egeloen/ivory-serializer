@@ -22,21 +22,5 @@ class Readable
     /**
      * @var bool
      */
-    private $readable;
-
-    /**
-     * @param mixed[] $data
-     */
-    public function __construct(array $data)
-    {
-        $this->readable = isset($data['value']) ? $data['value'] : true;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isReadable()
-    {
-        return $this->readable;
-    }
+    public $readable = true;
 }

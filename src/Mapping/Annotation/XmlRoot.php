@@ -20,23 +20,9 @@ namespace Ivory\Serializer\Mapping\Annotation;
 class XmlRoot
 {
     /**
+     * @Required
+     *
      * @var string
      */
-    private $name;
-
-    /**
-     * @param mixed[] $data
-     */
-    public function __construct(array $data)
-    {
-        $this->name = isset($data['value']) ? $data['value'] : null;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
+    public $name;
 }

@@ -20,23 +20,9 @@ namespace Ivory\Serializer\Mapping\Annotation;
 class Accessor
 {
     /**
+     * @Required
+     *
      * @var string
      */
-    private $accessor;
-
-    /**
-     * @param mixed[] $data
-     */
-    public function __construct(array $data)
-    {
-        $this->accessor = isset($data['value']) ? $data['value'] : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getAccessor()
-    {
-        return $this->accessor;
-    }
+    public $accessor;
 }

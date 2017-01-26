@@ -21,7 +21,7 @@ Require the library in your `composer.json` file:
 $ composer require egeloen/serializer
 ```
 
-## Download additional libraries
+## Download additional libraries (optional)
 
 The Ivory Serializer relies on third libraries in order to not reinvent the wheel...
 

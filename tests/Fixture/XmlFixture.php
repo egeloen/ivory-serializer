@@ -40,14 +40,14 @@ class XmlFixture implements FixtureInterface
     public $list;
 
     /**
-     * @Serializer\XmlCollection(key_as_node = true)
+     * @Serializer\XmlCollection(keyAsNode = true)
      *
      * @var string[]
      */
     public $keyAsNode;
 
     /**
-     * @Serializer\XmlCollection(key_as_attribute = true)
+     * @Serializer\XmlCollection(keyAsAttribute = true)
      *
      * @var string[]
      */
@@ -61,14 +61,14 @@ class XmlFixture implements FixtureInterface
     public $entry;
 
     /**
-     * @Serializer\XmlCollection(entry_attribute = "name")
+     * @Serializer\XmlCollection(entryAttribute = "name")
      *
      * @var string[]
      */
     public $entryAttribute;
 
     /**
-     * @Serializer\XmlCollection(inline = true, entry = "inline", entry_attribute = "index")
+     * @Serializer\XmlCollection(inline = true, entry = "inline", entryAttribute = "index")
      *
      * @var string[]
      */

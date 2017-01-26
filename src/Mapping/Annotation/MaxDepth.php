@@ -20,23 +20,9 @@ namespace Ivory\Serializer\Mapping\Annotation;
 class MaxDepth
 {
     /**
+     * @Required
+     *
      * @var int
      */
-    private $maxDepth;
-
-    /**
-     * @param mixed[] $data
-     */
-    public function __construct(array $data)
-    {
-        $this->maxDepth = isset($data['value']) ? $data['value'] : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxDepth()
-    {
-        return $this->maxDepth;
-    }
+    public $maxDepth;
 }

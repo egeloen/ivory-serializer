@@ -20,23 +20,9 @@ namespace Ivory\Serializer\Mapping\Annotation;
 class Mutator
 {
     /**
+     * @Required
+     *
      * @var string
      */
-    private $mutator;
-
-    /**
-     * @param mixed[] $data
-     */
-    public function __construct(array $data)
-    {
-        $this->mutator = isset($data['value']) ? $data['value'] : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMutator()
-    {
-        return $this->mutator;
-    }
+    public $mutator;
 }

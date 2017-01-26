@@ -20,23 +20,9 @@ namespace Ivory\Serializer\Mapping\Annotation;
 class Groups
 {
     /**
+     * @Required
+     *
      * @var string[]
      */
-    private $groups;
-
-    /**
-     * @param mixed[] $data
-     */
-    public function __construct(array $data)
-    {
-        $this->groups = isset($data['value']) ? $data['value'] : [];
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getGroups()
-    {
-        return $this->groups;
-    }
+    public $groups;
 }

@@ -20,23 +20,9 @@ namespace Ivory\Serializer\Mapping\Annotation;
 class Alias
 {
     /**
+     * @Required
+     *
      * @var string
      */
-    private $alias;
-
-    /**
-     * @param mixed[] $data
-     */
-    public function __construct(array $data)
-    {
-        $this->alias = isset($data['value']) ? $data['value'] : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getAlias()
-    {
-        return $this->alias;
-    }
+    public $alias;
 }

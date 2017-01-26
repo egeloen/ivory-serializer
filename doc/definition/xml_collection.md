@@ -15,10 +15,10 @@ class User
 {
     /**
      * @Serializer\XmlCollection({
-     *     entry = "entry", 
-     *     entry_attribute = "key", 
-     *     key_as_node = true, 
-     *     key_as_attibute = false, 
+     *     entry = "entry",
+     *     entryAttribute = "key",
+     *     keyAsNode = true,
+     *     keyAsAttibute = false,
      *     inline = false
      * })
      *
@@ -156,8 +156,8 @@ Acme\User:
                 "xml_entry": "entry",
                 "xml_entry_attribute": "key",
                 "xml_key_as_node": true,
-                 "xml_key_as_attribute": false,
-                 "xml_inline": false
+                "xml_key_as_attribute": false,
+                "xml_inline": false
             }
         }
     }

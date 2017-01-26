@@ -20,23 +20,9 @@ namespace Ivory\Serializer\Mapping\Annotation;
 class ExclusionPolicy
 {
     /**
+     * @Required
+     *
      * @var string
      */
-    private $policy;
-
-    /**
-     * @param mixed[] $data
-     */
-    public function __construct(array $data)
-    {
-        $this->policy = isset($data['value']) ? $data['value'] : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPolicy()
-    {
-        return $this->policy;
-    }
+    public $policy;
 }

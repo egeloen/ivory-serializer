@@ -20,23 +20,9 @@ namespace Ivory\Serializer\Mapping\Annotation;
 class Type
 {
     /**
+     * @Required
+     *
      * @var string
      */
-    private $type;
-
-    /**
-     * @param mixed[] $data
-     */
-    public function __construct(array $data)
-    {
-        $this->type = isset($data['value']) ? $data['value'] : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
+    public $type;
 }

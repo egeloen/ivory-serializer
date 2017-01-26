@@ -20,23 +20,17 @@ namespace Ivory\Serializer\Mapping\Annotation;
 class Order
 {
     /**
+     * @Required
+     *
      * @var string|string[]
      */
-    private $order;
+    public $order;
 
     /**
      * @param mixed[] $data
      */
     public function __construct(array $data)
     {
-        $this->order = isset($data['value']) ? $data['value'] : null;
-    }
-
-    /**
-     * @return string|string[]
-     */
-    public function getOrder()
-    {
-        return $this->order;
+        $this->order = $data['value'];
     }
 }

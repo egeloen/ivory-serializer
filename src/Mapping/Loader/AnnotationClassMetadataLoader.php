@@ -63,15 +63,15 @@ class AnnotationClassMetadataLoader extends AbstractReflectionClassMetadataLoade
 
         foreach ($this->reader->getClassAnnotations($class) as $annotation) {
             if ($annotation instanceof ExclusionPolicy) {
-                $definition['exclusion_policy'] = $annotation->getPolicy();
+                $definition['exclusion_policy'] = $annotation->policy;
             } elseif ($annotation instanceof Order) {
-                $definition['order'] = $annotation->getOrder();
+                $definition['order'] = $annotation->order;
             } elseif ($annotation instanceof Readable) {
-                $definition['readable'] = $annotation->isReadable();
+                $definition['readable'] = $annotation->readable;
             } elseif ($annotation instanceof Writable) {
-                $definition['writable'] = $annotation->isWritable();
+                $definition['writable'] = $annotation->writable;
             } elseif ($annotation instanceof XmlRoot) {
-                $definition['xml_root'] = $annotation->getName();
+                $definition['xml_root'] = $annotation->name;
             }
         }
 
@@ -109,52 +109,52 @@ class AnnotationClassMetadataLoader extends AbstractReflectionClassMetadataLoade
 
         foreach ($annotations as $annotation) {
             if ($annotation instanceof Alias) {
-                $definition['alias'] = $annotation->getAlias();
+                $definition['alias'] = $annotation->alias;
             } elseif ($annotation instanceof Type) {
-                $definition['type'] = $annotation->getType();
+                $definition['type'] = $annotation->type;
             } elseif ($annotation instanceof Expose) {
                 $definition['expose'] = true;
             } elseif ($annotation instanceof Exclude) {
                 $definition['exclude'] = true;
             } elseif ($annotation instanceof Readable) {
-                $definition['readable'] = $annotation->isReadable();
+                $definition['readable'] = $annotation->readable;
             } elseif ($annotation instanceof Writable) {
-                $definition['writable'] = $annotation->isWritable();
+                $definition['writable'] = $annotation->writable;
             } elseif ($annotation instanceof Accessor) {
-                $definition['accessor'] = $annotation->getAccessor();
+                $definition['accessor'] = $annotation->accessor;
             } elseif ($annotation instanceof Mutator) {
-                $definition['mutator'] = $annotation->getMutator();
+                $definition['mutator'] = $annotation->mutator;
             } elseif ($annotation instanceof Since) {
-                $definition['since'] = $annotation->getVersion();
+                $definition['since'] = $annotation->version;
             } elseif ($annotation instanceof Until) {
-                $definition['until'] = $annotation->getVersion();
+                $definition['until'] = $annotation->version;
             } elseif ($annotation instanceof MaxDepth) {
-                $definition['max_depth'] = $annotation->getMaxDepth();
+                $definition['max_depth'] = $annotation->maxDepth;
             } elseif ($annotation instanceof Groups) {
-                $definition['groups'] = $annotation->getGroups();
+                $definition['groups'] = $annotation->groups;
             } elseif ($annotation instanceof XmlAttribute) {
                 $definition['xml_attribute'] = true;
             } elseif ($annotation instanceof XmlValue) {
                 $definition['xml_value'] = true;
             } elseif ($annotation instanceof XmlCollection) {
-                if ($annotation->hasEntry()) {
-                    $definition['xml_entry'] = $annotation->getEntry();
+                if ($annotation->entry !== null) {
+                    $definition['xml_entry'] = $annotation->entry;
                 }
 
-                if ($annotation->hasEntryAttribute()) {
-                    $definition['xml_entry_attribute'] = $annotation->getEntryAttribute();
+                if ($annotation->entryAttribute !== null) {
+                    $definition['xml_entry_attribute'] = $annotation->entryAttribute;
                 }
 
-                if ($annotation->hasKeyAsAttribute()) {
-                    $definition['xml_key_as_attribute'] = $annotation->useKeyAsAttribute();
+                if ($annotation->keyAsAttribute !== null) {
+                    $definition['xml_key_as_attribute'] = $annotation->keyAsAttribute;
                 }
 
-                if ($annotation->hasKeyAsNode()) {
-                    $definition['xml_key_as_node'] = $annotation->useKeyAsNode();
+                if ($annotation->keyAsNode !== null) {
+                    $definition['xml_key_as_node'] = $annotation->keyAsNode;
                 }
 
-                if ($annotation->hasInline()) {
-                    $definition['xml_inline'] = $annotation->isInline();
+                if ($annotation->inline !== null) {
+                    $definition['xml_inline'] = $annotation->inline;
                 }
             }
         }

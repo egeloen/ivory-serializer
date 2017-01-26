@@ -20,23 +20,9 @@ namespace Ivory\Serializer\Mapping\Annotation;
 class Until
 {
     /**
+     * @Required
+     *
      * @var string
      */
-    private $version;
-
-    /**
-     * @param mixed[] $data
-     */
-    public function __construct(array $data)
-    {
-        $this->version = isset($data['value']) ? $data['value'] : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
+    public $version;
 }
