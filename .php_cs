@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Symfony\CS\Config\Config;
-use Symfony\CS\Finder;
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
 
 $finder = Finder::create()
     ->in([
@@ -21,9 +21,10 @@ $finder = Finder::create()
 
 return Config::create()
     ->setUsingCache(true)
-    ->fixers([
-        'align_double_arrow',
-        'short_array_syntax',
-        'ordered_use',
+    ->setRules([
+        '@Symfony'               => true,
+        'array_syntax'           => ['syntax' => 'short'],
+        'binary_operator_spaces' => ['align_double_arrow' => true],
+        'ordered_imports'        => true,
     ])
-    ->finder($finder);
+    ->setFinder($finder);

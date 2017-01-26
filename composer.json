@@ -20,7 +20,7 @@
         "ext-json": "*",
         "ext-dom": "*",
         "ext-simplexml": "*",
-        "friendsofphp/php-cs-fixer": "^1.11",
+        "friendsofphp/php-cs-fixer": "^2.0",
         "nikic/php-parser": "^1.4",
         "phpdocumentor/reflection": "^3.0",
         "phpunit/phpunit": "^5.4",

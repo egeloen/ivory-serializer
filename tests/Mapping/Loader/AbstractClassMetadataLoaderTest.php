@@ -55,7 +55,7 @@ abstract class AbstractClassMetadataLoaderTest extends \PHPUnit_Framework_TestCa
 
     public function testInheritance()
     {
-        $this->assertInstanceOf(ClassMetadataLoaderInterface::class,  $this->loader);
+        $this->assertInstanceOf(ClassMetadataLoaderInterface::class, $this->loader);
     }
 
     public function testArrayFixture()
