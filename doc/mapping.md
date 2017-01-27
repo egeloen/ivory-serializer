@@ -160,6 +160,16 @@ use Ivory\Serializer\Mapping\Loader\JsonClassMetadataLoader;
 $loader = new JsonClassMetadataLoader('/path/to/file.json');
 ```
 
+## File
+
+The file loader allows you tu use JSON, XML and YAML loaders without taking care of the format:
+
+``` php
+use Ivory\Serializer\Mapping\Loader\FileClassMetadataLoader;
+
+$loader = new FileClassMetadataLoader($file);
+```
+
 ### Directory
 
 The directory loader allows you to use JSON, XML and YAML loaders by discovering mapping files recursively in one or 

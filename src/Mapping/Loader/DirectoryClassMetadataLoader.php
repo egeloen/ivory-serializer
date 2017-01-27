@@ -20,10 +20,6 @@ use Ivory\Serializer\Type\Parser\TypeParserInterface;
  */
 class DirectoryClassMetadataLoader implements ClassMetadataLoaderInterface
 {
-    const EXTENSION_JSON = 'json';
-    const EXTENSION_XML = 'xml';
-    const EXTENSION_YAML = 'yml';
-
     /**
      * @var string[]
      */
@@ -72,6 +68,12 @@ class DirectoryClassMetadataLoader implements ClassMetadataLoaderInterface
     public function loadClassMetadata(ClassMetadataInterface $classMetadata)
     {
         if (!$this->initialized) {
+            $extensions = [
+                FileClassMetadataLoader::EXTENSION_JSON,
+                FileClassMetadataLoader::EXTENSION_XML,
+                FileClassMetadataLoader::EXTENSION_YAML,
+            ];
+
             $loaders = [];
 
             foreach ($this->directories as $directory) {
@@ -82,19 +84,13 @@ class DirectoryClassMetadataLoader implements ClassMetadataLoaderInterface
                         continue;
                     }
 
-                    switch ($file->getExtension()) {
-                        case self::EXTENSION_JSON:
-                            $loaders[] = new JsonClassMetadataLoader($file->getRealPath(), $this->typeParser);
-                            break;
+                    $path = $file->getRealPath();
 
-                        case self::EXTENSION_XML:
-                            $loaders[] = new XmlClassMetadataLoader($file->getRealPath(), $this->typeParser);
-                            break;
-
-                        case self::EXTENSION_YAML:
-                            $loaders[] = new YamlClassMetadataLoader($file->getRealPath(), $this->typeParser);
-                            break;
+                    if (!in_array(pathinfo($path, PATHINFO_EXTENSION), $extensions, true)) {
+                        continue;
                     }
+
+                    $loaders[] = new FileClassMetadataLoader($path, $this->typeParser);
                 }
             }
 
