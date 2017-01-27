@@ -24,7 +24,7 @@ class XmlClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
      */
     protected function createLoader($file)
     {
-        return new XmlClassMetadataLoader(__DIR__.'/../../Fixture/config/xml/'.$file.'.xml');
+        return new XmlClassMetadataLoader(__DIR__.'/../../Fixture/config/xml/'.$file.'/'.$file.'.xml');
     }
 
     /**

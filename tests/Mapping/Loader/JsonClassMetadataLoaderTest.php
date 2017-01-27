@@ -33,6 +33,6 @@ class JsonClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
      */
     protected function createLoader($file)
     {
-        return new JsonClassMetadataLoader(__DIR__.'/../../Fixture/config/json/'.$file.'.json');
+        return new JsonClassMetadataLoader(__DIR__.'/../../Fixture/config/json/'.$file.'/'.$file.'.json');
     }
 }

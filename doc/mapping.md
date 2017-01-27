@@ -160,6 +160,22 @@ use Ivory\Serializer\Mapping\Loader\JsonClassMetadataLoader;
 $loader = new JsonClassMetadataLoader('/path/to/file.json');
 ```
 
+### Directory
+
+The directory loader allows you to use JSON, XML and YAML loaders by discovering mapping files recursively in one or 
+multiple directories:
+
+``` php
+use Ivory\Serializer\Mapping\Loader\DirectoryClassMetadataLoader;
+
+$loader = new DirectoryClassMetadataLoader('/path/to/mapping');
+// or
+$loader = new DirectoryClassMetadataLoader([
+    '/path/to/mapping1',
+    '/path/to/mapping2',
+]);
+```
+
 ### Chain
 
 The chain loader allows you to load a metadata by delegating it to a chain of loaders. When loading a metadata, the 
@@ -169,6 +185,7 @@ us to support multiple metadata formats in the same application.
 ``` php
 use Ivory\Serializer\Mapping\Loader\AnnotationClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\ChainClassMetadataLoader;
+use Ivory\Serializer\Mapping\Loader\DirectoryClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\JsonClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\ReflectionClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\XmlClassMetadataLoader;
@@ -180,6 +197,7 @@ $loaders = [
     new XmlClassMetadataLoader('/path/to/file.xml'),
     new YamlClassMetadataLoader('/path/to/file.yml'),
     new JsonClassMetadataLoader('/path/to/file.json'),
+    new DirectoryClassMetadataLoader('/path/to/mapping'),
 ];
 
 $loader = new ChainClassMetadataLoader($loaders);

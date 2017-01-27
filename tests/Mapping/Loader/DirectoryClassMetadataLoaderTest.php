@@ -11,18 +11,24 @@
 
 namespace Ivory\Tests\Serializer\Mapping\Loader;
 
-use Ivory\Serializer\Mapping\Loader\YamlClassMetadataLoader;
+use Ivory\Serializer\Mapping\Loader\DirectoryClassMetadataLoader;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class YamlClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
+class DirectoryClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
 {
     /**
      * {@inheritdoc}
      */
     protected function createLoader($file)
     {
-        return new YamlClassMetadataLoader(__DIR__.'/../../Fixture/config/yaml/'.$file.'/'.$file.'.yml');
+        $directories = [];
+
+        foreach (['json', 'xml', 'yaml'] as $format) {
+            $directories[] = __DIR__.'/../../Fixture/config/'.$format.'/'.$file;
+        }
+
+        return new DirectoryClassMetadataLoader($directories);
     }
 }

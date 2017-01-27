@@ -8,6 +8,3 @@
 # PHPUnit
 /phpunit.xml
 /build
-
-# Tests
-/tests/Fixture/config/*/lock.*
