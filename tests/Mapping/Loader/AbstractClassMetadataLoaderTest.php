@@ -43,14 +43,14 @@ abstract class AbstractClassMetadataLoaderTest extends \PHPUnit_Framework_TestCa
     /**
      * @var ClassMetadataLoaderInterface
      */
-    private $loader;
+    protected $loader;
 
     /**
      * {@inheritdoc}
      */
     protected function setUp()
     {
-        $this->setLoader($this->createLoader('mapping'));
+        $this->loader = $this->createLoader('mapping');
     }
 
     public function testInheritance()
@@ -291,14 +291,6 @@ abstract class AbstractClassMetadataLoaderTest extends \PHPUnit_Framework_TestCa
      * @return ClassMetadataLoaderInterface
      */
     abstract protected function createLoader($file);
-
-    /**
-     * @param ClassMetadataLoaderInterface $loader
-     */
-    protected function setLoader(ClassMetadataLoaderInterface $loader)
-    {
-        $this->loader = $loader;
-    }
 
     /**
      * @param ClassMetadataInterface $classMetadata

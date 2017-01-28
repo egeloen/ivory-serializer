@@ -38,7 +38,7 @@ A mapping is a set of definitions which allow you to configure how your object s
 
 ## Factory
 
-In order to create your metadatas, the library uses a factory relying on a loader. Let's create a factory: 
+In order to create your metadatas, the library uses a factory relying on a loader. Let's create a factory:
 
 ``` php
 use Ivory\Serializer\Mapping\Factory\ClassMetadataFactory;
@@ -55,19 +55,6 @@ $classMetadataFactory = ClassMetadataFactory::create([
 
 // Create a factory with an explicit loader
 $classMetadataFactory = new ClassMetadataFactory($loader);
-```
-
-In production, it is highly recommended to use the cache factory: 
-
-``` php
-use Ivory\Serializer\Mapping\Factory\CacheClassMetadataFactory;
-use Ivory\Serializer\Mapping\Factory\ClassMetadataFactory;
-
-// Create a factory
-$classMetadataFactory = new ClassMetadataFactory($loader);
-
-// Create a cached factory using a PSR-6 pool 
-$cacheClassMetadataFactory = new CacheClassMetadataFactory($classMetadataFactory, $psr6CachePool);
 ```
 
 Once you have created your factory, you need to register it on the serializer:
@@ -92,11 +79,44 @@ $typeRegistry = TypeRegistry::create([
 $serializer = new Serializer(new Navigator($typeRegistry));
 ```
 
+In production, it is highly recommended to use the cache factory in order to avoid parsing class and property metadata
+on each requests:
+
+``` php
+use Ivory\Serializer\Mapping\Factory\CacheClassMetadataFactory;
+use Ivory\Serializer\Mapping\Factory\ClassMetadataFactory;
+
+// Create a factory
+$classMetadataFactory = new ClassMetadataFactory($loader);
+
+// Create a cached factory using a PSR-6 pool 
+$cacheClassMetadataFactory = new CacheClassMetadataFactory($classMetadataFactory, $psr6CachePool);
+```
+
+In production, it is also highly recommended to warm up your cache during your deployment process in order to avoid
+parsing class and property metadatas the first time they are needed:
+
+``` php
+use Ivory\Serializer\Mapping\Loader\MappedClassMetadataLoaderInterface;
+
+if (!$loader instanceof MappedClassMetadataLoaderInterface) {
+    // Unable to warm up the cache
+    return;
+}
+
+// Warm up the cache
+foreach ($loader->getMappedClasses() as $class) {
+    $cacheClassMetadataFactory->getClassMetadata($class);
+}
+
+$psr6CachePool->commit();
+```
+
 ## Loader
 
 ### Reflection
 
-The reflection loader is used by default if you don't provide loaders manually. It is able to find all your 
+The reflection loader is used by default if you don't provide loaders manually. It is able to find all your
 properties/methods for (de)-serialization based on the reflection.
 
 ``` php

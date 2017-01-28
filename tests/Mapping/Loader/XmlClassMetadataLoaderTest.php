@@ -32,7 +32,7 @@ class XmlClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
      */
     public function testMissingContent()
     {
-        $this->setLoader($this->createLoader('content_missing'));
+        $this->loader = $this->createLoader('content_missing');
         $this->loadClassMetadata(new ClassMetadata(\stdClass::class));
     }
 
@@ -41,7 +41,7 @@ class XmlClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
      */
     public function testDoctype()
     {
-        $this->setLoader($this->createLoader('doctype'));
+        $this->loader = $this->createLoader('doctype');
         $this->loadClassMetadata(new ClassMetadata(\stdClass::class));
     }
 
@@ -50,7 +50,7 @@ class XmlClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
      */
     public function testXsd()
     {
-        $this->setLoader($this->createLoader('xsd'));
+        $this->loader = $this->createLoader('xsd');
         $this->loadClassMetadata(new ClassMetadata(\stdClass::class));
     }
 

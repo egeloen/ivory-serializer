@@ -17,14 +17,14 @@ use Ivory\Serializer\Type\Parser\TypeParserInterface;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class FileClassMetadataLoader implements ClassMetadataLoaderInterface
+class FileClassMetadataLoader implements MappedClassMetadataLoaderInterface
 {
     const EXTENSION_JSON = 'json';
     const EXTENSION_XML = 'xml';
     const EXTENSION_YAML = 'yml';
 
     /**
-     * @var ClassMetadataLoaderInterface
+     * @var MappedClassMetadataLoaderInterface
      */
     private $loader;
 
@@ -63,5 +63,13 @@ class FileClassMetadataLoader implements ClassMetadataLoaderInterface
     public function loadClassMetadata(ClassMetadataInterface $classMetadata)
     {
         return $this->loader->loadClassMetadata($classMetadata);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMappedClasses()
+    {
+        return $this->loader->getMappedClasses();
     }
 }

@@ -18,7 +18,7 @@ use Ivory\Serializer\Type\Parser\TypeParserInterface;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class DirectoryClassMetadataLoader implements ClassMetadataLoaderInterface
+class DirectoryClassMetadataLoader implements MappedClassMetadataLoaderInterface
 {
     /**
      * @var string[]
@@ -31,7 +31,7 @@ class DirectoryClassMetadataLoader implements ClassMetadataLoaderInterface
     private $typeParser;
 
     /**
-     * @var ClassMetadataLoaderInterface|null
+     * @var MappedClassMetadataLoaderInterface|null
      */
     private $loader;
 
@@ -67,40 +67,60 @@ class DirectoryClassMetadataLoader implements ClassMetadataLoaderInterface
      */
     public function loadClassMetadata(ClassMetadataInterface $classMetadata)
     {
+        return ($loader = $this->getLoader()) !== null && $loader->loadClassMetadata($classMetadata);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMappedClasses()
+    {
+        return ($loader = $this->getLoader()) !== null ? $loader->getMappedClasses() : [];
+    }
+
+    /**
+     * @return MappedClassMetadataLoaderInterface|null
+     */
+    private function getLoader()
+    {
         if (!$this->initialized) {
-            $extensions = [
-                FileClassMetadataLoader::EXTENSION_JSON,
-                FileClassMetadataLoader::EXTENSION_XML,
-                FileClassMetadataLoader::EXTENSION_YAML,
-            ];
-
-            $loaders = [];
-
-            foreach ($this->directories as $directory) {
-                $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory));
-
-                foreach ($iterator as $file) {
-                    if ($file->isDir()) {
-                        continue;
-                    }
-
-                    $path = $file->getRealPath();
-
-                    if (!in_array(pathinfo($path, PATHINFO_EXTENSION), $extensions, true)) {
-                        continue;
-                    }
-
-                    $loaders[] = new FileClassMetadataLoader($path, $this->typeParser);
-                }
-            }
-
-            if (!empty($loaders)) {
-                $this->loader = count($loaders) > 1 ? new ChainClassMetadataLoader($loaders) : array_shift($loaders);
-            }
-
+            $this->createLoader();
             $this->initialized = true;
         }
 
-        return $this->loader !== null && $this->loader->loadClassMetadata($classMetadata);
+        return $this->loader;
+    }
+
+    private function createLoader()
+    {
+        $extensions = [
+            FileClassMetadataLoader::EXTENSION_JSON,
+            FileClassMetadataLoader::EXTENSION_XML,
+            FileClassMetadataLoader::EXTENSION_YAML,
+        ];
+
+        $loaders = [];
+
+        foreach ($this->directories as $directory) {
+            $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory));
+
+            foreach ($iterator as $file) {
+                if ($file->isDir()) {
+                    continue;
+                }
+
+                $path = $file->getRealPath();
+
+                if (!in_array(pathinfo($path, PATHINFO_EXTENSION), $extensions, true)) {
+                    continue;
+                }
+
+                $loaders[] = new FileClassMetadataLoader($path, $this->typeParser);
+            }
+        }
+
+        if (!empty($loaders)) {
+            $this->loader = count($loaders) > 1 ? new ChainClassMetadataLoader($loaders) : array_shift($loaders);
+        }
     }
 }

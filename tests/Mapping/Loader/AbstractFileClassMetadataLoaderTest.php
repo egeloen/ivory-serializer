@@ -12,7 +12,12 @@
 namespace Ivory\Tests\Serializer\Mapping\Loader;
 
 use Ivory\Serializer\Mapping\ClassMetadata;
+use Ivory\Serializer\Mapping\Loader\MappedClassMetadataLoaderInterface;
 use Ivory\Tests\Serializer\Fixture\AccessorFixture;
+use Ivory\Tests\Serializer\Fixture\ArrayFixture;
+use Ivory\Tests\Serializer\Fixture\AscFixture;
+use Ivory\Tests\Serializer\Fixture\DateTimeFixture;
+use Ivory\Tests\Serializer\Fixture\DescFixture;
 use Ivory\Tests\Serializer\Fixture\ExcludeFixture;
 use Ivory\Tests\Serializer\Fixture\ExposeFixture;
 use Ivory\Tests\Serializer\Fixture\GroupFixture;
@@ -33,6 +38,153 @@ use Ivory\Tests\Serializer\Fixture\XmlValueFixture;
  */
 abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadataLoaderTest
 {
+    public function testInheritance()
+    {
+        $this->assertInstanceOf(MappedClassMetadataLoaderInterface::class, $this->loader);
+
+        parent::testInheritance();
+    }
+
+    public function testArrayFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testArrayFixture();
+    }
+
+    public function testScalarFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testScalarFixture();
+    }
+
+    public function testDateTimeFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testDateTimeFixture();
+    }
+
+    public function testExcludeFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testExcludeFixture();
+    }
+
+    public function testExposeFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testExposeFixture();
+    }
+
+    public function testReadableFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testReadableFixture();
+    }
+
+    public function testReadableClassFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testReadableClassFixture();
+    }
+
+    public function testWritableFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testWritableFixture();
+    }
+
+    public function testWritableClassFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testWritableClassFixture();
+    }
+
+    public function testAccessorFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testAccessorFixture();
+    }
+
+    public function testMutatorFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testMutatorFixture();
+    }
+
+    public function testMaxDepthFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testMaxDepthFixture();
+    }
+
+    public function testGroupFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testGroupFixture();
+    }
+
+    public function testOrderFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testOrderFixture();
+    }
+
+    public function testAscFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testAscFixture();
+    }
+
+    public function testDescFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testDescFixture();
+    }
+
+    public function testVersionFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testVersionFixture();
+    }
+
+    public function testXmlFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testXmlFixture();
+    }
+
+    public function testXmlValueFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testXmlValueFixture();
+    }
+
+    public function testUnknownFixture()
+    {
+        $this->assertMappedClasses();
+
+        parent::testUnknownFixture();
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -54,7 +206,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testMalformed()
     {
-        $this->setLoader($this->createLoader('malformed'));
+        $this->loader = $this->createLoader('malformed');
         $this->loadClassMetadata(new ClassMetadata(\stdClass::class));
     }
 
@@ -63,7 +215,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testExclusionPolicy()
     {
-        $this->setLoader($this->createLoader('exclusion_policy'));
+        $this->loader = $this->createLoader('exclusion_policy');
         $this->loadClassMetadata(new ClassMetadata(ExcludeFixture::class));
     }
 
@@ -72,7 +224,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testExclude()
     {
-        $this->setLoader($this->createLoader('exclude'));
+        $this->loader = $this->createLoader('exclude');
         $this->loadClassMetadata(new ClassMetadata(ExcludeFixture::class));
     }
 
@@ -81,7 +233,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testExpose()
     {
-        $this->setLoader($this->createLoader('expose'));
+        $this->loader = $this->createLoader('expose');
         $this->loadClassMetadata(new ClassMetadata(ExposeFixture::class));
     }
 
@@ -90,7 +242,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testReadable()
     {
-        $this->setLoader($this->createLoader('readable'));
+        $this->loader = $this->createLoader('readable');
         $this->loadClassMetadata(new ClassMetadata(ReadableFixture::class));
     }
 
@@ -99,7 +251,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testReadableClass()
     {
-        $this->setLoader($this->createLoader('readable_class'));
+        $this->loader = $this->createLoader('readable_class');
         $this->loadClassMetadata(new ClassMetadata(ReadableClassFixture::class));
     }
 
@@ -108,7 +260,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testWritable()
     {
-        $this->setLoader($this->createLoader('writable'));
+        $this->loader = $this->createLoader('writable');
         $this->loadClassMetadata(new ClassMetadata(WritableFixture::class));
     }
 
@@ -117,7 +269,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testWritableClass()
     {
-        $this->setLoader($this->createLoader('writable_class'));
+        $this->loader = $this->createLoader('writable_class');
         $this->loadClassMetadata(new ClassMetadata(WritableClassFixture::class));
     }
 
@@ -126,7 +278,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testAccessor()
     {
-        $this->setLoader($this->createLoader('accessor'));
+        $this->loader = $this->createLoader('accessor');
         $this->loadClassMetadata(new ClassMetadata(AccessorFixture::class));
     }
 
@@ -135,7 +287,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testMutator()
     {
-        $this->setLoader($this->createLoader('mutator'));
+        $this->loader = $this->createLoader('mutator');
         $this->loadClassMetadata(new ClassMetadata(MutatorFixture::class));
     }
 
@@ -144,7 +296,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testOrder()
     {
-        $this->setLoader($this->createLoader('order'));
+        $this->loader = $this->createLoader('order');
         $this->loadClassMetadata(new ClassMetadata(OrderFixture::class));
     }
 
@@ -153,7 +305,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testOrderEmpty()
     {
-        $this->setLoader($this->createLoader('order_empty'));
+        $this->loader = $this->createLoader('order_empty');
         $this->loadClassMetadata(new ClassMetadata(OrderFixture::class));
     }
 
@@ -162,7 +314,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testOrderEmptyProperty()
     {
-        $this->setLoader($this->createLoader('order_empty_property'));
+        $this->loader = $this->createLoader('order_empty_property');
         $this->loadClassMetadata(new ClassMetadata(OrderFixture::class));
     }
 
@@ -171,7 +323,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testProperties()
     {
-        $this->setLoader($this->createLoader('properties'));
+        $this->loader = $this->createLoader('properties');
         $this->loadClassMetadata(new ClassMetadata(\stdClass::class));
     }
 
@@ -180,7 +332,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testPropertyAlias()
     {
-        $this->setLoader($this->createLoader('alias'));
+        $this->loader = $this->createLoader('alias');
         $this->loadClassMetadata(new ClassMetadata(ScalarFixture::class));
     }
 
@@ -189,7 +341,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testPropertyType()
     {
-        $this->setLoader($this->createLoader('type'));
+        $this->loader = $this->createLoader('type');
         $this->loadClassMetadata(new ClassMetadata(ScalarFixture::class));
     }
 
@@ -198,7 +350,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testPropertySince()
     {
-        $this->setLoader($this->createLoader('since'));
+        $this->loader = $this->createLoader('since');
         $this->loadClassMetadata(new ClassMetadata(VersionFixture::class));
     }
 
@@ -207,7 +359,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testPropertyUntil()
     {
-        $this->setLoader($this->createLoader('until'));
+        $this->loader = $this->createLoader('until');
         $this->loadClassMetadata(new ClassMetadata(VersionFixture::class));
     }
 
@@ -216,7 +368,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testPropertyMaxDepth()
     {
-        $this->setLoader($this->createLoader('max_depth'));
+        $this->loader = $this->createLoader('max_depth');
         $this->loadClassMetadata(new ClassMetadata(MaxDepthFixture::class));
     }
 
@@ -225,7 +377,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testPropertyGroups()
     {
-        $this->setLoader($this->createLoader('groups'));
+        $this->loader = $this->createLoader('groups');
         $this->loadClassMetadata(new ClassMetadata(GroupFixture::class));
     }
 
@@ -234,7 +386,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testXmlRoot()
     {
-        $this->setLoader($this->createLoader('xml_root'));
+        $this->loader = $this->createLoader('xml_root');
         $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
     }
 
@@ -243,7 +395,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testXmlAttribute()
     {
-        $this->setLoader($this->createLoader('xml_attribute'));
+        $this->loader = $this->createLoader('xml_attribute');
         $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
     }
 
@@ -252,7 +404,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testXmlEntry()
     {
-        $this->setLoader($this->createLoader('xml_entry'));
+        $this->loader = $this->createLoader('xml_entry');
         $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
     }
 
@@ -261,7 +413,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testXmlEntryAttribute()
     {
-        $this->setLoader($this->createLoader('xml_entry_attribute'));
+        $this->loader = $this->createLoader('xml_entry_attribute');
         $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
     }
 
@@ -270,7 +422,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testXmlKeyAsAttribute()
     {
-        $this->setLoader($this->createLoader('xml_key_as_attribute'));
+        $this->loader = $this->createLoader('xml_key_as_attribute');
         $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
     }
 
@@ -279,7 +431,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testXmlKeyAsNode()
     {
-        $this->setLoader($this->createLoader('xml_key_as_node'));
+        $this->loader = $this->createLoader('xml_key_as_node');
         $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
     }
 
@@ -288,7 +440,7 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testXmlInline()
     {
-        $this->setLoader($this->createLoader('xml_inline'));
+        $this->loader = $this->createLoader('xml_inline');
         $this->loadClassMetadata(new ClassMetadata(XmlFixture::class));
     }
 
@@ -297,7 +449,32 @@ abstract class AbstractFileClassMetadataLoaderTest extends AbstractClassMetadata
      */
     public function testXmlValue()
     {
-        $this->setLoader($this->createLoader('xml_value'));
+        $this->loader = $this->createLoader('xml_value');
         $this->loadClassMetadata(new ClassMetadata(XmlValueFixture::class));
+    }
+
+    protected function assertMappedClasses()
+    {
+        $this->assertSame([
+            ArrayFixture::class,
+            ScalarFixture::class,
+            DateTimeFixture::class,
+            ExcludeFixture::class,
+            ExposeFixture::class,
+            AccessorFixture::class,
+            MutatorFixture::class,
+            MaxDepthFixture::class,
+            GroupFixture::class,
+            OrderFixture::class,
+            AscFixture::class,
+            DescFixture::class,
+            ReadableFixture::class,
+            ReadableClassFixture::class,
+            WritableFixture::class,
+            WritableClassFixture::class,
+            VersionFixture::class,
+            XmlFixture::class,
+            XmlValueFixture::class,
+        ], $this->loader->getMappedClasses());
     }
 }

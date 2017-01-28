@@ -14,6 +14,7 @@ namespace Ivory\Tests\Serializer\Mapping\Loader;
 use Ivory\Serializer\Mapping\ClassMetadata;
 use Ivory\Serializer\Mapping\Loader\ChainClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\ClassMetadataLoaderInterface;
+use Ivory\Serializer\Mapping\Loader\MappedClassMetadataLoaderInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -31,7 +32,7 @@ class ChainClassMetadataLoaderTest extends \PHPUnit_Framework_TestCase
     private $firstLoader;
 
     /**
-     * @var ClassMetadataLoaderInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var MappedClassMetadataLoaderInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $secondLoader;
 
@@ -41,7 +42,7 @@ class ChainClassMetadataLoaderTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->firstLoader = $this->createClassMetadataLoaderMock();
-        $this->secondLoader = $this->createClassMetadataLoaderMock();
+        $this->secondLoader = $this->createMappedClassMetadataLoaderMock();
 
         $this->loader = new ChainClassMetadataLoader([$this->firstLoader, $this->secondLoader]);
     }
@@ -89,11 +90,29 @@ class ChainClassMetadataLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->loader->loadClassMetadata($classMetadata));
     }
 
+    public function testMappedClasses()
+    {
+        $this->secondLoader
+            ->expects($this->once())
+            ->method('getMappedClasses')
+            ->will($this->returnValue($classes = [\stdClass::class]));
+
+        $this->assertSame($classes, $this->loader->getMappedClasses());
+    }
+
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|ClassMetadataLoaderInterface
      */
     private function createClassMetadataLoaderMock()
     {
         return $this->createMock(ClassMetadataLoaderInterface::class);
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|MappedClassMetadataLoaderInterface
+     */
+    private function createMappedClassMetadataLoaderMock()
+    {
+        return $this->createMock(MappedClassMetadataLoaderInterface::class);
     }
 }

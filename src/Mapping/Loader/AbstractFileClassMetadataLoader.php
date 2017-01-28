@@ -16,7 +16,7 @@ use Ivory\Serializer\Type\Parser\TypeParserInterface;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-abstract class AbstractFileClassMetadataLoader extends AbstractClassMetadataLoader
+abstract class AbstractFileClassMetadataLoader extends AbstractClassMetadataLoader implements MappedClassMetadataLoaderInterface
 {
     /**
      * @var string
@@ -45,6 +45,18 @@ abstract class AbstractFileClassMetadataLoader extends AbstractClassMetadataLoad
         }
 
         $this->file = $file;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMappedClasses()
+    {
+        if ($this->data === null) {
+            $this->data = $this->loadFile($this->file);
+        }
+
+        return array_keys($this->data);
     }
 
     /**

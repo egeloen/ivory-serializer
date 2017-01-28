@@ -16,7 +16,7 @@ use Ivory\Serializer\Mapping\ClassMetadataInterface;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class ChainClassMetadataLoader implements ClassMetadataLoaderInterface
+class ChainClassMetadataLoader implements MappedClassMetadataLoaderInterface
 {
     /**
      * @var ClassMetadataLoaderInterface[]
@@ -43,5 +43,21 @@ class ChainClassMetadataLoader implements ClassMetadataLoaderInterface
         }
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMappedClasses()
+    {
+        $classes = [];
+
+        foreach ($this->loaders as $loader) {
+            if ($loader instanceof MappedClassMetadataLoaderInterface) {
+                $classes = array_merge($classes, $loader->getMappedClasses());
+            }
+        }
+
+        return array_unique($classes);
     }
 }

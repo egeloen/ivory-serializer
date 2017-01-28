@@ -24,7 +24,7 @@ class JsonClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
      */
     public function testMissingContent()
     {
-        $this->setLoader($this->createLoader('invalid'));
+        $this->loader = $this->createLoader('invalid');
         $this->loadClassMetadata(new ClassMetadata(\stdClass::class));
     }
 
