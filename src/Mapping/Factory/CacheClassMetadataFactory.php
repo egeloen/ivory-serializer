@@ -29,13 +29,20 @@ class CacheClassMetadataFactory extends AbstractClassMetadataFactory
     private $pool;
 
     /**
+     * @var string|null
+     */
+    private $prefix;
+
+    /**
      * @param ClassMetadataFactoryInterface $factory
      * @param CacheItemPoolInterface        $pool
+     * @param string|null                   $prefix
      */
-    public function __construct(ClassMetadataFactoryInterface $factory, CacheItemPoolInterface $pool)
+    public function __construct(ClassMetadataFactoryInterface $factory, CacheItemPoolInterface $pool, $prefix = null)
     {
         $this->factory = $factory;
         $this->pool = $pool;
+        $this->prefix = $prefix;
     }
 
     /**
@@ -43,7 +50,7 @@ class CacheClassMetadataFactory extends AbstractClassMetadataFactory
      */
     protected function fetchClassMetadata($class)
     {
-        $item = $this->pool->getItem(strtr($class, '\\', '_'));
+        $item = $this->pool->getItem(strtr($this->prefix.$class, '\\', '_'));
 
         if ($item->isHit()) {
             return $item->get();
