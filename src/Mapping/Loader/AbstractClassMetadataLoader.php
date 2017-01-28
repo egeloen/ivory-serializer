@@ -114,7 +114,7 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
                 $propertyMetadata = new PropertyMetadata($property, $classMetadata->getName());
             }
 
-            $this->loadPropertyMetadata($propertyMetadata, $value, $data['readable'], $data['writable']);
+            $this->loadPropertyMetadata($propertyMetadata, $value);
 
             if ($this->isPropertyExposed($value, $data['exclusion_policy'])) {
                 $properties[$property] = $propertyMetadata;
@@ -137,24 +137,23 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
     /**
      * @param PropertyMetadataInterface $propertyMetadata
      * @param mixed                     $data
-     * @param bool                      $classReadable
-     * @param bool                      $classWritable
      */
-    private function loadPropertyMetadata(
-        PropertyMetadataInterface $propertyMetadata,
-        $data,
-        $classReadable,
-        $classWritable
-    ) {
-        $propertyMetadata->setReadable(isset($data['readable']) ? $data['readable'] : $classReadable);
-        $propertyMetadata->setWritable(isset($data['writable']) ? $data['writable'] : $classWritable);
-
+    private function loadPropertyMetadata(PropertyMetadataInterface $propertyMetadata, $data)
+    {
         if (isset($data['alias'])) {
             $propertyMetadata->setAlias($data['alias']);
         }
 
         if (isset($data['type'])) {
             $propertyMetadata->setType($this->typeParser->parse($data['type']));
+        }
+
+        if (isset($data['readable'])) {
+            $propertyMetadata->setReadable($data['readable']);
+        }
+
+        if (isset($data['writable'])) {
+            $propertyMetadata->setWritable($data['writable']);
         }
 
         if (isset($data['accessor'])) {
@@ -262,13 +261,11 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
 
         $resolver
             ->setRequired(['properties'])
-            ->setDefaults([
-                'exclusion_policy' => ExclusionPolicy::NONE,
-                'readable'         => true,
-                'writable'         => true,
-            ])
+            ->setDefaults(['exclusion_policy' => ExclusionPolicy::NONE])
             ->setDefined([
+                'readable',
                 'order',
+                'writable',
                 'xml_root',
             ])
             ->setAllowedTypes('order', ['array', 'string'])
@@ -312,6 +309,7 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
                 }
 
                 $results = [];
+                $visibilities = ['readable', 'writable'];
 
                 foreach ($properties as $key => $property) {
                     if ($property === null) {
@@ -325,6 +323,12 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
                             'The mapping for the property "%s" is not valid.',
                             $key
                         ), 0, $e);
+                    }
+
+                    foreach ($visibilities as $visibility) {
+                        if (isset($options[$visibility]) && !isset($results[$key][$visibility])) {
+                            $results[$key][$visibility] = $options[$visibility];
+                        }
                     }
                 }
 

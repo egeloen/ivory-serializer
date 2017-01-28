@@ -37,14 +37,14 @@ class PropertyMetadata implements PropertyMetadataInterface
     private $type;
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    private $readable = true;
+    private $readable;
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    private $writable = true;
+    private $writable;
 
     /**
      * @var string|null
@@ -77,19 +77,19 @@ class PropertyMetadata implements PropertyMetadataInterface
     private $groups = [];
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    private $xmlAttribute = false;
+    private $xmlAttribute;
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    private $xmlValue = false;
+    private $xmlValue;
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    private $xmlInline = false;
+    private $xmlInline;
 
     /**
      * @var string|null
@@ -204,9 +204,17 @@ class PropertyMetadata implements PropertyMetadataInterface
     /**
      * {@inheritdoc}
      */
+    public function hasReadable()
+    {
+        return $this->readable !== null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isReadable()
     {
-        return $this->readable;
+        return !$this->hasReadable() || $this->readable;
     }
 
     /**
@@ -220,9 +228,17 @@ class PropertyMetadata implements PropertyMetadataInterface
     /**
      * {@inheritdoc}
      */
+    public function hasWritable()
+    {
+        return $this->writable !== null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isWritable()
     {
-        return $this->writable;
+        return !$this->hasWritable() || $this->writable;
     }
 
     /**
@@ -417,9 +433,17 @@ class PropertyMetadata implements PropertyMetadataInterface
     /**
      * {@inheritdoc}
      */
+    public function hasXmlAttribute()
+    {
+        return $this->xmlAttribute !== null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isXmlAttribute()
     {
-        return $this->xmlAttribute;
+        return $this->hasXmlAttribute() && $this->xmlAttribute;
     }
 
     /**
@@ -433,9 +457,17 @@ class PropertyMetadata implements PropertyMetadataInterface
     /**
      * {@inheritdoc}
      */
+    public function hasXmlValue()
+    {
+        return $this->xmlValue !== null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isXmlValue()
     {
-        return $this->xmlValue;
+        return $this->hasXmlValue() && $this->xmlValue;
     }
 
     /**
@@ -449,9 +481,17 @@ class PropertyMetadata implements PropertyMetadataInterface
     /**
      * {@inheritdoc}
      */
+    public function hasXmlInline()
+    {
+        return $this->xmlInline !== null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isXmlInline()
     {
-        return $this->xmlInline;
+        return $this->hasXmlInline() && $this->xmlInline;
     }
 
     /**
@@ -563,18 +603,20 @@ class PropertyMetadata implements PropertyMetadataInterface
      */
     public function merge(PropertyMetadataInterface $propertyMetadata)
     {
-        $this->setReadable($propertyMetadata->isReadable());
-        $this->setWritable($propertyMetadata->isWritable());
-        $this->setXmlAttribute($propertyMetadata->isXmlAttribute());
-        $this->setXmlValue($propertyMetadata->isXmlValue());
-        $this->setXmlInline($propertyMetadata->isXmlInline());
-
         if ($propertyMetadata->hasAlias()) {
             $this->setAlias($propertyMetadata->getAlias());
         }
 
         if ($propertyMetadata->hasType()) {
             $this->setType($propertyMetadata->getType());
+        }
+
+        if ($propertyMetadata->hasReadable()) {
+            $this->setReadable($propertyMetadata->isReadable());
+        }
+
+        if ($propertyMetadata->hasWritable()) {
+            $this->setWritable($propertyMetadata->isWritable());
         }
 
         if ($propertyMetadata->hasAccessor()) {
@@ -599,6 +641,18 @@ class PropertyMetadata implements PropertyMetadataInterface
 
         foreach ($propertyMetadata->getGroups() as $group) {
             $this->addGroup($group);
+        }
+
+        if ($propertyMetadata->hasXmlAttribute()) {
+            $this->setXmlAttribute($propertyMetadata->isXmlAttribute());
+        }
+
+        if ($propertyMetadata->hasXmlValue()) {
+            $this->setXmlValue($propertyMetadata->isXmlValue());
+        }
+
+        if ($propertyMetadata->hasXmlInline()) {
+            $this->setXmlInline($propertyMetadata->isXmlInline());
         }
 
         if ($propertyMetadata->hasXmlEntry()) {

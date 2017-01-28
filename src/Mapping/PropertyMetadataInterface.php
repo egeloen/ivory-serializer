@@ -59,12 +59,22 @@ interface PropertyMetadataInterface extends MetadataInterface
     /**
      * @return bool
      */
+    public function hasReadable();
+
+    /**
+     * @return bool
+     */
     public function isReadable();
 
     /**
      * @param bool $readable
      */
     public function setReadable($readable);
+
+    /**
+     * @return bool
+     */
+    public function hasWritable();
 
     /**
      * @return bool
@@ -191,6 +201,11 @@ interface PropertyMetadataInterface extends MetadataInterface
     /**
      * @return bool
      */
+    public function hasXmlAttribute();
+
+    /**
+     * @return bool
+     */
     public function isXmlAttribute();
 
     /**
@@ -201,12 +216,22 @@ interface PropertyMetadataInterface extends MetadataInterface
     /**
      * @return bool
      */
+    public function hasXmlValue();
+
+    /**
+     * @return bool
+     */
     public function isXmlValue();
 
     /**
      * @param bool $xmlValue
      */
     public function setXmlValue($xmlValue);
+
+    /**
+     * @return bool
+     */
+    public function hasXmlInline();
 
     /**
      * @return bool
