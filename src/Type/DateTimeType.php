@@ -30,13 +30,13 @@ class DateTimeType extends AbstractClassType
     private $timeZone;
 
     /**
-     * @param string $format
-     * @param string $timeZone
+     * @param string      $format
+     * @param string|null $timeZone
      */
-    public function __construct($format = \DateTime::RFC3339, $timeZone = 'UTC')
+    public function __construct($format = \DateTime::RFC3339, $timeZone = null)
     {
         $this->format = $format;
-        $this->timeZone = $timeZone;
+        $this->timeZone = $timeZone ?: date_default_timezone_get();
     }
 
     /**

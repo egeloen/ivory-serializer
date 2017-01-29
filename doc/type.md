@@ -23,12 +23,15 @@ The library is shipped with some built-in types:
 | `array<value=type>`                          | Array type with typed value            |
 | `array<key=type, value=type>`                | Array type with typed key and value    |
 | `DateTime`                                   | `DateTime` type                        |
-| `DateTime<format='Y-m-d H:i:d'>`             | `DateTime` type with format            |
+| `DateTime<format='Y-m-d\TH:i:sP'>`           | `DateTime` type with format            |
 | `DateTime<timezone='Europe/Paris'>`          | `DateTime` type with timezone          |
 | `DateTimeImmutable`                          | `DateTimeImmutable` type               |
-| `DateTimeImmutable<format='Y-m-d H:i:d'>`    | `DateTimeImmutable` type with format   |
+| `DateTimeImmutable<format='Y-m-d\TH:i:sP'>`  | `DateTimeImmutable` type with format   |
 | `DateTimeImmutable<timezone='Europe/Paris'>` | `DateTimeImmutable` type with timezone |
 | `Fully\Qualified\Class\Name`                 | Object type                            |
+
+The `DateTime` and `DateTimeImmutable` types use the `DateTime::RFC3339` as default format and rely on
+`date_default_timezone_get` to determine the default timezone.
 
 ## Custom
 
