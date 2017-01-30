@@ -22,6 +22,7 @@ final class Type
     const CLOSURE = \Closure::class;
     const DATE_TIME = \DateTimeInterface::class;
     const DOUBLE = 'double';
+    const EXCEPTION = \Exception::class;
     const FLOAT = 'float';
     const INT = 'int';
     const INTEGER = 'integer';

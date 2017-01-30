@@ -1,0 +1,2 @@
+code,message,exception\.code,exception\.message,exception\.file,exception\.line,exception\.trace
+500,"Internal Server Error",321,"Parent exception",.+,\d+,".+"

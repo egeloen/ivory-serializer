@@ -15,6 +15,7 @@ use Ivory\Serializer\Type\ArrayType;
 use Ivory\Serializer\Type\BooleanType;
 use Ivory\Serializer\Type\ClosureType;
 use Ivory\Serializer\Type\DateTimeType;
+use Ivory\Serializer\Type\ExceptionType;
 use Ivory\Serializer\Type\FloatType;
 use Ivory\Serializer\Type\IntegerType;
 use Ivory\Serializer\Type\NullType;
@@ -59,6 +60,7 @@ class TypeRegistry implements TypeRegistryInterface
             Type::CLOSURE   => new ClosureType(),
             Type::DATE_TIME => new DateTimeType(),
             Type::DOUBLE    => $floatType = new FloatType(),
+            Type::EXCEPTION => new ExceptionType(),
             Type::FLOAT     => $floatType,
             Type::INT       => $integerType = new IntegerType(),
             Type::INTEGER   => $integerType,

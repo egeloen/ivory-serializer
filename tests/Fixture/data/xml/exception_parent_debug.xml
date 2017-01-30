@@ -1,0 +1,12 @@
+<\?xml version="1\.0" encoding="UTF\-8"\?>
+<result>
+  <code>500<\/code>
+  <message>Internal Server Error<\/message>
+  <exception>
+    <code>321<\/code>
+    <message>Parent exception<\/message>
+    <file>.+<\/file>
+    <line>\d+<\/line>
+    <trace>(.|\n)+<\/trace>
+  <\/exception>
+<\/result>

@@ -22,7 +22,11 @@ use Ivory\Serializer\Naming\KebabCaseNamingStrategy;
 use Ivory\Serializer\Naming\SnakeCaseNamingStrategy;
 use Ivory\Serializer\Naming\SpaceNamingStrategy;
 use Ivory\Serializer\Naming\StudlyCapsNamingStrategy;
+use Ivory\Serializer\Navigator\Navigator;
+use Ivory\Serializer\Registry\TypeRegistry;
 use Ivory\Serializer\Serializer;
+use Ivory\Serializer\Type\ExceptionType;
+use Ivory\Serializer\Type\Type;
 use Ivory\Tests\Serializer\Fixture\AccessorFixture;
 use Ivory\Tests\Serializer\Fixture\ArrayFixture;
 use Ivory\Tests\Serializer\Fixture\AscFixture;
@@ -104,9 +108,81 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return mixed[][]
+     * @param string $name
+     * @param mixed  $data
+     * @param string $format
+     *
+     * @dataProvider exceptionProvider
+     */
+    public function testSerializeException($name, $data, $format)
+    {
+        $this->serializer = new Serializer(new Navigator(TypeRegistry::create([
+            Type::EXCEPTION => new ExceptionType(true),
+        ])));
+
+        $this->assertRegExp(
+            '/^'.$this->getDataSet($name.'_debug', $format).'$/',
+            $this->serializer->serialize($data, $format)
+        );
+    }
+
+    /**
+     * @return mixed[]
      */
     public function serializeProvider()
+    {
+        return $this->expandCases(array_merge($this->exceptionCases(), $this->commonCases()));
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function deserializeProvider()
+    {
+        $cases = [];
+
+        foreach ($this->expandCases($this->commonCases()) as $provider) {
+            if (isset($provider[3])) {
+                continue;
+            }
+
+            $cases[] = [
+                $provider[0],
+                $data = $provider[1],
+                is_object($data) ? get_class($data) : strtolower(gettype($data)),
+                $provider[2],
+            ];
+        }
+
+        return $cases;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function exceptionProvider()
+    {
+        return $this->expandCases($this->exceptionCases());
+    }
+
+    /**
+     * @return mixed[]
+     */
+    private function exceptionCases()
+    {
+        $parentException = new \Exception('Parent exception', 321);
+        $childException = new \Exception('Child exception', 123, $parentException);
+
+        return [
+            ['exception_parent', $parentException],
+            ['exception_child', $childException],
+        ];
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function commonCases()
     {
         $emptyArrayFixture = new ArrayFixture();
         $arrayFixture = clone $emptyArrayFixture;
@@ -241,7 +317,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $xmlValueFixture->foo = 'oof';
         $xmlValueFixture->bar = 'rab';
 
-        $cases = [
+        return [
             ['array', []],
             ['boolean', true],
             ['integer', 123],
@@ -294,7 +370,15 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['xml', $xmlFixture],
             ['xml_value', $xmlValueFixture],
         ];
+    }
 
+    /**
+     * @param mixed[] $cases
+     *
+     * @return mixed[]
+     */
+    private function expandCases(array $cases)
+    {
         $providers = [];
 
         foreach ([Format::CSV, Format::JSON, Format::XML, Format::YAML] as $format) {
@@ -306,30 +390,6 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
                 $case[2] = $format;
                 $providers[] = $case;
             }
-        }
-
-        return $providers;
-    }
-
-    /**
-     * @return mixed[][]
-     */
-    public function deserializeProvider()
-    {
-        $providers = [];
-        $serializeProviders = self::serializeProvider();
-
-        foreach ($serializeProviders as $provider) {
-            if (isset($provider[3])) {
-                continue;
-            }
-
-            $providers[] = [
-                $provider[0],
-                $data = $provider[1],
-                is_object($data) ? get_class($data) : strtolower(gettype($data)),
-                $provider[2],
-            ];
         }
 
         return $providers;

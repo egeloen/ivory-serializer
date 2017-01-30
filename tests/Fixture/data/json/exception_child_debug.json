@@ -1,0 +1,1 @@
+{"code":500,"message":"Internal Server Error","exception":{"code":123,"message":"Child exception","file":".+","line":\d+,"trace":".+","previous":{"code":321,"message":"Parent exception","file":".+","line":\d+,"trace":".+"}}}

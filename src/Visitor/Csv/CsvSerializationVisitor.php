@@ -123,12 +123,16 @@ class CsvSerializationVisitor extends AbstractSerializationVisitor
                     $headers = count($result);
                 }
             } elseif (is_array($headers) && $headers !== array_keys($result)) {
+                fclose($resource);
+
                 throw new \InvalidArgumentException(sprintf(
                     'The input dimension is not equals for all entries (Expected: %d, got %d).',
                     count($headers),
                     count($result)
                 ));
             } elseif ($headers !== count($result)) {
+                fclose($resource);
+
                 throw new \InvalidArgumentException(sprintf(
                     'The input dimension is not equals for all entries (Expected: %d, got %d).',
                     $headers,
@@ -163,7 +167,7 @@ class CsvSerializationVisitor extends AbstractSerializationVisitor
             if (is_array($value)) {
                 $this->flatten($value, $result, $key.$this->keySeparator);
             } else {
-                $result[$key] = $value;
+                $result[$key] = is_string($value) ? str_replace(PHP_EOL, '', $value) : $value;
             }
         }
     }

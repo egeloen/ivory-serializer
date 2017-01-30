@@ -1,0 +1,2 @@
+code,message,exception\.code,exception\.message,exception\.file,exception\.line,exception\.trace,exception\.previous\.code,exception\.previous\.message,exception\.previous\.file,exception\.previous\.line,exception\.previous\.trace
+500,"Internal Server Error",123,"Child exception",.+,\d+,".+",321,"Parent exception",.+,\d+,".+"

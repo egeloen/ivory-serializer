@@ -30,8 +30,29 @@ The library is shipped with some built-in types:
 | `DateTimeImmutable<timezone='Europe/Paris'>` | `DateTimeImmutable` type with timezone |
 | `Fully\Qualified\Class\Name`                 | Object type                            |
 
+### DateTime & DateTimeImmutable
+
 The `DateTime` and `DateTimeImmutable` types use the `DateTime::RFC3339` as default format and rely on
 `date_default_timezone_get` to determine the default timezone.
+
+### Exception
+
+By default, the serializer does not expose exception data but generate a generic structure (code => 500, message => 
+Internal Server Error). If your want to get more informations about the exception when you are in development mode 
+for example, you can use the following:
+
+``` php
+use Ivory\Serializer\Registry\TypeRegistry;
+use Ivory\Serializer\Serializer;
+use Ivory\Serializer\Type\ExceptionType;
+use Ivory\Serializer\Type\Type;
+
+$typeRegistry = TypeRegistry::create([
+    Type::EXCEPTION => new ExceptionType(true), 
+]);
+
+$serializer = new Serializer(new Navigator($typeRegistry));
+```
 
 ## Custom
 
