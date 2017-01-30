@@ -25,17 +25,11 @@ abstract class AbstractClassType implements TypeInterface
      */
     public function convert($data, TypeMetadataInterface $type, ContextInterface $context)
     {
-        switch ($context->getDirection()) {
-            case Direction::SERIALIZATION:
-                $data = $this->serialize($data, $type, $context);
-                break;
-
-            case Direction::DESERIALIZATION:
-                $data = $this->deserialize($data, $type, $context);
-                break;
+        if ($context->getDirection() === Direction::SERIALIZATION) {
+            return $this->serialize($data, $type, $context);
         }
 
-        return $context->getVisitor()->visitData($data, $type, $context);
+        return $this->deserialize($data, $type, $context);
     }
 
     /**

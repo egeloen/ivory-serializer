@@ -60,7 +60,7 @@ class DateTimeType extends AbstractClassType
             throw new \InvalidArgumentException(sprintf('The date format "%s" is not valid.', $format));
         }
 
-        return $result;
+        return $this->visit($result, $type, $context);
     }
 
     /**
@@ -103,6 +103,18 @@ class DateTimeType extends AbstractClassType
             ));
         }
 
-        return $result;
+        return $this->visit($result, $type, $context);
+    }
+
+    /**
+     * @param mixed                 $data
+     * @param TypeMetadataInterface $type
+     * @param ContextInterface      $context
+     *
+     * @return mixed
+     */
+    private function visit($data, TypeMetadataInterface $type, ContextInterface $context)
+    {
+        return $context->getVisitor()->visitData($data, $type, $context);
     }
 }
