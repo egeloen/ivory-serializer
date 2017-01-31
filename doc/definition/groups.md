@@ -1,6 +1,7 @@
 # Groups
 
-The groups allows you include properties based on the runtime groups provided via the context.
+The groups allows you include properties based on the runtime groups provided via the context. Be aware that if you
+don't configure groups, the serializer will automatically use the group `Default` for your property.
 
 ## Example
 

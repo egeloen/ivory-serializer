@@ -105,7 +105,7 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
      */
     private function doLoadClassMetadata(ClassMetadataInterface $classMetadata, array $data)
     {
-        $properties = $classMetadata->getProperties();
+        $properties = $data['exclusion_policy'] === ExclusionPolicy::NONE ? $classMetadata->getProperties() : [];
 
         foreach ($data['properties'] as $property => $value) {
             $propertyMetadata = $classMetadata->getProperty($property);
@@ -365,6 +365,9 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
                 'xml_key_as_node',
                 'xml_value',
             ])
+            ->setDefault('groups', function (Options $options, $groups) {
+                return $groups === null ? [PropertyMetadataInterface::GROUP_DEFAULT] : $groups;
+            })
             ->setAllowedTypes('accessor', 'string')
             ->setAllowedTypes('alias', 'string')
             ->setAllowedTypes('exclude', 'bool')
@@ -399,7 +402,7 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
                     }
                 }
 
-                return true;
+                return count($groups) > 0;
             })
             ->setAllowedValues('max_depth', function ($maxDepth) {
                 return $maxDepth >= 0;

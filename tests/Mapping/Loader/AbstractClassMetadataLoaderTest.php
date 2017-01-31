@@ -354,8 +354,11 @@ abstract class AbstractClassMetadataLoaderTest extends \PHPUnit_Framework_TestCa
         $this->assertSame(isset($data['max_depth']), $propertyMetadata->hasMaxDepth());
         $this->assertSame(isset($data['max_depth']) ? $data['max_depth'] : null, $propertyMetadata->getMaxDepth());
 
-        $this->assertSame(isset($data['groups']), $propertyMetadata->hasGroups());
-        $this->assertSame(isset($data['groups']) ? $data['groups'] : [], $propertyMetadata->getGroups());
+        $this->assertTrue($propertyMetadata->hasGroups());
+        $this->assertSame(
+            isset($data['groups']) ? $data['groups'] : [PropertyMetadataInterface::GROUP_DEFAULT],
+            $propertyMetadata->getGroups()
+        );
 
         $this->assertSame(isset($data['xml_attribute']) && $data['xml_attribute'], $propertyMetadata->isXmlAttribute());
         $this->assertSame(isset($data['xml_inline']) && $data['xml_inline'], $propertyMetadata->isXmlInline());
