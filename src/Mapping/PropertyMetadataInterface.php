@@ -16,8 +16,6 @@ namespace Ivory\Serializer\Mapping;
  */
 interface PropertyMetadataInterface extends MetadataInterface
 {
-    const GROUP_DEFAULT = 'Default';
-
     /**
      * @return string
      */

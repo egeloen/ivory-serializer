@@ -19,6 +19,8 @@ use Ivory\Serializer\Mapping\PropertyMetadataInterface;
  */
 class GroupsExclusionStrategy extends ExclusionStrategy
 {
+    const GROUP_DEFAULT = 'Default';
+
     /**
      * @var string[]
      */
@@ -37,6 +39,10 @@ class GroupsExclusionStrategy extends ExclusionStrategy
      */
     public function skipProperty(PropertyMetadataInterface $property, ContextInterface $context)
     {
+        if (!$property->hasGroups()) {
+            return !in_array(self::GROUP_DEFAULT, $this->groups, true);
+        }
+
         foreach ($this->groups as $group) {
             if ($property->hasGroup($group)) {
                 return false;

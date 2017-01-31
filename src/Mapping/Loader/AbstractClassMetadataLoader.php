@@ -365,9 +365,6 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
                 'xml_key_as_node',
                 'xml_value',
             ])
-            ->setDefault('groups', function (Options $options, $groups) {
-                return $groups === null ? [PropertyMetadataInterface::GROUP_DEFAULT] : $groups;
-            })
             ->setAllowedTypes('accessor', 'string')
             ->setAllowedTypes('alias', 'string')
             ->setAllowedTypes('exclude', 'bool')
