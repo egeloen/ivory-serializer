@@ -100,7 +100,7 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
     abstract protected function loadData($class);
 
     /**
-     * @param ClassMetadataInterface $classMetadata
+     * @param ClassMetadataInterface $classMetadata[] :
      * @param mixed[]                $data
      */
     private function doLoadClassMetadata(ClassMetadataInterface $classMetadata, array $data)
@@ -177,7 +177,7 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
         }
 
         if (isset($data['groups'])) {
-            $propertyMetadata->setGroups($data['groups']);
+            $propertyMetadata->addGroups($data['groups']);
         }
 
         if (isset($data['xml_attribute'])) {
