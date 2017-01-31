@@ -100,7 +100,7 @@ abstract class AbstractClassMetadataLoader implements ClassMetadataLoaderInterfa
     abstract protected function loadData($class);
 
     /**
-     * @param ClassMetadataInterface $classMetadata[] :
+     * @param ClassMetadataInterface $classMetadata
      * @param mixed[]                $data
      */
     private function doLoadClassMetadata(ClassMetadataInterface $classMetadata, array $data)
