@@ -70,6 +70,11 @@ class Context implements ContextInterface
     private $metadataStack;
 
     /**
+     * @var mixed[]
+     */
+    private $options = [];
+
+    /**
      * @param ExclusionStrategyInterface|null $exclusionStrategy
      * @param NamingStrategyInterface|null    $namingStrategy
      */
@@ -273,5 +278,64 @@ class Context implements ContextInterface
     {
         array_pop($this->dataStack);
         array_pop($this->metadataStack);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = [];
+        $this->addOptions($options);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addOptions(array $options)
+    {
+        foreach ($options as $option => $value) {
+            $this->setOption($option, $value);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasOption($option)
+    {
+        return array_key_exists($option, $this->options);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOption($option)
+    {
+        return $this->hasOption($option) ? $this->options[$option] : null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOption($option, $value)
+    {
+        $this->options[$option] = $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeOption($option)
+    {
+        unset($this->options[$option]);
     }
 }

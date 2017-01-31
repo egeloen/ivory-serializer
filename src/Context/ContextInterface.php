@@ -145,4 +145,44 @@ interface ContextInterface
     public function enterScope($data, MetadataInterface $metadata);
 
     public function leaveScope();
+
+    /**
+     * @return bool
+     */
+    public function hasOptions();
+
+    /**
+     * @param mixed[] $options
+     */
+    public function setOptions(array $options);
+
+    /**
+     * @param mixed[] $options
+     */
+    public function addOptions(array $options);
+
+    /**
+     * @param string $option
+     *
+     * @return bool
+     */
+    public function hasOption($option);
+
+    /**
+     * @param string $option
+     *
+     * @return mixed
+     */
+    public function getOption($option);
+
+    /**
+     * @param string $option
+     * @param mixed  $value
+     */
+    public function setOption($option, $value);
+
+    /**
+     * @param string $option
+     */
+    public function removeOption($option);
 }

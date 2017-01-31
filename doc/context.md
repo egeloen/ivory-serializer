@@ -171,3 +171,19 @@ $context->setNamingStrategy(new CacheNamingStrategy(
     $psr6Cache
 ));
 ```
+
+## Options
+
+The context allows you to pass arbitrary data into the serializer and use them in your own code. The available API is:
+
+``` php
+$context->hasOptions();
+$context->getOptions();
+$context->setOptions($options);
+$context->addOptions($options);
+
+$context->hasOption($option);
+$context->getOption($option);
+$context->setOption($option, $value);
+$context->removeOption($option);
+```
