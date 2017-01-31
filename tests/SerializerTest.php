@@ -121,7 +121,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         ])));
 
         $this->assertRegExp(
-            '/^'.$this->getDataSet($name.'_debug', $format).'$/',
+            '/^'.$this->getDataSet($name.'_debug', $format).'$/s',
             $this->serializer->serialize($data, $format)
         );
     }

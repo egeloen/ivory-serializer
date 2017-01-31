@@ -7,13 +7,13 @@
     <message>Child exception<\/message>
     <file>.+<\/file>
     <line>\d+<\/line>
-    <trace>(.|\n)+<\/trace>
+    <trace>.+<\/trace>
     <previous>
       <code>321<\/code>
       <message>Parent exception<\/message>
       <file>.+<\/file>
       <line>\d+<\/line>
-      <trace>(.|\n)+<\/trace>
+      <trace>.+<\/trace>
     <\/previous>
   <\/exception>
 <\/result>

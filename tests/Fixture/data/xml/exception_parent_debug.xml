@@ -7,6 +7,6 @@
     <message>Parent exception<\/message>
     <file>.+<\/file>
     <line>\d+<\/line>
-    <trace>(.|\n)+<\/trace>
+    <trace>.+<\/trace>
   <\/exception>
 <\/result>
