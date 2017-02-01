@@ -2,6 +2,6 @@
 <result>
   <foo>bar</foo>
   <baz>
-    <entry key="0">bat</entry>
+    <entry>bat</entry>
   </baz>
 </result>

@@ -1,20 +1,26 @@
 foo: oof
 bar: rab
 list:
-    - foo
-    - bar
+    0: foo
+    bar: rab
+    zib<: biz
 keyAsNode:
     0: bit
+    bir<: rib
     bot: ban
 keyAsAttribute:
     0: ban
+    bor>: rob
     bit: bot
 entry:
-    - baz
-    - bat
+    0: baz
+    bat: tab
+    opo<: opo
 entryAttribute:
     0: baz
     bin: bat
+    bin<: nib
 inline:
     biz: boz
     bot: ban
+    '<zop': poz

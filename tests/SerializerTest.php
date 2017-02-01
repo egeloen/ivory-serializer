@@ -306,12 +306,12 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $xmlFixture = new XmlFixture();
         $xmlFixture->foo = 'oof';
         $xmlFixture->bar = 'rab';
-        $xmlFixture->list = ['foo', 'bar'];
-        $xmlFixture->keyAsAttribute = ['ban', 'bit' => 'bot'];
-        $xmlFixture->keyAsNode = ['bit', 'bot' => 'ban'];
-        $xmlFixture->entry = ['baz', 'bat'];
-        $xmlFixture->entryAttribute = ['baz', 'bin' => 'bat'];
-        $xmlFixture->inline = ['biz' => 'boz', 'bot' => 'ban'];
+        $xmlFixture->list = ['foo', 'bar' => 'rab', 'zib<' => 'biz'];
+        $xmlFixture->keyAsAttribute = ['ban', 'bor>' => 'rob', 'bit' => 'bot'];
+        $xmlFixture->keyAsNode = ['bit', 'bir<' => 'rib', 'bot' => 'ban'];
+        $xmlFixture->entry = ['baz', 'bat' => 'tab', 'opo<' => 'opo'];
+        $xmlFixture->entryAttribute = ['baz', 'bin' => 'bat', 'bin<' => 'nib'];
+        $xmlFixture->inline = ['biz' => 'boz', 'bot' => 'ban', '<zop' => 'poz'];
 
         $xmlValueFixture = new XmlValueFixture();
         $xmlValueFixture->foo = 'oof';

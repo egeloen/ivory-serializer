@@ -346,7 +346,10 @@ class XmlSerializationVisitor extends AbstractVisitor
             $node = $document->createElement($name);
         } catch (\DOMException $e) {
             $node = $document->createElement($entry ?: $this->entry);
-            $node->setAttribute($entryAttribute ?: $this->entryAttribute, $name);
+
+            if (is_string($name)) {
+                $node->setAttribute($entryAttribute ?: $this->entryAttribute, $name);
+            }
         }
 
         return $node;

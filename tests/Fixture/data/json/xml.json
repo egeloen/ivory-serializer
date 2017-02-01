@@ -1,1 +1,1 @@
-{"foo":"oof","bar":"rab","list":["foo","bar"],"keyAsNode":{"0":"bit","bot":"ban"},"keyAsAttribute":{"0":"ban","bit":"bot"},"entry":["baz","bat"],"entryAttribute":{"0":"baz","bin":"bat"},"inline":{"biz":"boz","bot":"ban"}}
+{"foo":"oof","bar":"rab","list":{"0":"foo","bar":"rab","zib<":"biz"},"keyAsNode":{"0":"bit","bir<":"rib","bot":"ban"},"keyAsAttribute":{"0":"ban","bor>":"rob","bit":"bot"},"entry":{"0":"baz","bat":"tab","opo<":"opo"},"entryAttribute":{"0":"baz","bin":"bat","bin<":"nib"},"inline":{"biz":"boz","bot":"ban","<zop":"poz"}}

@@ -2,25 +2,31 @@
 <xml bar="rab">
   <foo>oof</foo>
   <list>
-    <entry key="0">foo</entry>
-    <entry key="1">bar</entry>
+    <entry>foo</entry>
+    <bar>rab</bar>
+    <entry key="zib&lt;">biz</entry>
   </list>
   <keyAsNode>
-    <entry key="0">bit</entry>
+    <entry>bit</entry>
+    <entry key="bir&lt;">rib</entry>
     <bot>ban</bot>
   </keyAsNode>
   <keyAsAttribute>
     <entry key="0">ban</entry>
+    <entry key="bor&gt;">rob</entry>
     <bit key="bit">bot</bit>
   </keyAsAttribute>
   <entry>
-    <item key="0">baz</item>
-    <item key="1">bat</item>
+    <item>baz</item>
+    <bat>tab</bat>
+    <item key="opo&lt;">opo</item>
   </entry>
   <entryAttribute>
-    <entry name="0">baz</entry>
+    <entry>baz</entry>
     <bin>bat</bin>
+    <entry name="bin&lt;">nib</entry>
   </entryAttribute>
   <inline index="biz">boz</inline>
   <inline index="bot">ban</inline>
+  <inline index="&lt;zop">poz</inline>
 </xml>
