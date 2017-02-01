@@ -152,6 +152,11 @@ interface ContextInterface
     public function hasOptions();
 
     /**
+     * @return mixed[]
+     */
+    public function getOptions();
+
+    /**
      * @param mixed[] $options
      */
     public function setOptions(array $options);

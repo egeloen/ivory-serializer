@@ -291,6 +291,14 @@ class Context implements ContextInterface
     /**
      * {@inheritdoc}
      */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setOptions(array $options)
     {
         $this->options = [];
