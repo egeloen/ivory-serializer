@@ -141,9 +141,14 @@ interface ContextInterface
     /**
      * @param mixed             $data
      * @param MetadataInterface $metadata
+     *
+     * @return ContextInterface
      */
     public function enterScope($data, MetadataInterface $metadata);
 
+    /**
+     * @return ContextInterface
+     */
     public function leaveScope();
 
     /**
@@ -158,11 +163,15 @@ interface ContextInterface
 
     /**
      * @param mixed[] $options
+     *
+     * @return ContextInterface
      */
     public function setOptions(array $options);
 
     /**
      * @param mixed[] $options
+     *
+     * @return ContextInterface
      */
     public function addOptions(array $options);
 
@@ -183,11 +192,15 @@ interface ContextInterface
     /**
      * @param string $option
      * @param mixed  $value
+     *
+     * @return ContextInterface
      */
     public function setOption($option, $value);
 
     /**
      * @param string $option
+     *
+     * @return ContextInterface
      */
     public function removeOption($option);
 }

@@ -269,6 +269,8 @@ class Context implements ContextInterface
     {
         $this->dataStack[] = $data;
         $this->metadataStack[] = $metadata;
+
+        return $this;
     }
 
     /**
@@ -278,6 +280,8 @@ class Context implements ContextInterface
     {
         array_pop($this->dataStack);
         array_pop($this->metadataStack);
+
+        return $this;
     }
 
     /**
@@ -303,6 +307,8 @@ class Context implements ContextInterface
     {
         $this->options = [];
         $this->addOptions($options);
+
+        return $this;
     }
 
     /**
@@ -313,6 +319,8 @@ class Context implements ContextInterface
         foreach ($options as $option => $value) {
             $this->setOption($option, $value);
         }
+
+        return $this;
     }
 
     /**
@@ -337,6 +345,8 @@ class Context implements ContextInterface
     public function setOption($option, $value)
     {
         $this->options[$option] = $value;
+
+        return $this;
     }
 
     /**
@@ -345,5 +355,7 @@ class Context implements ContextInterface
     public function removeOption($option)
     {
         unset($this->options[$option]);
+
+        return $this;
     }
 }
