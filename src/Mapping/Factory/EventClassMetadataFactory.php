@@ -11,7 +11,8 @@
 
 namespace Ivory\Serializer\Mapping\Factory;
 
-use Ivory\Serializer\Event\LoadClassMetadataEvent;
+use Ivory\Serializer\Event\ClassMetadataLoadEvent;
+use Ivory\Serializer\Event\ClassMetadataNotFoundEvent;
 use Ivory\Serializer\Event\SerializerEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -47,13 +48,18 @@ class EventClassMetadataFactory implements ClassMetadataFactoryInterface
     {
         $classMetadata = $this->factory->getClassMetadata($class);
 
-        if ($classMetadata !== null) {
+        if ($classMetadata === null) {
             $this->dispatcher->dispatch(
-                SerializerEvents::LOAD_CLASS_METADATA,
-                new LoadClassMetadataEvent($classMetadata)
+                SerializerEvents::CLASS_METADATA_NOT_FOUND,
+                $event = new ClassMetadataNotFoundEvent($class)
+            );
+        } else {
+            $this->dispatcher->dispatch(
+                SerializerEvents::CLASS_METADATA_LOAD,
+                $event = new ClassMetadataLoadEvent($classMetadata)
             );
         }
 
-        return $classMetadata;
+        return $event->getClassMetadata();
     }
 }

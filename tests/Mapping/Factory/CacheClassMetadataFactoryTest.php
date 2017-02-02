@@ -25,12 +25,12 @@ class CacheClassMetadataFactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * @var CacheClassMetadataFactory
      */
-    private $factory;
+    private $cacheFactory;
 
     /**
      * @var ClassMetadataFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $innerFactory;
+    private $factory;
 
     /**
      * @var CacheItemPoolInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -42,15 +42,15 @@ class CacheClassMetadataFactoryTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->innerFactory = $this->createClassMetadataFactoryMock();
+        $this->factory = $this->createClassMetadataFactoryMock();
         $this->pool = $this->createCacheItemPoolMock();
 
-        $this->factory = new CacheClassMetadataFactory($this->innerFactory, $this->pool);
+        $this->cacheFactory = new CacheClassMetadataFactory($this->factory, $this->pool);
     }
 
     public function testInheritance()
     {
-        $this->assertInstanceOf(ClassMetadataFactoryInterface::class, $this->factory);
+        $this->assertInstanceOf(ClassMetadataFactoryInterface::class, $this->cacheFactory);
     }
 
     public function testClassMetadata()
@@ -66,7 +66,7 @@ class CacheClassMetadataFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('isHit')
             ->will($this->returnValue(false));
 
-        $this->innerFactory
+        $this->factory
             ->expects($this->once())
             ->method('getClassMetadata')
             ->with($this->identicalTo($class = 'foo\bar'))
@@ -83,7 +83,7 @@ class CacheClassMetadataFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('save')
             ->with($this->identicalTo($item));
 
-        $this->assertSame($classMetadata, $this->factory->getClassMetadata($class));
+        $this->assertSame($classMetadata, $this->cacheFactory->getClassMetadata($class));
     }
 
     public function testClassMetadataCached()
@@ -104,11 +104,11 @@ class CacheClassMetadataFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValue($classMetadata = $this->createClassMetadataMock()));
 
-        $this->innerFactory
+        $this->factory
             ->expects($this->never())
             ->method('getClassMetadata');
 
-        $this->assertSame($classMetadata, $this->factory->getClassMetadata('foo\bar'));
+        $this->assertSame($classMetadata, $this->cacheFactory->getClassMetadata('foo\bar'));
     }
 
     /**

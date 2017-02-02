@@ -20,14 +20,6 @@ use Ivory\Serializer\Mapping\Loader\XmlClassMetadataLoader;
 class XmlClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
 {
     /**
-     * {@inheritdoc}
-     */
-    protected function createLoader($file)
-    {
-        return new XmlClassMetadataLoader(__DIR__.'/../../Fixture/config/xml/'.$file.'/'.$file.'.xml');
-    }
-
-    /**
      * @expectedException \InvalidArgumentException
      */
     public function testMissingContent()
@@ -96,5 +88,13 @@ class XmlClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
 
     public function testXmlKeyAsNode()
     {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function createLoader($file)
+    {
+        return new XmlClassMetadataLoader(__DIR__.'/../../Fixture/config/xml/'.$file.'/'.$file.'.xml');
     }
 }

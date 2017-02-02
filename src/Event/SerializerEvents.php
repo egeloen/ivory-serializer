@@ -16,7 +16,8 @@ namespace Ivory\Serializer\Event;
  */
 final class SerializerEvents
 {
-    const LOAD_CLASS_METADATA = 'serializer.load_class_metadata';
+    const CLASS_METADATA_LOAD = 'serializer.class_metadata.load';
+    const CLASS_METADATA_NOT_FOUND = 'serializer.class_metadata.not_found';
 
     const PRE_SERIALIZE = 'serializer.pre_serialize';
     const POST_SERIALIZE = 'serializer.post_serialize';

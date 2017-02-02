@@ -181,13 +181,13 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
         $document->validateOnParse = true;
 
         if (!@$document->loadXML($data, LIBXML_NONET | LIBXML_COMPACT)) {
-            $this->dispatchErrors($file, $internalErrors, $disableEntities);
+            throw $this->createException($file, $internalErrors, $disableEntities);
         }
 
         $document->normalizeDocument();
 
         if (!@$document->schemaValidateSource(file_get_contents(__DIR__.'/../Resource/mapping.xsd'))) {
-            $this->dispatchErrors($file, $internalErrors, $disableEntities);
+            throw $this->createException($file, $internalErrors, $disableEntities);
         }
 
         foreach ($document->childNodes as $child) {
@@ -205,8 +205,10 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
      * @param string $file
      * @param bool   $internalErrors
      * @param bool   $disableEntities
+     *
+     * @return \InvalidArgumentException
      */
-    private function dispatchErrors($file, $internalErrors, $disableEntities)
+    private function createException($file, $internalErrors, $disableEntities)
     {
         $errors = [];
 
@@ -223,7 +225,7 @@ class XmlClassMetadataLoader extends AbstractFileClassMetadataLoader
 
         $this->setLibXmlState($internalErrors, $disableEntities);
 
-        throw new \InvalidArgumentException(implode(PHP_EOL, $errors));
+        return new \InvalidArgumentException(implode(PHP_EOL, $errors));
     }
 
     /**

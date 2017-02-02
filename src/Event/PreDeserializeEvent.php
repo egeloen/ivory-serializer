@@ -14,6 +14,6 @@ namespace Ivory\Serializer\Event;
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class PreDeserializeEvent extends AbstractEvent
+class PreDeserializeEvent extends AbstractPreEvent
 {
 }

@@ -40,6 +40,7 @@ $deserialize = $serializer->deserialize($json, \stdClass::class, Format::JSON);
   - [Usage](/doc/usage.md)
   - [Mapping](/doc/mapping.md)
   - [Type](/doc/type.md)
+  - [Event](/doc/event.md)
   - [Visitor](/doc/visitor.md)
   - [Context](/doc/context.md)
     - [Exclusion strategies](/doc/context.md#exclusion-strategies)

@@ -12,31 +12,17 @@
 namespace Ivory\Serializer\Event;
 
 use Ivory\Serializer\Mapping\ClassMetadataInterface;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class LoadClassMetadataEvent extends Event
+class ClassMetadataLoadEvent extends AbstractClassMetadataEvent
 {
-    /**
-     * @var ClassMetadataInterface
-     */
-    private $classMetadata;
-
     /**
      * @param ClassMetadataInterface $classMetadata
      */
     public function __construct(ClassMetadataInterface $classMetadata)
     {
         $this->classMetadata = $classMetadata;
-    }
-
-    /**
-     * @return ClassMetadataInterface
-     */
-    public function getClassMetadata()
-    {
-        return $this->classMetadata;
     }
 }

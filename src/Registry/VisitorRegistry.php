@@ -11,10 +11,13 @@
 
 namespace Ivory\Serializer\Registry;
 
+use Ivory\Serializer\Accessor\AccessorInterface;
 use Ivory\Serializer\Accessor\ReflectionAccessor;
 use Ivory\Serializer\Direction;
 use Ivory\Serializer\Format;
 use Ivory\Serializer\Instantiator\DoctrineInstantiator;
+use Ivory\Serializer\Instantiator\InstantiatorInterface;
+use Ivory\Serializer\Mutator\MutatorInterface;
 use Ivory\Serializer\Mutator\ReflectionMutator;
 use Ivory\Serializer\Visitor\Csv\CsvDeserializationVisitor;
 use Ivory\Serializer\Visitor\Csv\CsvSerializationVisitor;
@@ -49,15 +52,22 @@ class VisitorRegistry implements VisitorRegistryInterface
     }
 
     /**
-     * @param VisitorInterface[][] $visitors
+     * @param VisitorInterface[][]       $visitors
+     * @param InstantiatorInterface|null $instantiator
+     * @param AccessorInterface|null     $accessor
+     * @param MutatorInterface|null      $mutator
      *
      * @return VisitorRegistryInterface
      */
-    public static function create(array $visitors = [])
-    {
-        $instantiator = new DoctrineInstantiator();
-        $accessor = new ReflectionAccessor();
-        $mutator = new ReflectionMutator();
+    public static function create(
+        array $visitors = [],
+        InstantiatorInterface $instantiator = null,
+        AccessorInterface $accessor = null,
+        MutatorInterface $mutator = null
+    ) {
+        $instantiator = $instantiator ?: new DoctrineInstantiator();
+        $accessor = $accessor ?: new ReflectionAccessor();
+        $mutator = $mutator ?: new ReflectionMutator();
 
         return new static(array_replace_recursive([
             Direction::SERIALIZATION => [

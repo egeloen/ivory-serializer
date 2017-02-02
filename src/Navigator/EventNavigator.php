@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Ivory\Serializer\Type;
+namespace Ivory\Serializer\Navigator;
 
 use Ivory\Serializer\Context\ContextInterface;
 use Ivory\Serializer\Direction;
@@ -19,17 +19,19 @@ use Ivory\Serializer\Event\PreDeserializeEvent;
 use Ivory\Serializer\Event\PreSerializeEvent;
 use Ivory\Serializer\Event\SerializerEvents;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
+use Ivory\Serializer\Type\Guesser\TypeGuesser;
+use Ivory\Serializer\Type\Guesser\TypeGuesserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class EventType implements TypeInterface
+class EventNavigator implements NavigatorInterface
 {
     /**
-     * @var TypeInterface
+     * @var NavigatorInterface
      */
-    private $type;
+    private $navigator;
 
     /**
      * @var EventDispatcherInterface
@@ -37,37 +39,46 @@ class EventType implements TypeInterface
     private $dispatcher;
 
     /**
-     * @param TypeInterface            $type
-     * @param EventDispatcherInterface $dispatcher
+     * @var TypeGuesserInterface
      */
-    public function __construct(TypeInterface $type, EventDispatcherInterface $dispatcher)
-    {
-        $this->type = $type;
+    private $typeGuesser;
+
+    /**
+     * @param NavigatorInterface        $navigator
+     * @param EventDispatcherInterface  $dispatcher
+     * @param TypeGuesserInterface|null $typeGuesser
+     */
+    public function __construct(
+        NavigatorInterface $navigator,
+        EventDispatcherInterface $dispatcher,
+        TypeGuesserInterface $typeGuesser = null
+    ) {
+        $this->navigator = $navigator;
         $this->dispatcher = $dispatcher;
+        $this->typeGuesser = $typeGuesser ?: new TypeGuesser();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function convert($data, TypeMetadataInterface $type, ContextInterface $context)
+    public function navigate($data, ContextInterface $context, TypeMetadataInterface $type = null)
     {
+        $type = $type ?: $this->typeGuesser->guess($data);
         $serialization = $context->getDirection() === Direction::SERIALIZATION;
 
         if ($serialization) {
             $this->dispatcher->dispatch(
                 SerializerEvents::PRE_SERIALIZE,
-                new PreSerializeEvent($data, $type, $context)
+                $event = new PreSerializeEvent($data, $type, $context)
             );
         } else {
             $this->dispatcher->dispatch(
                 SerializerEvents::PRE_DESERIALIZE,
                 $event = new PreDeserializeEvent($data, $type, $context)
             );
-
-            $data = $event->getData();
         }
 
-        $result = $this->type->convert($data, $type, $context);
+        $result = $this->navigator->navigate($data = $event->getData(), $context, $type = $event->getType());
 
         if ($serialization) {
             $this->dispatcher->dispatch(
@@ -77,10 +88,8 @@ class EventType implements TypeInterface
         } else {
             $this->dispatcher->dispatch(
                 SerializerEvents::POST_DESERIALIZE,
-                $event = new PostDeserializeEvent($result, $type, $context)
+                new PostDeserializeEvent($result, $type, $context)
             );
-
-            $result = $event->getData();
         }
 
         return $result;

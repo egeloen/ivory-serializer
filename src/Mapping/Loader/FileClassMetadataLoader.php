@@ -53,7 +53,7 @@ class FileClassMetadataLoader implements MappedClassMetadataLoaderInterface
         }
 
         if ($this->loader === null) {
-            throw new \InvalidArgumentException('The file "%s" is not supported.');
+            throw new \InvalidArgumentException(sprintf('The file "%s" is not supported.', $file));
         }
     }
 

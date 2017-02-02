@@ -23,12 +23,12 @@ abstract class AbstractEvent extends Event
     /**
      * @var mixed
      */
-    private $data;
+    protected $data;
 
     /**
      * @var TypeMetadataInterface
      */
-    private $type;
+    protected $type;
 
     /**
      * @var ContextInterface

@@ -24,6 +24,7 @@
         "nikic/php-parser": "^1.4",
         "phpdocumentor/reflection": "^3.0",
         "phpunit/phpunit": "^5.4",
+        "phpunit/phpunit-mock-objects": "^3.2.3",
         "psr/cache": "^1.0",
         "symfony/event-dispatcher": "^2.8|^3.0",
         "symfony/property-info": "^2.8|^3.0",

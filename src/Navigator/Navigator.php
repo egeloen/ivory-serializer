@@ -12,10 +12,11 @@
 namespace Ivory\Serializer\Navigator;
 
 use Ivory\Serializer\Context\ContextInterface;
-use Ivory\Serializer\Mapping\TypeMetadata;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 use Ivory\Serializer\Registry\TypeRegistry;
 use Ivory\Serializer\Registry\TypeRegistryInterface;
+use Ivory\Serializer\Type\Guesser\TypeGuesser;
+use Ivory\Serializer\Type\Guesser\TypeGuesserInterface;
 use Ivory\Serializer\Type\Type;
 
 /**
@@ -29,11 +30,18 @@ class Navigator implements NavigatorInterface
     private $typeRegistry;
 
     /**
-     * @param TypeRegistryInterface|null $typeRegistry
+     * @var TypeGuesserInterface
      */
-    public function __construct(TypeRegistryInterface $typeRegistry = null)
+    private $typeGuesser;
+
+    /**
+     * @param TypeRegistryInterface|null $typeRegistry
+     * @param TypeGuesserInterface|null  $typeGuesser
+     */
+    public function __construct(TypeRegistryInterface $typeRegistry = null, TypeGuesserInterface $typeGuesser = null)
     {
         $this->typeRegistry = $typeRegistry ?: TypeRegistry::create();
+        $this->typeGuesser = $typeGuesser ?: new TypeGuesser();
     }
 
     /**
@@ -41,7 +49,7 @@ class Navigator implements NavigatorInterface
      */
     public function navigate($data, ContextInterface $context, TypeMetadataInterface $type = null)
     {
-        $type = $type ?: new TypeMetadata(is_object($data) ? get_class($data) : strtolower(gettype($data)));
+        $type = $type ?: $this->typeGuesser->guess($data);
         $name = $type->getName();
 
         if ($data === null) {

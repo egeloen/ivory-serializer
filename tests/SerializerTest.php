@@ -82,6 +82,25 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $name
+     * @param mixed  $data
+     * @param string $format
+     *
+     * @dataProvider serializeExceptionProvider
+     */
+    public function testSerializeException($name, $data, $format)
+    {
+        $this->serializer = new Serializer(new Navigator(TypeRegistry::create([
+            Type::EXCEPTION => new ExceptionType(true),
+        ])));
+
+        $this->assertRegExp(
+            '/^'.$this->getDataSet($name.'_debug', $format).'$/s',
+            $this->serializer->serialize($data, $format)
+        );
+    }
+
+    /**
      * @param string                $name
      * @param mixed                 $data
      * @param string                $type
@@ -108,22 +127,27 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param string $name
-     * @param mixed  $data
+     * @param string $message
+     * @param string $type
      * @param string $format
      *
-     * @dataProvider exceptionProvider
+     * @dataProvider unsupportedTypeProvider
      */
-    public function testSerializeException($name, $data, $format)
+    public function testDeserializeWithInvalidType($message, $type, $format)
     {
-        $this->serializer = new Serializer(new Navigator(TypeRegistry::create([
-            Type::EXCEPTION => new ExceptionType(true),
-        ])));
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
 
-        $this->assertRegExp(
-            '/^'.$this->getDataSet($name.'_debug', $format).'$/s',
-            $this->serializer->serialize($data, $format)
-        );
+        $this->serializer->deserialize($this->getDataSet('string', $format), $type, $format);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The visitor for direction "deserialization" and format "txt" does not exist.
+     */
+    public function testDeserializeWithInvalidFormat()
+    {
+        $this->serializer->deserialize('data', Type::STRING, 'txt');
     }
 
     /**
@@ -132,6 +156,14 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     public function serializeProvider()
     {
         return $this->expandCases(array_merge($this->exceptionCases(), $this->commonCases()));
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function serializeExceptionProvider()
+    {
+        return $this->expandCases($this->exceptionCases());
     }
 
     /**
@@ -160,9 +192,12 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @return mixed[]
      */
-    public function exceptionProvider()
+    public function unsupportedTypeProvider()
     {
-        return $this->expandCases($this->exceptionCases());
+        return $this->expandCases([
+            ['The type "foo" does not exist.', 'foo'],
+            ['The type must be a string or a "Ivory\Serializer\Mapping\TypeMetadataInterface", got "boolean".', true],
+        ]);
     }
 
     /**

@@ -49,6 +49,9 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->name, $this->classMetadata->getName());
         $this->assertFalse($this->classMetadata->hasProperties());
         $this->assertEmpty($this->classMetadata->getProperties());
+
+        $this->assertFalse($this->classMetadata->hasXmlRoot());
+        $this->assertNull($this->classMetadata->getXmlRoot());
     }
 
     public function testSetProperties()
@@ -105,6 +108,14 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($this->classMetadata->getProperties());
     }
 
+    public function testXmlRoot()
+    {
+        $this->classMetadata->setXmlRoot($xmlRoot = 'root');
+
+        $this->assertTrue($this->classMetadata->hasXmlRoot());
+        $this->assertSame($xmlRoot, $this->classMetadata->getXmlRoot());
+    }
+
     public function testMerge()
     {
         $firstProperty = $this->createPropertyMetadataMock($firstName = 'foo');
@@ -114,6 +125,7 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
         $classMetadata = new ClassMetadata(\stdClass::class);
         $classMetadata->addProperty($secondProperty);
         $classMetadata->addProperty($thirdProperty);
+        $classMetadata->setXmlRoot($xmlRoot = 'root');
 
         $firstProperty
             ->expects($this->once())
@@ -127,6 +139,8 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
             [$firstName => $firstProperty, $thirdName => $thirdProperty],
             $this->classMetadata->getProperties()
         );
+
+        $this->assertSame($xmlRoot, $this->classMetadata->getXmlRoot());
     }
 
     public function testSerialize()

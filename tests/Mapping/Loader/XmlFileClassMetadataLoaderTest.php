@@ -19,11 +19,16 @@ use Ivory\Serializer\Mapping\Loader\FileClassMetadataLoader;
 class XmlFileClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
 {
     /**
-     * {@inheritdoc}
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessageRegExp /^The file ".+" is not supported\.$/
      */
-    protected function createLoader($file)
+    public function testUnsupportedFile()
     {
-        return new FileClassMetadataLoader(__DIR__.'/../../Fixture/config/xml/'.$file.'/'.$file.'.xml');
+        new FileClassMetadataLoader(__DIR__.'/../../Fixture/config/xml/mapping/ignore.txt');
+    }
+
+    public function testDocumentType()
+    {
     }
 
     public function testExclude()
@@ -68,5 +73,13 @@ class XmlFileClassMetadataLoaderTest extends AbstractFileClassMetadataLoaderTest
 
     public function testXmlKeyAsNode()
     {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function createLoader($file)
+    {
+        return new FileClassMetadataLoader(__DIR__.'/../../Fixture/config/xml/'.$file.'/'.$file.'.xml');
     }
 }
