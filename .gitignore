@@ -3,7 +3,7 @@
 /vendor
 
 # Docker
-.env
+/.env
 
 # PHP CS Fixer
 /.php_cs.cache
