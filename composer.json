@@ -27,6 +27,7 @@
         "phpunit/phpunit-mock-objects": "^3.2.3",
         "psr/cache": "^1.0",
         "symfony/event-dispatcher": "^2.8|^3.0",
+        "symfony/phpunit-bridge": "^2.8|^3.0",
         "symfony/property-info": "^2.8|^3.0",
         "symfony/property-access": "^2.8|^3.0",
         "symfony/yaml": "^2.6|^3.0"
