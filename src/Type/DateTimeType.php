@@ -88,7 +88,7 @@ class DateTimeType extends AbstractClassType
 
         $result = $class::createFromFormat(
             $format = $type->getOption('format', $this->format),
-            $data,
+            (string) $data,
             $timezone = new \DateTimeZone($type->getOption('timezone', $this->timeZone))
         );
 
