@@ -45,13 +45,19 @@ class DateTimeType implements TypeInterface
      */
     public function convert($data, TypeMetadataInterface $type, ContextInterface $context)
     {
-        return $context->getDirection() === Direction::SERIALIZATION
+        $result = $context->getDirection() === Direction::SERIALIZATION
             ? $this->serialize($data, $type, $context)
             : $this->deserialize($data, $type, $context);
+
+        return $context->getVisitor()->visitData($result, $type, $context);
     }
 
     /**
-     * {@inheritdoc}
+     * @param \DateTimeInterface    $data
+     * @param TypeMetadataInterface $type
+     * @param ContextInterface      $context
+     *
+     * @return string
      */
     private function serialize($data, TypeMetadataInterface $type, ContextInterface $context)
     {
@@ -71,11 +77,15 @@ class DateTimeType implements TypeInterface
             throw new \InvalidArgumentException(sprintf('The date format "%s" is not valid.', $format));
         }
 
-        return $context->getVisitor()->visitData($result, $type, $context);
+        return $result;
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed                 $data
+     * @param TypeMetadataInterface $type
+     * @param ContextInterface      $context
+     *
+     * @return \DateTimeInterface
      */
     private function deserialize($data, TypeMetadataInterface $type, ContextInterface $context)
     {
@@ -114,6 +124,6 @@ class DateTimeType implements TypeInterface
             ));
         }
 
-        return $context->getVisitor()->visitData($result, $type, $context);
+        return $result;
     }
 }
