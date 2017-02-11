@@ -12,12 +12,13 @@
 namespace Ivory\Serializer\Type;
 
 use Ivory\Serializer\Context\ContextInterface;
+use Ivory\Serializer\Direction;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class DateTimeType extends AbstractClassType
+class DateTimeType implements TypeInterface
 {
     /**
      * @var string
@@ -42,7 +43,17 @@ class DateTimeType extends AbstractClassType
     /**
      * {@inheritdoc}
      */
-    protected function serialize($data, TypeMetadataInterface $type, ContextInterface $context)
+    public function convert($data, TypeMetadataInterface $type, ContextInterface $context)
+    {
+        return $context->getDirection() === Direction::SERIALIZATION
+            ? $this->serialize($data, $type, $context)
+            : $this->deserialize($data, $type, $context);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    private function serialize($data, TypeMetadataInterface $type, ContextInterface $context)
     {
         $class = $type->getName();
 
@@ -60,13 +71,13 @@ class DateTimeType extends AbstractClassType
             throw new \InvalidArgumentException(sprintf('The date format "%s" is not valid.', $format));
         }
 
-        return $this->visit($result, $type, $context);
+        return $context->getVisitor()->visitData($result, $type, $context);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function deserialize($data, TypeMetadataInterface $type, ContextInterface $context)
+    private function deserialize($data, TypeMetadataInterface $type, ContextInterface $context)
     {
         $class = $type->getName();
 
@@ -103,18 +114,6 @@ class DateTimeType extends AbstractClassType
             ));
         }
 
-        return $this->visit($result, $type, $context);
-    }
-
-    /**
-     * @param mixed                 $data
-     * @param TypeMetadataInterface $type
-     * @param ContextInterface      $context
-     *
-     * @return mixed
-     */
-    private function visit($data, TypeMetadataInterface $type, ContextInterface $context)
-    {
-        return $context->getVisitor()->visitData($data, $type, $context);
+        return $context->getVisitor()->visitData($result, $type, $context);
     }
 }

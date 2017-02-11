@@ -12,38 +12,25 @@
 namespace Ivory\Serializer\Type;
 
 use Ivory\Serializer\Context\ContextInterface;
+use Ivory\Serializer\Direction;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class StdClassType extends AbstractClassType
+class StdClassType implements TypeInterface
 {
     /**
      * {@inheritdoc}
      */
-    protected function serialize($data, TypeMetadataInterface $type, ContextInterface $context)
+    public function convert($data, TypeMetadataInterface $type, ContextInterface $context)
     {
-        return $this->visit((array) $data, $type, $context);
-    }
+        $visitor = $context->getVisitor();
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function deserialize($data, TypeMetadataInterface $type, ContextInterface $context)
-    {
-        return (object) $this->visit($data, $type, $context);
-    }
+        if ($context->getDirection() === Direction::SERIALIZATION) {
+            return $visitor->visitArray((array) $data, $type, $context);
+        }
 
-    /**
-     * @param mixed                 $data
-     * @param TypeMetadataInterface $type
-     * @param ContextInterface      $context
-     *
-     * @return mixed
-     */
-    private function visit($data, TypeMetadataInterface $type, ContextInterface $context)
-    {
-        return $context->getVisitor()->visitArray($data, $type, $context);
+        return (object) $visitor->visitArray($data, $type, $context);
     }
 }

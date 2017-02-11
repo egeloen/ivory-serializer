@@ -12,12 +12,13 @@
 namespace Ivory\Serializer\Type;
 
 use Ivory\Serializer\Context\ContextInterface;
+use Ivory\Serializer\Direction;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class ExceptionType extends AbstractClassType
+class ExceptionType implements TypeInterface
 {
     /**
      * @var bool
@@ -35,8 +36,12 @@ class ExceptionType extends AbstractClassType
     /**
      * {@inheritdoc}
      */
-    protected function serialize($exception, TypeMetadataInterface $type, ContextInterface $context)
+    public function convert($exception, TypeMetadataInterface $type, ContextInterface $context)
     {
+        if ($context->getDirection() === Direction::DESERIALIZATION) {
+            throw new \RuntimeException(sprintf('De-serializing an "Exception" is not supported.'));
+        }
+
         $result = [
             'code'    => 500,
             'message' => 'Internal Server Error',
@@ -47,14 +52,6 @@ class ExceptionType extends AbstractClassType
         }
 
         return $context->getVisitor()->visitArray($result, $type, $context);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function deserialize($data, TypeMetadataInterface $type, ContextInterface $context)
-    {
-        throw new \RuntimeException(sprintf('Deserializing an "Exception" is not supported.'));
     }
 
     /**

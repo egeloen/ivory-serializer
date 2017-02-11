@@ -56,29 +56,38 @@ $serializer = new Serializer(new Navigator($typeRegistry));
 
 ## Custom
 
-If you want to create your own type for a specific class, you can implement the `Ivory\Serializer\Type\TypeInterface`
-or extend the `Ivory\Serializer\Type\AbstractClassType`:
+If you want to create your own type for a specific class, you need to implement the
+`Ivory\Serializer\Type\TypeInterface`:
 
 ``` php
 namespace Acme\Serializer\Type;
 
-use Ivory\Serializer\Type\AbstractClassType;
+use Ivory\Serializer\Direction;
+use Ivory\Serializer\Type\TypeInterface;
 
-class AcmeObjectType extends AbstractClassType
+class AcmeObjectType implements TypeInterface
 {
-    protected function serialize($data, TypeMetadataInterface $type, ContextInterface $context)
+    public function convert($data, TypeMetadataInterface $type, ContextInterface $context)
+    {
+        return $context->getDirection() === Direction::SERIALIZATION
+            ? $this->serialize($data, $type, $context)
+            : $this->deserialize($data, $type, $context);
+    }
+
+    private function serialize($data, TypeMetadataInterface $type, ContextInterface $context)
     {
         // Visit your data
     }
-    
-    protected function deserialize($data, TypeMetadataInterface $type, ContextInterface $context)
+
+    private function deserialize($data, TypeMetadataInterface $type, ContextInterface $context)
     {
         // Visit your data
     }
 }
 ```
 
-Then, just need to register your type in the serializer:
+Then, just need to register your type in the serializer. When you will serialize or deserialize an `AcmeObject` or any 
+object which extends it, then, your custom type will be triggered:
 
 ``` php
 use Acme\Model\AcmeObject;
@@ -93,5 +102,20 @@ $typeRegistry = TypeRegistry::create([
 $serializer = new Serializer(new Navigator($typeRegistry));
 ```
 
-When you will serialize or deserialize an `AcmeObject` or any object which extends it, then, your custom type will be 
-triggered. 
+You can also register a type just for a specific direction (eg serialization or deserialization):
+
+``` php
+use Acme\Model\AcmeObject;
+use Acme\Serializer\Type\AcmeObjectType;
+use Ivory\Serializer\Direction;
+use Ivory\Serializer\Registry\TypeRegistry;
+use Ivory\Serializer\Serializer;
+
+$typeRegistry = TypeRegistry::create([
+    Direction::SERIALIZATION => [
+        AcmeObject::class => new AcmeObjectType(),
+    ],
+]);
+
+$serializer = new Serializer(new Navigator($typeRegistry));
+```

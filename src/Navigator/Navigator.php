@@ -56,6 +56,6 @@ class Navigator implements NavigatorInterface
             $name = Type::NULL;
         }
 
-        return $this->typeRegistry->getType($name)->convert($data, $type, $context);
+        return $this->typeRegistry->getType($name, $context->getDirection())->convert($data, $type, $context);
     }
 }

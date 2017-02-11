@@ -195,7 +195,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     public function unsupportedTypeProvider()
     {
         return $this->expandCases([
-            ['The type "foo" does not exist.', 'foo'],
+            ['The type "foo" for direction "deserialization" does not exist.', 'foo'],
             ['The type must be a string or a "Ivory\Serializer\Mapping\TypeMetadataInterface", got "boolean".', true],
         ]);
     }

@@ -20,14 +20,16 @@ interface TypeRegistryInterface
 {
     /**
      * @param string        $name
+     * @param int           $direction
      * @param TypeInterface $type
      */
-    public function registerType($name, TypeInterface $type);
+    public function registerType($name, $direction, TypeInterface $type);
 
     /**
      * @param string $name
+     * @param int    $direction
      *
      * @return TypeInterface
      */
-    public function getType($name);
+    public function getType($name, $direction);
 }
