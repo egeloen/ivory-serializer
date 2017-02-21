@@ -83,8 +83,8 @@ abstract class AbstractDeserializationVisitor extends AbstractGenericVisitor
         if ($type === null) {
             throw new \RuntimeException(sprintf(
                 'You must define the type of the %s:%s.',
-                $property->getName(),
-                $property->getClass()
+                $property->getClass(),
+                $property->getName()
             ));
         }
 
