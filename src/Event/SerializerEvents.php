@@ -25,9 +25,6 @@ final class SerializerEvents
     const PRE_DESERIALIZE = 'serializer.pre_deserialize';
     const POST_DESERIALIZE = 'serializer.post_deserialize';
 
-    /**
-     * {@inheritdoc}
-     */
     private function __construct()
     {
     }
