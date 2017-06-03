@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<result>
+  <entry>
+    <foo>bar</foo>
+    <baz>
+      <entry>bat</entry>
+    </baz>
+  </entry>
+  <entry>
+    <foo>bar</foo>
+    <baz>
+      <entry>bat</entry>
+    </baz>
+  </entry>
+</result>

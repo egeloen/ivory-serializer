@@ -114,13 +114,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $result = $this->serializer->deserialize($this->getDataSet($name, $format), $type, $format, $context);
 
         foreach ([&$data, &$result] as &$value) {
-            if ($value instanceof FixtureInterface) {
-                $value = $value->toArray();
-            } elseif ($value instanceof \DateTimeInterface) {
-                $value = $value->format(\DateTime::RFC3339);
-            } elseif ($value instanceof \stdClass) {
-                $value = (array) $value;
-            }
+            $value = $this->convertFixture($value);
         }
 
         $this->assertSame($data, $result);
@@ -362,6 +356,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ['date_time', $dateTime],
             ['std_class', $stdClass],
             ['std_class_empty', $emptyStdClass],
+            ['array_object', [$stdClass, $stdClass]],
             ['object_array', $arrayFixture],
             ['object_array_empty', $emptyArrayFixture],
             ['object_date_time', $dateTimeFixture],
@@ -431,6 +426,28 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param mixed $value
+     *
+     * @return mixed
+     */
+    private function convertFixture($value)
+    {
+        if ($value instanceof FixtureInterface) {
+            $value = $value->toArray();
+        } elseif ($value instanceof \DateTimeInterface) {
+            $value = $value->format(\DateTime::RFC3339);
+        } elseif ($value instanceof \stdClass) {
+            $value = (array) $value;
+        } elseif (is_array($value)) {
+            foreach ($value as &$data) {
+                $data = $this->convertFixture($data);
+            }
+        }
+
+        return $value;
+    }
+
+    /**
      * @param string $name
      * @param string $format
      *
@@ -444,6 +461,12 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             $extension = 'yml';
         }
 
-        return file_get_contents(__DIR__.'/Fixture/data/'.strtolower($format).'/'.$name.'.'.strtolower($extension));
+        $path = __DIR__.'/Fixture/data/'.strtolower($format).'/'.$name.'.'.strtolower($extension);
+
+        if (!file_exists($path)) {
+            throw new \RuntimeException(sprintf('The fixture file "%s" does not exist.', $path));
+        }
+
+        return file_get_contents($path);
     }
 }

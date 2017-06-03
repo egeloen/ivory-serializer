@@ -130,7 +130,7 @@ class CsvSerializationVisitor extends AbstractSerializationVisitor
                     count($headers),
                     count($result)
                 ));
-            } elseif ($headers !== count($result)) {
+            } elseif (is_int($headers) && $headers !== count($result)) {
                 fclose($resource);
 
                 throw new \InvalidArgumentException(sprintf(

@@ -268,12 +268,12 @@ class ArrayFixture implements FixtureInterface
     public function toArray(array $options = [])
     {
         return [
-            'scalars'    => $this->scalars,
-            'types'      => $this->types,
-            'inceptions' => $this->inceptions,
-            'objects'    => array_map(function (FixtureInterface $object) use ($options) {
+            'scalars' => $this->scalars,
+            'objects' => array_map(function (FixtureInterface $object) use ($options) {
                 return $object->toArray($options);
             }, $this->objects),
+            'types'      => $this->types,
+            'inceptions' => $this->inceptions,
         ];
     }
 }

@@ -81,6 +81,7 @@ class CsvDeserializationVisitor extends AbstractDeserializationVisitor
     {
         $result = $first = [];
         $headers = null;
+        $index = 0;
 
         $resource = fopen('php://temp', 'r+');
         fwrite($resource, $data);
@@ -112,12 +113,20 @@ class CsvDeserializationVisitor extends AbstractDeserializationVisitor
                 ));
             }
 
+            $result[$index] = [];
+
             foreach ($fields as $key => $value) {
-                $this->expand($headers[$key], $value, $result);
+                $this->expand($headers[$key], $value, $result[$index]);
             }
+
+            ++$index;
         }
 
         fclose($resource);
+
+        if (count($result) === 1) {
+            $result = reset($result);
+        }
 
         if (!empty($result)) {
             return $result;
